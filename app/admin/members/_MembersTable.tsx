@@ -27,7 +27,7 @@ export type MemberRow = {
   tier: string;
   status: string;
   joinedAt: Date;
-  user: { name: string; email: string };
+  user: { id: string; name: string; email: string };
 };
 
 export function MembersTable({ members }: { members: MemberRow[] }) {
@@ -187,9 +187,12 @@ export function MembersTable({ members }: { members: MemberRow[] }) {
                         })}
                       </td>
                       <td className="px-4 py-3.5">
-                        <button className="text-xs text-[var(--yif-gold)]/70 hover:text-[var(--yif-gold)] transition-colors px-2 py-1 rounded hover:bg-[var(--yif-gold)]/8">
+                        <a
+                          href={`/admin/members/${m.user.id}`}
+                          className="text-xs text-[var(--yif-gold)]/70 hover:text-[var(--yif-gold)] transition-colors px-2 py-1 rounded hover:bg-[var(--yif-gold)]/8"
+                        >
                           View
-                        </button>
+                        </a>
                       </td>
                     </tr>
                   );

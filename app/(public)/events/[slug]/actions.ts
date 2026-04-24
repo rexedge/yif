@@ -6,7 +6,7 @@ import {
   type TransactionInitData,
 } from "@/lib/paystack";
 import { recordTransactionInit } from "@/lib/transactions";
-import { getEventBySlug } from "@/lib/events-data";
+import { prisma } from "@/lib/prisma";
 
 export type CheckoutState = {
   error?: string;
@@ -32,13 +32,16 @@ export async function checkoutTickets(
     return { error: "Quantity must be between 1 and 10." };
   }
 
-  const event = getEventBySlug(slug);
+  const event = await prisma.event.findUnique({
+    where: { slug },
+    include: { tiers: true },
+  });
   if (!event) return { error: "Event not found." };
 
   const tier = event.tiers.find((t) => t.id === tierId);
   if (!tier) return { error: "Invalid ticket tier." };
 
-  const totalNaira = tier.price * qty;
+  const totalNaira = Number(tier.price) * qty;
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 
   try {

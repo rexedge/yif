@@ -2,11 +2,24 @@
 
 import { useActionState, useEffect, useRef } from "react";
 import { checkoutTickets, type CheckoutState } from "./actions";
-import { type YIFEvent, formatCurrency } from "@/lib/events-data";
+import type { EventTicketTier } from "@/generated/prisma/client";
+
+function formatCurrency(amount: number): string {
+  return new Intl.NumberFormat("en-NG", {
+    style: "currency",
+    currency: "NGN",
+    minimumFractionDigits: 0,
+  }).format(amount);
+}
 
 const initial: CheckoutState = {};
 
-export default function TicketCheckout({ event }: { event: YIFEvent }) {
+interface Props {
+  eventSlug: string;
+  tiers: EventTicketTier[];
+}
+
+export default function TicketCheckout({ eventSlug, tiers }: Props) {
   const [state, action, pending] = useActionState(checkoutTickets, initial);
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -35,7 +48,7 @@ export default function TicketCheckout({ event }: { event: YIFEvent }) {
       )}
 
       <form ref={formRef} action={action} className="space-y-5">
-        <input type="hidden" name="slug" value={event.slug} />
+        <input type="hidden" name="slug" value={eventSlug} />
 
         {/* Tier selector */}
         <fieldset>
@@ -43,7 +56,7 @@ export default function TicketCheckout({ event }: { event: YIFEvent }) {
             Ticket Type
           </legend>
           <div className="space-y-2">
-            {event.tiers.map((tier) => (
+            {tiers.map((tier) => (
               <label
                 key={tier.id}
                 className="flex cursor-pointer items-start gap-3 rounded-xl border border-[var(--yif-cream-dark)] p-4 transition-colors has-[:checked]:border-[var(--yif-gold)] has-[:checked]:bg-[var(--yif-gold)]/5"
@@ -52,7 +65,7 @@ export default function TicketCheckout({ event }: { event: YIFEvent }) {
                   type="radio"
                   name="tierId"
                   value={tier.id}
-                  defaultChecked={tier.id === event.tiers[0]?.id}
+                  defaultChecked={tier.id === tiers[0]?.id}
                   className="mt-0.5 accent-[var(--yif-gold)]"
                   required
                 />
@@ -60,7 +73,7 @@ export default function TicketCheckout({ event }: { event: YIFEvent }) {
                   <span className="font-semibold text-[var(--yif-navy)]">
                     {tier.name}
                     <span className="ml-2 font-bold text-[var(--yif-gold)]">
-                      {formatCurrency(tier.price)}
+                      {formatCurrency(Number(tier.price))}
                     </span>
                   </span>
                   <span className="mt-0.5 text-xs text-[var(--muted)]">

@@ -4,38 +4,40 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import type { Prisma } from "@/generated/prisma/client";
 
 export const metadata: Metadata = {
   title: "My Donations | YIF Member Portal",
 };
 
+function getCause(metadata: Prisma.JsonValue): string {
+  if (metadata && typeof metadata === "object" && !Array.isArray(metadata)) {
+    const m = metadata as Record<string, unknown>;
+    if (typeof m.cause === "string" && m.cause) return m.cause;
+  }
+  return "General Fund";
+}
+
 export default async function DonationsPage() {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) redirect("/login");
 
-  const [donations, stats] = await Promise.all([
-    prisma.donation.findMany({
-      where: { userId: session.user.id },
-      orderBy: { createdAt: "desc" },
-    }),
-    prisma.donation.aggregate({
-      where: { userId: session.user.id, status: "COMPLETED" },
-      _sum: { amount: true },
-      _count: { id: true },
-    }),
-  ]);
+  const donations = await prisma.transaction.findMany({
+    where: {
+      userId: session.user.id,
+      purpose: "DONATION",
+      status: "SUCCESS",
+    },
+    orderBy: { createdAt: "desc" },
+  });
 
   const currentYear = new Date().getFullYear();
   const thisYearTotal = donations
-    .filter(
-      (d) =>
-        d.status === "COMPLETED" &&
-        new Date(d.createdAt).getFullYear() === currentYear,
-    )
+    .filter((d) => new Date(d.createdAt).getFullYear() === currentYear)
     .reduce((acc, d) => acc + Number(d.amount), 0);
 
-  const totalDonated = stats._sum.amount ? Number(stats._sum.amount) : 0;
-  const totalCount = stats._count.id;
+  const totalDonated = donations.reduce((acc, d) => acc + Number(d.amount), 0);
+  const totalCount = donations.length;
 
   const summary = [
     {
@@ -130,7 +132,7 @@ export default async function DonationsPage() {
           {years.map((year) => {
             const yearDonations = byYear.get(year)!;
             const yearTotal = yearDonations
-              .filter((d) => d.status === "COMPLETED")
+              .filter((d) => d.status === "SUCCESS")
               .reduce((acc, d) => acc + Number(d.amount), 0);
 
             return (
@@ -166,14 +168,16 @@ export default async function DonationsPage() {
                         >
                           <td className="px-5 py-4">
                             <p className="font-medium text-white/70">
-                              {d.cause}
+                              {getCause(d.metadata)}
                             </p>
                             <p className="text-xs text-white/30 font-mono mt-0.5">
                               {d.reference}
                             </p>
                           </td>
                           <td className="px-4 py-4 text-white/40 hidden sm:table-cell">
-                            {new Date(d.createdAt).toLocaleDateString("en-GB", {
+                            {new Date(
+                              d.paidAt ?? d.createdAt,
+                            ).toLocaleDateString("en-GB", {
                               day: "numeric",
                               month: "short",
                               year: "numeric",
@@ -184,8 +188,7 @@ export default async function DonationsPage() {
                               ₦{Number(d.amount).toLocaleString("en-NG")}
                             </p>
                             <p className="text-xs text-[var(--yif-green)] mt-0.5">
-                              {d.status.charAt(0) +
-                                d.status.slice(1).toLowerCase()}
+                              Completed
                             </p>
                           </td>
                         </tr>

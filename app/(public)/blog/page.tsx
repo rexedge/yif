@@ -1,12 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import {
-  BLOG_POSTS,
-  CATEGORY_COLORS,
-  CATEGORY_GRADIENTS,
-  formatDate,
-  type BlogPost,
-} from "@/lib/blog-data";
+import { prisma } from "@/lib/prisma";
+import type { BlogPost, BlogTopic } from "@/generated/prisma/client";
 
 export const metadata: Metadata = {
   title: "Blog & News | Yoruba Indigenes' Foundation",
@@ -20,18 +15,35 @@ export const metadata: Metadata = {
   },
 };
 
-function CategoryBadge({ category }: { category: BlogPost["category"] }) {
+function formatDate(date: Date | null): string {
+  if (!date) return "";
+  return date.toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+}
+
+function CategoryBadge({ topic }: { topic: BlogTopic | null }) {
+  if (!topic) return null;
   return (
     <span
       className="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-widest text-white"
-      style={{ backgroundColor: CATEGORY_COLORS[category] }}
+      style={{ backgroundColor: topic.color ?? "#1a2744" }}
     >
-      {category}
+      {topic.name}
     </span>
   );
 }
 
-function PostCard({ post, index }: { post: BlogPost; index: number }) {
+function PostCard({
+  post,
+  index,
+}: {
+  post: BlogPost & { topic: BlogTopic | null };
+  index: number;
+}) {
+  const color = post.topic?.color ?? "#1a2744";
   return (
     <article
       className="animate-fade-up group flex flex-col overflow-hidden rounded-2xl bg-white shadow-md transition-shadow duration-300 hover:shadow-xl"
@@ -44,7 +56,10 @@ function PostCard({ post, index }: { post: BlogPost; index: number }) {
         aria-label={post.title}
       >
         <div
-          className={`relative h-52 w-full bg-gradient-to-br ${CATEGORY_GRADIENTS[post.category]} overflow-hidden`}
+          className="relative h-52 w-full overflow-hidden"
+          style={{
+            background: `linear-gradient(135deg, ${color} 0%, #1a2744 100%)`,
+          }}
         >
           {/* Adinkra-inspired SVG pattern overlay */}
           <svg
@@ -91,11 +106,11 @@ function PostCard({ post, index }: { post: BlogPost; index: number }) {
           </svg>
           {/* Category initial mark */}
           <div className="absolute bottom-4 left-5 text-white/20 font-display text-8xl font-bold leading-none select-none">
-            {post.category.charAt(0)}
+            {(post.topic?.name ?? "Y").charAt(0)}
           </div>
           {/* Badge overlay */}
           <div className="absolute left-5 top-5">
-            <CategoryBadge category={post.category} />
+            <CategoryBadge topic={post.topic} />
           </div>
         </div>
       </Link>
@@ -103,9 +118,11 @@ function PostCard({ post, index }: { post: BlogPost; index: number }) {
       {/* Content */}
       <div className="flex flex-1 flex-col p-6">
         <div className="mb-3 flex items-center gap-3 text-xs text-[var(--muted)]">
-          <time dateTime={post.date}>{formatDate(post.date)}</time>
+          <time dateTime={post.publishedAt?.toISOString() ?? ""}>
+            {formatDate(post.publishedAt)}
+          </time>
           <span aria-hidden="true">·</span>
-          <span>{post.readTime} min read</span>
+          <span>{post.readTime ?? 5} min read</span>
         </div>
 
         <Link href={`/blog/${post.slug}`} className="group/title block flex-1">
@@ -120,7 +137,7 @@ function PostCard({ post, index }: { post: BlogPost; index: number }) {
         <div className="mt-6 flex items-center justify-between border-t border-[var(--yif-cream-dark)] pt-4">
           <div>
             <p className="text-sm font-semibold text-[var(--yif-charcoal)]">
-              {post.author}
+              {post.authorName}
             </p>
             <p className="text-xs text-[var(--muted)]">{post.authorRole}</p>
           </div>
@@ -153,8 +170,15 @@ function PostCard({ post, index }: { post: BlogPost; index: number }) {
   );
 }
 
-export default function BlogPage() {
-  const categories = Array.from(new Set(BLOG_POSTS.map((p) => p.category)));
+export default async function BlogPage() {
+  const [posts, topics] = await Promise.all([
+    prisma.blogPost.findMany({
+      where: { isPublished: true },
+      include: { topic: true },
+      orderBy: { publishedAt: "desc" },
+    }),
+    prisma.blogTopic.findMany({ orderBy: { name: "asc" } }),
+  ]);
 
   return (
     <>
@@ -176,39 +200,34 @@ export default function BlogPage() {
       </section>
 
       {/* ── Category strip ── */}
-      <section className="sticky top-0 z-10 border-b border-[var(--yif-cream-dark)] bg-[var(--yif-cream)]/95 backdrop-blur-sm">
-        <div className="mx-auto flex max-w-7xl items-center gap-2 overflow-x-auto px-4 py-3 sm:px-6 lg:px-8">
-          <span className="shrink-0 text-xs font-semibold uppercase tracking-widest text-[var(--muted)]">
-            Topics:
-          </span>
-          {categories.map((cat) => (
-            <span
-              key={cat}
-              className="shrink-0 rounded-full border px-3 py-1 text-xs font-semibold transition-colors"
-              style={{
-                borderColor: CATEGORY_COLORS[cat],
-                color: CATEGORY_COLORS[cat],
-              }}
-            >
-              {cat}
+      {topics.length > 0 && (
+        <section className="sticky top-0 z-10 border-b border-[var(--yif-cream-dark)] bg-[var(--yif-cream)]/95 backdrop-blur-sm">
+          <div className="mx-auto flex max-w-7xl items-center gap-2 overflow-x-auto px-4 py-3 sm:px-6 lg:px-8">
+            <span className="shrink-0 text-xs font-semibold uppercase tracking-widest text-[var(--muted)]">
+              Topics:
             </span>
-          ))}
-        </div>
-      </section>
+            {topics.map((topic) => (
+              <span
+                key={topic.id}
+                className="shrink-0 rounded-full border px-3 py-1 text-xs font-semibold transition-colors"
+                style={{
+                  borderColor: topic.color ?? "#1a2744",
+                  color: topic.color ?? "#1a2744",
+                }}
+              >
+                {topic.name}
+              </span>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* ── Post grid ── */}
       <section className="bg-[var(--yif-cream)] py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
-            {BLOG_POSTS.map((post, i) => (
-              <PostCard key={post.slug} post={post} index={i} />
-            ))}
-          </div>
-
-          {/* End-of-list note */}
-          <div className="mt-16 border-t border-[var(--yif-cream-dark)] pt-10 text-center">
-            <p className="text-sm text-[var(--muted)]">
-              More articles coming soon.{" "}
+          {posts.length === 0 ? (
+            <p className="text-center text-[var(--muted)]">
+              Articles coming soon.{" "}
               <Link
                 href="/contact"
                 className="font-semibold text-[var(--yif-gold)] underline-offset-4 hover:underline"
@@ -217,7 +236,13 @@ export default function BlogPage() {
               </Link>{" "}
               to contribute a piece.
             </p>
-          </div>
+          ) : (
+            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
+              {posts.map((post, i) => (
+                <PostCard key={post.slug} post={post} index={i} />
+              ))}
+            </div>
+          )}
         </div>
       </section>
     </>

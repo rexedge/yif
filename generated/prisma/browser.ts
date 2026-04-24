@@ -48,6 +48,26 @@ export type Member = Prisma.MemberModel
  */
 export type Event = Prisma.EventModel
 /**
+ * Model EventTicketTier
+ * 
+ */
+export type EventTicketTier = Prisma.EventTicketTierModel
+/**
+ * Model BlogTopic
+ * 
+ */
+export type BlogTopic = Prisma.BlogTopicModel
+/**
+ * Model BlogPost
+ * 
+ */
+export type BlogPost = Prisma.BlogPostModel
+/**
+ * Model Invitation
+ * 
+ */
+export type Invitation = Prisma.InvitationModel
+/**
  * Model Ticket
  * 
  */

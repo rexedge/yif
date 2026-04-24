@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { deleteEvent } from "./actions";
 
 export const metadata: Metadata = { title: "Admin — Events | YIF" };
 
@@ -59,9 +61,12 @@ export default async function AdminEventsPage() {
             {events.length} events on record
           </p>
         </div>
-        <button className="rounded-xl bg-[var(--yif-gold)] text-[var(--yif-navy-dark)] px-5 py-2.5 text-sm font-semibold hover:bg-[var(--yif-gold-light)] transition-colors">
+        <Link
+          href="/admin/events/new"
+          className="rounded-xl bg-[var(--yif-gold)] text-[var(--yif-navy-dark)] px-5 py-2.5 text-sm font-semibold hover:opacity-90 transition-opacity"
+        >
           + Create Event
-        </button>
+        </Link>
       </div>
 
       {/* Stats */}
@@ -160,12 +165,33 @@ export default async function AdminEventsPage() {
                       </td>
                       <td className="px-4 py-4">
                         <div className="flex items-center gap-1.5">
-                          <button className="text-xs text-[var(--yif-gold)]/70 hover:text-[var(--yif-gold)] transition-colors px-2 py-1 rounded hover:bg-[var(--yif-gold)]/8">
+                          <Link
+                            href={`/events/${e.slug}`}
+                            target="_blank"
+                            className="text-xs text-[var(--yif-gold)]/70 hover:text-[var(--yif-gold)] transition-colors px-2 py-1 rounded hover:bg-[var(--yif-gold)]/8"
+                          >
                             View
-                          </button>
-                          <button className="text-xs text-white/30 hover:text-white/60 transition-colors px-2 py-1 rounded hover:bg-white/5">
+                          </Link>
+                          <Link
+                            href={`/admin/events/${e.id}/edit`}
+                            className="text-xs text-white/50 hover:text-white/80 transition-colors px-2 py-1 rounded hover:bg-white/5"
+                          >
                             Edit
-                          </button>
+                          </Link>
+                          <form
+                            action={async () => {
+                              "use server";
+                              await deleteEvent(e.id);
+                            }}
+                            className="inline"
+                          >
+                            <button
+                              type="submit"
+                              className="text-xs text-[var(--yif-terracotta)]/40 hover:text-[var(--yif-terracotta)]/80 transition-colors px-2 py-1 rounded hover:bg-[var(--yif-terracotta)]/8"
+                            >
+                              Delete
+                            </button>
+                          </form>
                         </div>
                       </td>
                     </tr>

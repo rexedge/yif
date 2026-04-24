@@ -1,41 +1,62 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import {
-  getEventBySlug,
-  getAllEventSlugs,
-  CATEGORY_GRADIENTS,
-  formatEventDate,
-  formatCurrency,
-} from "@/lib/events-data";
+import { prisma } from "@/lib/prisma";
 import TicketCheckout from "./TicketCheckout";
 
 type Props = { params: Promise<{ slug: string }> };
 
-export async function generateStaticParams() {
-  return getAllEventSlugs().map((slug) => ({ slug }));
+const CATEGORY_GRADIENTS: Record<string, string> = {
+  Awards: "from-[#c9913d] to-[#1a2744]",
+  Conference: "from-[#1a2744] to-[#2d3e6b]",
+  Workshop: "from-[#2d6a4f] to-[#1a3d30]",
+  Fundraiser: "from-[#c0553a] to-[#7a2a18]",
+  Cultural: "from-[#c9913d] to-[#8b5e1e]",
+};
+
+function formatEventDate(date: Date, endDate?: Date | null): string {
+  const opts: Intl.DateTimeFormatOptions = {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  };
+  const start = date.toLocaleDateString("en-GB", opts);
+  if (!endDate) return start;
+  return `${date.toLocaleDateString("en-GB", { day: "numeric", month: "long" })} – ${endDate.toLocaleDateString("en-GB", opts)}`;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const event = getEventBySlug(slug);
+  const event = await prisma.event.findUnique({ where: { slug } });
   if (!event) return { title: "Event Not Found | YIF" };
   return {
     title: `${event.title} | YIF`,
-    description: event.description.slice(0, 160),
+    description: (event.description ?? "").slice(0, 160),
   };
 }
 
 export default async function EventPage({ params }: Props) {
   const { slug } = await params;
-  const event = getEventBySlug(slug);
+  const event = await prisma.event.findUnique({
+    where: { slug },
+    include: { tiers: true },
+  });
   if (!event) notFound();
+
+  const isPast = event.date < new Date();
+  const gradient =
+    CATEGORY_GRADIENTS[event.category ?? "Conference"] ??
+    CATEGORY_GRADIENTS.Conference;
+  const agenda = Array.isArray(event.agenda) ? (event.agenda as string[]) : [];
+  const speakers = Array.isArray(event.speakers)
+    ? (event.speakers as Array<{ name: string; role: string }>)
+    : [];
 
   return (
     <>
       {/* ── Hero band ── */}
       <div
-        className={`relative overflow-hidden bg-gradient-to-br ${CATEGORY_GRADIENTS[event.category]} py-24 sm:py-32`}
+        className={`relative overflow-hidden bg-gradient-to-br ${gradient} py-24 sm:py-32`}
       >
         <svg
           aria-hidden="true"
@@ -102,7 +123,9 @@ export default async function EventPage({ params }: Props) {
           <h1 className="mt-2 font-display text-4xl font-semibold text-white sm:text-5xl">
             {event.title}
           </h1>
-          <p className="mt-3 text-lg text-white/70 italic">{event.tagline}</p>
+          {event.tagline && (
+            <p className="mt-3 text-lg text-white/70 italic">{event.tagline}</p>
+          )}
 
           <div className="mt-6 flex flex-wrap gap-4 text-sm text-white/80">
             <span className="flex items-center gap-2">
@@ -129,27 +152,37 @@ export default async function EventPage({ params }: Props) {
                   strokeLinecap="round"
                 />
               </svg>
-              <time dateTime={event.date}>
-                {formatEventDate(event.date, event.endDate)} · {event.time}
+              <time dateTime={event.date.toISOString()}>
+                {formatEventDate(event.date, event.endDate)}{" "}
+                {event.time ? `· ${event.time}` : ""}
               </time>
             </span>
-            <span className="flex items-center gap-2">
-              <svg
-                aria-hidden="true"
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="none"
-              >
-                <path
-                  d="M8 1C5.24 1 3 3.24 3 6c0 4.25 5 9 5 9s5-4.75 5-9c0-2.76-2.24-5-5-5z"
-                  stroke="white"
-                  strokeWidth="1.2"
-                />
-                <circle cx="8" cy="6" r="2" stroke="white" strokeWidth="1.2" />
-              </svg>
-              {event.location}, {event.country}
-            </span>
+            {event.location && (
+              <span className="flex items-center gap-2">
+                <svg
+                  aria-hidden="true"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                >
+                  <path
+                    d="M8 1C5.24 1 3 3.24 3 6c0 4.25 5 9 5 9s5-4.75 5-9c0-2.76-2.24-5-5-5z"
+                    stroke="white"
+                    strokeWidth="1.2"
+                  />
+                  <circle
+                    cx="8"
+                    cy="6"
+                    r="2"
+                    stroke="white"
+                    strokeWidth="1.2"
+                  />
+                </svg>
+                {event.location}
+                {event.country ? `, ${event.country}` : ""}
+              </span>
+            )}
           </div>
         </div>
       </div>
@@ -160,23 +193,25 @@ export default async function EventPage({ params }: Props) {
           {/* Left: details */}
           <div className="lg:col-span-2 space-y-10">
             {/* About */}
-            <section>
-              <h2 className="mb-4 font-display text-2xl font-semibold text-[var(--yif-navy)]">
-                About This Event
-              </h2>
-              <p className="leading-relaxed text-[var(--yif-charcoal)]">
-                {event.description}
-              </p>
-            </section>
+            {event.description && (
+              <section>
+                <h2 className="mb-4 font-display text-2xl font-semibold text-[var(--yif-navy)]">
+                  About This Event
+                </h2>
+                <p className="leading-relaxed text-[var(--yif-charcoal)]">
+                  {event.description}
+                </p>
+              </section>
+            )}
 
             {/* Agenda */}
-            {event.agenda.length > 0 && (
+            {agenda.length > 0 && (
               <section>
                 <h2 className="mb-4 font-display text-2xl font-semibold text-[var(--yif-navy)]">
                   Agenda
                 </h2>
                 <ol className="space-y-2">
-                  {event.agenda.map((item, i) => (
+                  {agenda.map((item, i) => (
                     <li
                       key={i}
                       className="flex gap-3 text-sm text-[var(--yif-charcoal)]"
@@ -192,13 +227,13 @@ export default async function EventPage({ params }: Props) {
             )}
 
             {/* Speakers */}
-            {event.speakers.length > 0 && (
+            {speakers.length > 0 && (
               <section>
                 <h2 className="mb-4 font-display text-2xl font-semibold text-[var(--yif-navy)]">
                   Speakers &amp; Organisers
                 </h2>
                 <div className="grid gap-3 sm:grid-cols-2">
-                  {event.speakers.map((s) => (
+                  {speakers.map((s) => (
                     <div
                       key={s.name}
                       className="flex items-center gap-3 rounded-xl border border-[var(--yif-cream-dark)] bg-[var(--yif-cream)] p-4"
@@ -219,21 +254,27 @@ export default async function EventPage({ params }: Props) {
             )}
 
             {/* Venue */}
-            <section>
-              <h2 className="mb-4 font-display text-2xl font-semibold text-[var(--yif-navy)]">
-                Venue
-              </h2>
-              <div className="rounded-xl border border-[var(--yif-cream-dark)] bg-[var(--yif-cream)] p-4 text-sm text-[var(--yif-charcoal)]">
-                <p className="font-semibold">{event.location}</p>
-                <p className="text-[var(--muted)]">{event.address}</p>
-                <p className="text-[var(--muted)]">{event.country}</p>
-              </div>
-            </section>
+            {event.location && (
+              <section>
+                <h2 className="mb-4 font-display text-2xl font-semibold text-[var(--yif-navy)]">
+                  Venue
+                </h2>
+                <div className="rounded-xl border border-[var(--yif-cream-dark)] bg-[var(--yif-cream)] p-4 text-sm text-[var(--yif-charcoal)]">
+                  <p className="font-semibold">{event.location}</p>
+                  {event.address && (
+                    <p className="text-[var(--muted)]">{event.address}</p>
+                  )}
+                  {event.country && (
+                    <p className="text-[var(--muted)]">{event.country}</p>
+                  )}
+                </div>
+              </section>
+            )}
           </div>
 
           {/* Right: ticket checkout */}
           <aside className="lg:sticky lg:top-24 h-fit">
-            {event.past ? (
+            {isPast ? (
               <div className="rounded-2xl border border-[var(--yif-cream-dark)] bg-[var(--yif-cream)] p-6 text-center">
                 <p className="text-[var(--muted)]">
                   This event has already taken place.
@@ -248,17 +289,31 @@ export default async function EventPage({ params }: Props) {
             ) : (
               <>
                 {/* Price summary */}
-                <div className="mb-4 rounded-xl border border-[var(--yif-cream-dark)] bg-[var(--yif-cream)] p-4">
-                  <p className="text-xs font-semibold uppercase tracking-widest text-[var(--muted)]">
-                    Tickets from
-                  </p>
-                  <p className="mt-1 font-display text-3xl font-semibold text-[var(--yif-navy)]">
-                    {formatCurrency(
-                      Math.min(...event.tiers.map((t) => t.price)),
-                    )}
-                  </p>
-                </div>
-                <TicketCheckout event={event} />
+                {event.tiers.length > 0 && (
+                  <div className="mb-4 rounded-xl border border-[var(--yif-cream-dark)] bg-[var(--yif-cream)] p-4">
+                    <p className="text-xs font-semibold uppercase tracking-widest text-[var(--muted)]">
+                      Tickets from
+                    </p>
+                    <p className="mt-1 font-display text-3xl font-semibold text-[var(--yif-navy)]">
+                      {new Intl.NumberFormat("en-NG", {
+                        style: "currency",
+                        currency: "NGN",
+                        minimumFractionDigits: 0,
+                      }).format(
+                        Math.min(...event.tiers.map((t) => Number(t.price))),
+                      )}
+                    </p>
+                  </div>
+                )}
+                {event.tiers.length > 0 ? (
+                  <TicketCheckout eventSlug={event.slug} tiers={event.tiers} />
+                ) : (
+                  <div className="rounded-2xl border border-[var(--yif-cream-dark)] bg-[var(--yif-cream)] p-6 text-center">
+                    <p className="text-[var(--muted)]">
+                      Ticket details coming soon.
+                    </p>
+                  </div>
+                )}
               </>
             )}
           </aside>

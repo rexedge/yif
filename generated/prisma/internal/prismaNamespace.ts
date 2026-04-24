@@ -390,6 +390,10 @@ export const ModelName = {
   Verification: 'Verification',
   Member: 'Member',
   Event: 'Event',
+  EventTicketTier: 'EventTicketTier',
+  BlogTopic: 'BlogTopic',
+  BlogPost: 'BlogPost',
+  Invitation: 'Invitation',
   Ticket: 'Ticket',
   Donation: 'Donation',
   ScholarshipApplication: 'ScholarshipApplication',
@@ -409,7 +413,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification" | "member" | "event" | "ticket" | "donation" | "scholarshipApplication" | "transaction"
+    modelProps: "user" | "session" | "account" | "verification" | "member" | "event" | "eventTicketTier" | "blogTopic" | "blogPost" | "invitation" | "ticket" | "donation" | "scholarshipApplication" | "transaction"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -857,6 +861,302 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    EventTicketTier: {
+      payload: Prisma.$EventTicketTierPayload<ExtArgs>
+      fields: Prisma.EventTicketTierFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.EventTicketTierFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventTicketTierPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.EventTicketTierFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventTicketTierPayload>
+        }
+        findFirst: {
+          args: Prisma.EventTicketTierFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventTicketTierPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.EventTicketTierFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventTicketTierPayload>
+        }
+        findMany: {
+          args: Prisma.EventTicketTierFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventTicketTierPayload>[]
+        }
+        create: {
+          args: Prisma.EventTicketTierCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventTicketTierPayload>
+        }
+        createMany: {
+          args: Prisma.EventTicketTierCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.EventTicketTierCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventTicketTierPayload>[]
+        }
+        delete: {
+          args: Prisma.EventTicketTierDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventTicketTierPayload>
+        }
+        update: {
+          args: Prisma.EventTicketTierUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventTicketTierPayload>
+        }
+        deleteMany: {
+          args: Prisma.EventTicketTierDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.EventTicketTierUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.EventTicketTierUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventTicketTierPayload>[]
+        }
+        upsert: {
+          args: Prisma.EventTicketTierUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EventTicketTierPayload>
+        }
+        aggregate: {
+          args: Prisma.EventTicketTierAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateEventTicketTier>
+        }
+        groupBy: {
+          args: Prisma.EventTicketTierGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EventTicketTierGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.EventTicketTierCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EventTicketTierCountAggregateOutputType> | number
+        }
+      }
+    }
+    BlogTopic: {
+      payload: Prisma.$BlogTopicPayload<ExtArgs>
+      fields: Prisma.BlogTopicFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.BlogTopicFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogTopicPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.BlogTopicFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogTopicPayload>
+        }
+        findFirst: {
+          args: Prisma.BlogTopicFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogTopicPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.BlogTopicFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogTopicPayload>
+        }
+        findMany: {
+          args: Prisma.BlogTopicFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogTopicPayload>[]
+        }
+        create: {
+          args: Prisma.BlogTopicCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogTopicPayload>
+        }
+        createMany: {
+          args: Prisma.BlogTopicCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.BlogTopicCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogTopicPayload>[]
+        }
+        delete: {
+          args: Prisma.BlogTopicDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogTopicPayload>
+        }
+        update: {
+          args: Prisma.BlogTopicUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogTopicPayload>
+        }
+        deleteMany: {
+          args: Prisma.BlogTopicDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.BlogTopicUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.BlogTopicUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogTopicPayload>[]
+        }
+        upsert: {
+          args: Prisma.BlogTopicUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogTopicPayload>
+        }
+        aggregate: {
+          args: Prisma.BlogTopicAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateBlogTopic>
+        }
+        groupBy: {
+          args: Prisma.BlogTopicGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BlogTopicGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.BlogTopicCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BlogTopicCountAggregateOutputType> | number
+        }
+      }
+    }
+    BlogPost: {
+      payload: Prisma.$BlogPostPayload<ExtArgs>
+      fields: Prisma.BlogPostFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.BlogPostFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogPostPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.BlogPostFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogPostPayload>
+        }
+        findFirst: {
+          args: Prisma.BlogPostFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogPostPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.BlogPostFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogPostPayload>
+        }
+        findMany: {
+          args: Prisma.BlogPostFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogPostPayload>[]
+        }
+        create: {
+          args: Prisma.BlogPostCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogPostPayload>
+        }
+        createMany: {
+          args: Prisma.BlogPostCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.BlogPostCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogPostPayload>[]
+        }
+        delete: {
+          args: Prisma.BlogPostDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogPostPayload>
+        }
+        update: {
+          args: Prisma.BlogPostUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogPostPayload>
+        }
+        deleteMany: {
+          args: Prisma.BlogPostDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.BlogPostUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.BlogPostUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogPostPayload>[]
+        }
+        upsert: {
+          args: Prisma.BlogPostUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BlogPostPayload>
+        }
+        aggregate: {
+          args: Prisma.BlogPostAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateBlogPost>
+        }
+        groupBy: {
+          args: Prisma.BlogPostGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BlogPostGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.BlogPostCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BlogPostCountAggregateOutputType> | number
+        }
+      }
+    }
+    Invitation: {
+      payload: Prisma.$InvitationPayload<ExtArgs>
+      fields: Prisma.InvitationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.InvitationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvitationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.InvitationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvitationPayload>
+        }
+        findFirst: {
+          args: Prisma.InvitationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvitationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.InvitationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvitationPayload>
+        }
+        findMany: {
+          args: Prisma.InvitationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvitationPayload>[]
+        }
+        create: {
+          args: Prisma.InvitationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvitationPayload>
+        }
+        createMany: {
+          args: Prisma.InvitationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.InvitationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvitationPayload>[]
+        }
+        delete: {
+          args: Prisma.InvitationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvitationPayload>
+        }
+        update: {
+          args: Prisma.InvitationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvitationPayload>
+        }
+        deleteMany: {
+          args: Prisma.InvitationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.InvitationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.InvitationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvitationPayload>[]
+        }
+        upsert: {
+          args: Prisma.InvitationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvitationPayload>
+        }
+        aggregate: {
+          args: Prisma.InvitationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateInvitation>
+        }
+        groupBy: {
+          args: Prisma.InvitationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.InvitationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.InvitationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.InvitationCountAggregateOutputType> | number
+        }
+      }
+    }
     Ticket: {
       payload: Prisma.$TicketPayload<ExtArgs>
       fields: Prisma.TicketFieldRefs
@@ -1286,16 +1586,84 @@ export const EventScalarFieldEnum = {
   id: 'id',
   title: 'title',
   slug: 'slug',
+  tagline: 'tagline',
+  category: 'category',
   description: 'description',
   date: 'date',
+  endDate: 'endDate',
+  time: 'time',
   location: 'location',
+  address: 'address',
+  country: 'country',
   imageUrl: 'imageUrl',
+  agenda: 'agenda',
+  speakers: 'speakers',
   isPublished: 'isPublished',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type EventScalarFieldEnum = (typeof EventScalarFieldEnum)[keyof typeof EventScalarFieldEnum]
+
+
+export const EventTicketTierScalarFieldEnum = {
+  id: 'id',
+  eventId: 'eventId',
+  name: 'name',
+  price: 'price',
+  description: 'description',
+  capacity: 'capacity',
+  sold: 'sold',
+  createdAt: 'createdAt'
+} as const
+
+export type EventTicketTierScalarFieldEnum = (typeof EventTicketTierScalarFieldEnum)[keyof typeof EventTicketTierScalarFieldEnum]
+
+
+export const BlogTopicScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  color: 'color',
+  createdAt: 'createdAt'
+} as const
+
+export type BlogTopicScalarFieldEnum = (typeof BlogTopicScalarFieldEnum)[keyof typeof BlogTopicScalarFieldEnum]
+
+
+export const BlogPostScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  slug: 'slug',
+  excerpt: 'excerpt',
+  content: 'content',
+  authorName: 'authorName',
+  authorRole: 'authorRole',
+  authorImage: 'authorImage',
+  imageUrl: 'imageUrl',
+  readTime: 'readTime',
+  isPublished: 'isPublished',
+  publishedAt: 'publishedAt',
+  topicId: 'topicId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BlogPostScalarFieldEnum = (typeof BlogPostScalarFieldEnum)[keyof typeof BlogPostScalarFieldEnum]
+
+
+export const InvitationScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  token: 'token',
+  invitedById: 'invitedById',
+  referralCode: 'referralCode',
+  usedAt: 'usedAt',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt'
+} as const
+
+export type InvitationScalarFieldEnum = (typeof InvitationScalarFieldEnum)[keyof typeof InvitationScalarFieldEnum]
 
 
 export const TicketScalarFieldEnum = {
@@ -1384,19 +1752,19 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
-export const JsonNullValueInput = {
-  JsonNull: JsonNull
-} as const
-
-export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
-
-
 export const NullableJsonNullValueInput = {
   DbNull: DbNull,
   JsonNull: JsonNull
 } as const
 
 export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {
@@ -1494,6 +1862,34 @@ export type ListEnumMembershipStatusFieldRefInput<$PrismaModel> = FieldRefInputT
 
 
 /**
+ * Reference to a field of type 'Json'
+ */
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+/**
+ * Reference to a field of type 'QueryMode'
+ */
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+/**
+ * Reference to a field of type 'Decimal'
+ */
+export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
+    
+
+
+/**
+ * Reference to a field of type 'Decimal[]'
+ */
+export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
+    
+
+
+/**
  * Reference to a field of type 'Int'
  */
 export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -1522,20 +1918,6 @@ export type ListEnumTicketStatusFieldRefInput<$PrismaModel> = FieldRefInputType<
 
 
 /**
- * Reference to a field of type 'Decimal'
- */
-export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
-    
-
-
-/**
- * Reference to a field of type 'Decimal[]'
- */
-export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
-    
-
-
-/**
  * Reference to a field of type 'DonationStatus'
  */
 export type EnumDonationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DonationStatus'>
@@ -1560,20 +1942,6 @@ export type EnumApplicationStatusFieldRefInput<$PrismaModel> = FieldRefInputType
  * Reference to a field of type 'ApplicationStatus[]'
  */
 export type ListEnumApplicationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ApplicationStatus[]'>
-    
-
-
-/**
- * Reference to a field of type 'Json'
- */
-export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
-    
-
-
-/**
- * Reference to a field of type 'QueryMode'
- */
-export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 
@@ -1734,6 +2102,10 @@ export type GlobalOmitConfig = {
   verification?: Prisma.VerificationOmit
   member?: Prisma.MemberOmit
   event?: Prisma.EventOmit
+  eventTicketTier?: Prisma.EventTicketTierOmit
+  blogTopic?: Prisma.BlogTopicOmit
+  blogPost?: Prisma.BlogPostOmit
+  invitation?: Prisma.InvitationOmit
   ticket?: Prisma.TicketOmit
   donation?: Prisma.DonationOmit
   scholarshipApplication?: Prisma.ScholarshipApplicationOmit

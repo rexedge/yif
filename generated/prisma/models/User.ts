@@ -333,6 +333,7 @@ export type UserWhereInput = {
   donations?: Prisma.DonationListRelationFilter
   scholarshipApplications?: Prisma.ScholarshipApplicationListRelationFilter
   transactions?: Prisma.TransactionListRelationFilter
+  invitations?: Prisma.InvitationListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -366,6 +367,7 @@ export type UserOrderByWithRelationInput = {
   donations?: Prisma.DonationOrderByRelationAggregateInput
   scholarshipApplications?: Prisma.ScholarshipApplicationOrderByRelationAggregateInput
   transactions?: Prisma.TransactionOrderByRelationAggregateInput
+  invitations?: Prisma.InvitationOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -402,6 +404,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   donations?: Prisma.DonationListRelationFilter
   scholarshipApplications?: Prisma.ScholarshipApplicationListRelationFilter
   transactions?: Prisma.TransactionListRelationFilter
+  invitations?: Prisma.InvitationListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -493,6 +496,7 @@ export type UserCreateInput = {
   donations?: Prisma.DonationCreateNestedManyWithoutUserInput
   scholarshipApplications?: Prisma.ScholarshipApplicationCreateNestedManyWithoutUserInput
   transactions?: Prisma.TransactionCreateNestedManyWithoutUserInput
+  invitations?: Prisma.InvitationCreateNestedManyWithoutInvitedByInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -526,6 +530,7 @@ export type UserUncheckedCreateInput = {
   donations?: Prisma.DonationUncheckedCreateNestedManyWithoutUserInput
   scholarshipApplications?: Prisma.ScholarshipApplicationUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
+  invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutInvitedByInput
 }
 
 export type UserUpdateInput = {
@@ -559,6 +564,7 @@ export type UserUpdateInput = {
   donations?: Prisma.DonationUpdateManyWithoutUserNestedInput
   scholarshipApplications?: Prisma.ScholarshipApplicationUpdateManyWithoutUserNestedInput
   transactions?: Prisma.TransactionUpdateManyWithoutUserNestedInput
+  invitations?: Prisma.InvitationUpdateManyWithoutInvitedByNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -592,6 +598,7 @@ export type UserUncheckedUpdateInput = {
   donations?: Prisma.DonationUncheckedUpdateManyWithoutUserNestedInput
   scholarshipApplications?: Prisma.ScholarshipApplicationUncheckedUpdateManyWithoutUserNestedInput
   transactions?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
+  invitations?: Prisma.InvitationUncheckedUpdateManyWithoutInvitedByNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -826,6 +833,22 @@ export type UserUpdateOneRequiredWithoutMemberNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutMemberInput, Prisma.UserUpdateWithoutMemberInput>, Prisma.UserUncheckedUpdateWithoutMemberInput>
 }
 
+export type UserCreateNestedOneWithoutInvitationsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutInvitationsInput, Prisma.UserUncheckedCreateWithoutInvitationsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutInvitationsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutInvitationsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutInvitationsInput, Prisma.UserUncheckedCreateWithoutInvitationsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutInvitationsInput
+  upsert?: Prisma.UserUpsertWithoutInvitationsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutInvitationsInput, Prisma.UserUpdateWithoutInvitationsInput>, Prisma.UserUncheckedUpdateWithoutInvitationsInput>
+}
+
 export type UserCreateNestedOneWithoutTicketsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutTicketsInput, Prisma.UserUncheckedCreateWithoutTicketsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutTicketsInput
@@ -914,6 +937,7 @@ export type UserCreateWithoutSessionsInput = {
   donations?: Prisma.DonationCreateNestedManyWithoutUserInput
   scholarshipApplications?: Prisma.ScholarshipApplicationCreateNestedManyWithoutUserInput
   transactions?: Prisma.TransactionCreateNestedManyWithoutUserInput
+  invitations?: Prisma.InvitationCreateNestedManyWithoutInvitedByInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -946,6 +970,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   donations?: Prisma.DonationUncheckedCreateNestedManyWithoutUserInput
   scholarshipApplications?: Prisma.ScholarshipApplicationUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
+  invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutInvitedByInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -994,6 +1019,7 @@ export type UserUpdateWithoutSessionsInput = {
   donations?: Prisma.DonationUpdateManyWithoutUserNestedInput
   scholarshipApplications?: Prisma.ScholarshipApplicationUpdateManyWithoutUserNestedInput
   transactions?: Prisma.TransactionUpdateManyWithoutUserNestedInput
+  invitations?: Prisma.InvitationUpdateManyWithoutInvitedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -1026,6 +1052,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   donations?: Prisma.DonationUncheckedUpdateManyWithoutUserNestedInput
   scholarshipApplications?: Prisma.ScholarshipApplicationUncheckedUpdateManyWithoutUserNestedInput
   transactions?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
+  invitations?: Prisma.InvitationUncheckedUpdateManyWithoutInvitedByNestedInput
 }
 
 export type UserCreateWithoutAccountsInput = {
@@ -1058,6 +1085,7 @@ export type UserCreateWithoutAccountsInput = {
   donations?: Prisma.DonationCreateNestedManyWithoutUserInput
   scholarshipApplications?: Prisma.ScholarshipApplicationCreateNestedManyWithoutUserInput
   transactions?: Prisma.TransactionCreateNestedManyWithoutUserInput
+  invitations?: Prisma.InvitationCreateNestedManyWithoutInvitedByInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -1090,6 +1118,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   donations?: Prisma.DonationUncheckedCreateNestedManyWithoutUserInput
   scholarshipApplications?: Prisma.ScholarshipApplicationUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
+  invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutInvitedByInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -1138,6 +1167,7 @@ export type UserUpdateWithoutAccountsInput = {
   donations?: Prisma.DonationUpdateManyWithoutUserNestedInput
   scholarshipApplications?: Prisma.ScholarshipApplicationUpdateManyWithoutUserNestedInput
   transactions?: Prisma.TransactionUpdateManyWithoutUserNestedInput
+  invitations?: Prisma.InvitationUpdateManyWithoutInvitedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -1170,6 +1200,7 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   donations?: Prisma.DonationUncheckedUpdateManyWithoutUserNestedInput
   scholarshipApplications?: Prisma.ScholarshipApplicationUncheckedUpdateManyWithoutUserNestedInput
   transactions?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
+  invitations?: Prisma.InvitationUncheckedUpdateManyWithoutInvitedByNestedInput
 }
 
 export type UserCreateWithoutMemberInput = {
@@ -1202,6 +1233,7 @@ export type UserCreateWithoutMemberInput = {
   donations?: Prisma.DonationCreateNestedManyWithoutUserInput
   scholarshipApplications?: Prisma.ScholarshipApplicationCreateNestedManyWithoutUserInput
   transactions?: Prisma.TransactionCreateNestedManyWithoutUserInput
+  invitations?: Prisma.InvitationCreateNestedManyWithoutInvitedByInput
 }
 
 export type UserUncheckedCreateWithoutMemberInput = {
@@ -1234,6 +1266,7 @@ export type UserUncheckedCreateWithoutMemberInput = {
   donations?: Prisma.DonationUncheckedCreateNestedManyWithoutUserInput
   scholarshipApplications?: Prisma.ScholarshipApplicationUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
+  invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutInvitedByInput
 }
 
 export type UserCreateOrConnectWithoutMemberInput = {
@@ -1282,6 +1315,7 @@ export type UserUpdateWithoutMemberInput = {
   donations?: Prisma.DonationUpdateManyWithoutUserNestedInput
   scholarshipApplications?: Prisma.ScholarshipApplicationUpdateManyWithoutUserNestedInput
   transactions?: Prisma.TransactionUpdateManyWithoutUserNestedInput
+  invitations?: Prisma.InvitationUpdateManyWithoutInvitedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMemberInput = {
@@ -1310,6 +1344,155 @@ export type UserUncheckedUpdateWithoutMemberInput = {
   notifScholarshipNews?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
+  donations?: Prisma.DonationUncheckedUpdateManyWithoutUserNestedInput
+  scholarshipApplications?: Prisma.ScholarshipApplicationUncheckedUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
+  invitations?: Prisma.InvitationUncheckedUpdateManyWithoutInvitedByNestedInput
+}
+
+export type UserCreateWithoutInvitationsInput = {
+  id: string
+  name: string
+  email: string
+  emailVerified: boolean
+  image?: string | null
+  createdAt: Date | string
+  updatedAt: Date | string
+  role?: string
+  banned?: boolean | null
+  banReason?: string | null
+  banExpires?: Date | string | null
+  phone?: string | null
+  gender?: string | null
+  continent?: string | null
+  country?: string | null
+  stateProvince?: string | null
+  cityDistrict?: string | null
+  bio?: string | null
+  notifEventInvites?: boolean
+  notifNewsletter?: boolean
+  notifDonationReceipts?: boolean
+  notifMemberUpdates?: boolean
+  notifScholarshipNews?: boolean
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  member?: Prisma.MemberCreateNestedOneWithoutUserInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
+  donations?: Prisma.DonationCreateNestedManyWithoutUserInput
+  scholarshipApplications?: Prisma.ScholarshipApplicationCreateNestedManyWithoutUserInput
+  transactions?: Prisma.TransactionCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutInvitationsInput = {
+  id: string
+  name: string
+  email: string
+  emailVerified: boolean
+  image?: string | null
+  createdAt: Date | string
+  updatedAt: Date | string
+  role?: string
+  banned?: boolean | null
+  banReason?: string | null
+  banExpires?: Date | string | null
+  phone?: string | null
+  gender?: string | null
+  continent?: string | null
+  country?: string | null
+  stateProvince?: string | null
+  cityDistrict?: string | null
+  bio?: string | null
+  notifEventInvites?: boolean
+  notifNewsletter?: boolean
+  notifDonationReceipts?: boolean
+  notifMemberUpdates?: boolean
+  notifScholarshipNews?: boolean
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  member?: Prisma.MemberUncheckedCreateNestedOneWithoutUserInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
+  donations?: Prisma.DonationUncheckedCreateNestedManyWithoutUserInput
+  scholarshipApplications?: Prisma.ScholarshipApplicationUncheckedCreateNestedManyWithoutUserInput
+  transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutInvitationsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutInvitationsInput, Prisma.UserUncheckedCreateWithoutInvitationsInput>
+}
+
+export type UserUpsertWithoutInvitationsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutInvitationsInput, Prisma.UserUncheckedUpdateWithoutInvitationsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutInvitationsInput, Prisma.UserUncheckedCreateWithoutInvitationsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutInvitationsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutInvitationsInput, Prisma.UserUncheckedUpdateWithoutInvitationsInput>
+}
+
+export type UserUpdateWithoutInvitationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  continent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stateProvince?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cityDistrict?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notifEventInvites?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notifNewsletter?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notifDonationReceipts?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notifMemberUpdates?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notifScholarshipNews?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  member?: Prisma.MemberUpdateOneWithoutUserNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
+  donations?: Prisma.DonationUpdateManyWithoutUserNestedInput
+  scholarshipApplications?: Prisma.ScholarshipApplicationUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.TransactionUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutInvitationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  continent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stateProvince?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cityDistrict?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notifEventInvites?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notifNewsletter?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notifDonationReceipts?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notifMemberUpdates?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notifScholarshipNews?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  member?: Prisma.MemberUncheckedUpdateOneWithoutUserNestedInput
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
   donations?: Prisma.DonationUncheckedUpdateManyWithoutUserNestedInput
   scholarshipApplications?: Prisma.ScholarshipApplicationUncheckedUpdateManyWithoutUserNestedInput
@@ -1346,6 +1529,7 @@ export type UserCreateWithoutTicketsInput = {
   donations?: Prisma.DonationCreateNestedManyWithoutUserInput
   scholarshipApplications?: Prisma.ScholarshipApplicationCreateNestedManyWithoutUserInput
   transactions?: Prisma.TransactionCreateNestedManyWithoutUserInput
+  invitations?: Prisma.InvitationCreateNestedManyWithoutInvitedByInput
 }
 
 export type UserUncheckedCreateWithoutTicketsInput = {
@@ -1378,6 +1562,7 @@ export type UserUncheckedCreateWithoutTicketsInput = {
   donations?: Prisma.DonationUncheckedCreateNestedManyWithoutUserInput
   scholarshipApplications?: Prisma.ScholarshipApplicationUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
+  invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutInvitedByInput
 }
 
 export type UserCreateOrConnectWithoutTicketsInput = {
@@ -1426,6 +1611,7 @@ export type UserUpdateWithoutTicketsInput = {
   donations?: Prisma.DonationUpdateManyWithoutUserNestedInput
   scholarshipApplications?: Prisma.ScholarshipApplicationUpdateManyWithoutUserNestedInput
   transactions?: Prisma.TransactionUpdateManyWithoutUserNestedInput
+  invitations?: Prisma.InvitationUpdateManyWithoutInvitedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTicketsInput = {
@@ -1458,6 +1644,7 @@ export type UserUncheckedUpdateWithoutTicketsInput = {
   donations?: Prisma.DonationUncheckedUpdateManyWithoutUserNestedInput
   scholarshipApplications?: Prisma.ScholarshipApplicationUncheckedUpdateManyWithoutUserNestedInput
   transactions?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
+  invitations?: Prisma.InvitationUncheckedUpdateManyWithoutInvitedByNestedInput
 }
 
 export type UserCreateWithoutDonationsInput = {
@@ -1490,6 +1677,7 @@ export type UserCreateWithoutDonationsInput = {
   tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
   scholarshipApplications?: Prisma.ScholarshipApplicationCreateNestedManyWithoutUserInput
   transactions?: Prisma.TransactionCreateNestedManyWithoutUserInput
+  invitations?: Prisma.InvitationCreateNestedManyWithoutInvitedByInput
 }
 
 export type UserUncheckedCreateWithoutDonationsInput = {
@@ -1522,6 +1710,7 @@ export type UserUncheckedCreateWithoutDonationsInput = {
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
   scholarshipApplications?: Prisma.ScholarshipApplicationUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
+  invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutInvitedByInput
 }
 
 export type UserCreateOrConnectWithoutDonationsInput = {
@@ -1570,6 +1759,7 @@ export type UserUpdateWithoutDonationsInput = {
   tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
   scholarshipApplications?: Prisma.ScholarshipApplicationUpdateManyWithoutUserNestedInput
   transactions?: Prisma.TransactionUpdateManyWithoutUserNestedInput
+  invitations?: Prisma.InvitationUpdateManyWithoutInvitedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDonationsInput = {
@@ -1602,6 +1792,7 @@ export type UserUncheckedUpdateWithoutDonationsInput = {
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
   scholarshipApplications?: Prisma.ScholarshipApplicationUncheckedUpdateManyWithoutUserNestedInput
   transactions?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
+  invitations?: Prisma.InvitationUncheckedUpdateManyWithoutInvitedByNestedInput
 }
 
 export type UserCreateWithoutScholarshipApplicationsInput = {
@@ -1634,6 +1825,7 @@ export type UserCreateWithoutScholarshipApplicationsInput = {
   tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
   donations?: Prisma.DonationCreateNestedManyWithoutUserInput
   transactions?: Prisma.TransactionCreateNestedManyWithoutUserInput
+  invitations?: Prisma.InvitationCreateNestedManyWithoutInvitedByInput
 }
 
 export type UserUncheckedCreateWithoutScholarshipApplicationsInput = {
@@ -1666,6 +1858,7 @@ export type UserUncheckedCreateWithoutScholarshipApplicationsInput = {
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
   donations?: Prisma.DonationUncheckedCreateNestedManyWithoutUserInput
   transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
+  invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutInvitedByInput
 }
 
 export type UserCreateOrConnectWithoutScholarshipApplicationsInput = {
@@ -1714,6 +1907,7 @@ export type UserUpdateWithoutScholarshipApplicationsInput = {
   tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
   donations?: Prisma.DonationUpdateManyWithoutUserNestedInput
   transactions?: Prisma.TransactionUpdateManyWithoutUserNestedInput
+  invitations?: Prisma.InvitationUpdateManyWithoutInvitedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutScholarshipApplicationsInput = {
@@ -1746,6 +1940,7 @@ export type UserUncheckedUpdateWithoutScholarshipApplicationsInput = {
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
   donations?: Prisma.DonationUncheckedUpdateManyWithoutUserNestedInput
   transactions?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
+  invitations?: Prisma.InvitationUncheckedUpdateManyWithoutInvitedByNestedInput
 }
 
 export type UserCreateWithoutTransactionsInput = {
@@ -1778,6 +1973,7 @@ export type UserCreateWithoutTransactionsInput = {
   tickets?: Prisma.TicketCreateNestedManyWithoutUserInput
   donations?: Prisma.DonationCreateNestedManyWithoutUserInput
   scholarshipApplications?: Prisma.ScholarshipApplicationCreateNestedManyWithoutUserInput
+  invitations?: Prisma.InvitationCreateNestedManyWithoutInvitedByInput
 }
 
 export type UserUncheckedCreateWithoutTransactionsInput = {
@@ -1810,6 +2006,7 @@ export type UserUncheckedCreateWithoutTransactionsInput = {
   tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutUserInput
   donations?: Prisma.DonationUncheckedCreateNestedManyWithoutUserInput
   scholarshipApplications?: Prisma.ScholarshipApplicationUncheckedCreateNestedManyWithoutUserInput
+  invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutInvitedByInput
 }
 
 export type UserCreateOrConnectWithoutTransactionsInput = {
@@ -1858,6 +2055,7 @@ export type UserUpdateWithoutTransactionsInput = {
   tickets?: Prisma.TicketUpdateManyWithoutUserNestedInput
   donations?: Prisma.DonationUpdateManyWithoutUserNestedInput
   scholarshipApplications?: Prisma.ScholarshipApplicationUpdateManyWithoutUserNestedInput
+  invitations?: Prisma.InvitationUpdateManyWithoutInvitedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTransactionsInput = {
@@ -1890,6 +2088,7 @@ export type UserUncheckedUpdateWithoutTransactionsInput = {
   tickets?: Prisma.TicketUncheckedUpdateManyWithoutUserNestedInput
   donations?: Prisma.DonationUncheckedUpdateManyWithoutUserNestedInput
   scholarshipApplications?: Prisma.ScholarshipApplicationUncheckedUpdateManyWithoutUserNestedInput
+  invitations?: Prisma.InvitationUncheckedUpdateManyWithoutInvitedByNestedInput
 }
 
 
@@ -1904,6 +2103,7 @@ export type UserCountOutputType = {
   donations: number
   scholarshipApplications: number
   transactions: number
+  invitations: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1913,6 +2113,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   donations?: boolean | UserCountOutputTypeCountDonationsArgs
   scholarshipApplications?: boolean | UserCountOutputTypeCountScholarshipApplicationsArgs
   transactions?: boolean | UserCountOutputTypeCountTransactionsArgs
+  invitations?: boolean | UserCountOutputTypeCountInvitationsArgs
 }
 
 /**
@@ -1967,6 +2168,13 @@ export type UserCountOutputTypeCountTransactionsArgs<ExtArgs extends runtime.Typ
   where?: Prisma.TransactionWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountInvitationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.InvitationWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1999,6 +2207,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   donations?: boolean | Prisma.User$donationsArgs<ExtArgs>
   scholarshipApplications?: boolean | Prisma.User$scholarshipApplicationsArgs<ExtArgs>
   transactions?: boolean | Prisma.User$transactionsArgs<ExtArgs>
+  invitations?: boolean | Prisma.User$invitationsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -2089,6 +2298,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   donations?: boolean | Prisma.User$donationsArgs<ExtArgs>
   scholarshipApplications?: boolean | Prisma.User$scholarshipApplicationsArgs<ExtArgs>
   transactions?: boolean | Prisma.User$transactionsArgs<ExtArgs>
+  invitations?: boolean | Prisma.User$invitationsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -2104,6 +2314,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     donations: Prisma.$DonationPayload<ExtArgs>[]
     scholarshipApplications: Prisma.$ScholarshipApplicationPayload<ExtArgs>[]
     transactions: Prisma.$TransactionPayload<ExtArgs>[]
+    invitations: Prisma.$InvitationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2530,6 +2741,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   donations<T extends Prisma.User$donationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$donationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DonationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   scholarshipApplications<T extends Prisma.User$scholarshipApplicationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$scholarshipApplicationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ScholarshipApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   transactions<T extends Prisma.User$transactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$transactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  invitations<T extends Prisma.User$invitationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$invitationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InvitationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3135,6 +3347,30 @@ export type User$transactionsArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.TransactionScalarFieldEnum | Prisma.TransactionScalarFieldEnum[]
+}
+
+/**
+ * User.invitations
+ */
+export type User$invitationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Invitation
+   */
+  select?: Prisma.InvitationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Invitation
+   */
+  omit?: Prisma.InvitationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InvitationInclude<ExtArgs> | null
+  where?: Prisma.InvitationWhereInput
+  orderBy?: Prisma.InvitationOrderByWithRelationInput | Prisma.InvitationOrderByWithRelationInput[]
+  cursor?: Prisma.InvitationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.InvitationScalarFieldEnum | Prisma.InvitationScalarFieldEnum[]
 }
 
 /**

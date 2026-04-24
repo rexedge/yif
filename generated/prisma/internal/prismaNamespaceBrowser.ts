@@ -57,6 +57,10 @@ export const ModelName = {
   Verification: 'Verification',
   Member: 'Member',
   Event: 'Event',
+  EventTicketTier: 'EventTicketTier',
+  BlogTopic: 'BlogTopic',
+  BlogPost: 'BlogPost',
+  Invitation: 'Invitation',
   Ticket: 'Ticket',
   Donation: 'Donation',
   ScholarshipApplication: 'ScholarshipApplication',
@@ -173,16 +177,84 @@ export const EventScalarFieldEnum = {
   id: 'id',
   title: 'title',
   slug: 'slug',
+  tagline: 'tagline',
+  category: 'category',
   description: 'description',
   date: 'date',
+  endDate: 'endDate',
+  time: 'time',
   location: 'location',
+  address: 'address',
+  country: 'country',
   imageUrl: 'imageUrl',
+  agenda: 'agenda',
+  speakers: 'speakers',
   isPublished: 'isPublished',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type EventScalarFieldEnum = (typeof EventScalarFieldEnum)[keyof typeof EventScalarFieldEnum]
+
+
+export const EventTicketTierScalarFieldEnum = {
+  id: 'id',
+  eventId: 'eventId',
+  name: 'name',
+  price: 'price',
+  description: 'description',
+  capacity: 'capacity',
+  sold: 'sold',
+  createdAt: 'createdAt'
+} as const
+
+export type EventTicketTierScalarFieldEnum = (typeof EventTicketTierScalarFieldEnum)[keyof typeof EventTicketTierScalarFieldEnum]
+
+
+export const BlogTopicScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  color: 'color',
+  createdAt: 'createdAt'
+} as const
+
+export type BlogTopicScalarFieldEnum = (typeof BlogTopicScalarFieldEnum)[keyof typeof BlogTopicScalarFieldEnum]
+
+
+export const BlogPostScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  slug: 'slug',
+  excerpt: 'excerpt',
+  content: 'content',
+  authorName: 'authorName',
+  authorRole: 'authorRole',
+  authorImage: 'authorImage',
+  imageUrl: 'imageUrl',
+  readTime: 'readTime',
+  isPublished: 'isPublished',
+  publishedAt: 'publishedAt',
+  topicId: 'topicId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BlogPostScalarFieldEnum = (typeof BlogPostScalarFieldEnum)[keyof typeof BlogPostScalarFieldEnum]
+
+
+export const InvitationScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  token: 'token',
+  invitedById: 'invitedById',
+  referralCode: 'referralCode',
+  usedAt: 'usedAt',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt'
+} as const
+
+export type InvitationScalarFieldEnum = (typeof InvitationScalarFieldEnum)[keyof typeof InvitationScalarFieldEnum]
 
 
 export const TicketScalarFieldEnum = {
@@ -271,19 +343,19 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
-export const JsonNullValueInput = {
-  JsonNull: JsonNull
-} as const
-
-export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
-
-
 export const NullableJsonNullValueInput = {
   DbNull: DbNull,
   JsonNull: JsonNull
 } as const
 
 export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {

@@ -1,26 +1,25 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import {
-  BLOG_POSTS,
-  CATEGORY_COLORS,
-  CATEGORY_GRADIENTS,
-  formatDate,
-  getAllSlugs,
-  getPostBySlug,
-} from "@/lib/blog-data";
+import { prisma } from "@/lib/prisma";
+import RichTextRenderer from "@/components/editor/RichTextRenderer";
 
 type Props = {
   params: Promise<{ slug: string }>;
 };
 
-export function generateStaticParams() {
-  return getAllSlugs().map((slug) => ({ slug }));
+function formatDate(date: Date | null): string {
+  if (!date) return "";
+  return date.toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
+  const post = await prisma.blogPost.findUnique({ where: { slug } });
   if (!post) return { title: "Post Not Found" };
 
   return {
@@ -30,22 +29,29 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: post.title,
       description: post.excerpt,
       type: "article",
-      publishedTime: post.date,
-      authors: [post.author],
+      publishedTime: post.publishedAt?.toISOString(),
+      authors: [post.authorName],
     },
   };
 }
 
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
+  const post = await prisma.blogPost.findUnique({
+    where: { slug },
+    include: { topic: true },
+  });
 
-  if (!post) notFound();
+  if (!post || !post.isPublished) notFound();
 
-  const categoryColor = CATEGORY_COLORS[post.category];
-  const otherPosts = BLOG_POSTS.filter((p) => p.slug !== post.slug).slice(0, 3);
+  const topicColor = post.topic?.color ?? "#1a2744";
+  const otherPosts = await prisma.blogPost.findMany({
+    where: { isPublished: true, slug: { not: slug } },
+    include: { topic: true },
+    take: 3,
+    orderBy: { publishedAt: "desc" },
+  });
 
-  // Build social share URLs (title is URL-encoded server-side)
   const encodedTitle = encodeURIComponent(post.title);
   const postPath = `/blog/${post.slug}`;
 
@@ -53,7 +59,10 @@ export default async function BlogPostPage({ params }: Props) {
     <>
       {/* ── Hero banner ── */}
       <div
-        className={`relative overflow-hidden bg-gradient-to-br ${CATEGORY_GRADIENTS[post.category]} py-28 sm:py-36`}
+        className="relative overflow-hidden py-28 sm:py-36"
+        style={{
+          background: `linear-gradient(135deg, ${topicColor} 0%, #1a2744 100%)`,
+        }}
       >
         {/* SVG texture overlay */}
         <svg
@@ -120,9 +129,11 @@ export default async function BlogPostPage({ params }: Props) {
           </nav>
 
           {/* Category badge */}
-          <span className="mb-5 inline-flex items-center rounded-full bg-white/20 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-white backdrop-blur-sm">
-            {post.category}
-          </span>
+          {post.topic && (
+            <span className="mb-5 inline-flex items-center rounded-full bg-white/20 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-white backdrop-blur-sm">
+              {post.topic.name}
+            </span>
+          )}
 
           {/* Title */}
           <h1 className="font-display text-4xl font-semibold leading-tight text-white sm:text-5xl lg:text-6xl">
@@ -134,16 +145,18 @@ export default async function BlogPostPage({ params }: Props) {
             <span>
               By{" "}
               <strong className="font-semibold text-white">
-                {post.author}
+                {post.authorName}
               </strong>{" "}
               · {post.authorRole}
             </span>
             <span aria-hidden="true" className="hidden sm:inline">
               |
             </span>
-            <time dateTime={post.date}>{formatDate(post.date)}</time>
+            <time dateTime={post.publishedAt?.toISOString() ?? ""}>
+              {formatDate(post.publishedAt)}
+            </time>
             <span aria-hidden="true">·</span>
-            <span>{post.readTime} min read</span>
+            <span>{post.readTime ?? 5} min read</span>
           </div>
         </div>
       </div>
@@ -154,22 +167,16 @@ export default async function BlogPostPage({ params }: Props) {
           {/* Excerpt lead */}
           <p
             className="mb-10 border-l-4 pl-5 font-display text-xl leading-relaxed text-[var(--yif-navy)] italic sm:text-2xl"
-            style={{ borderColor: categoryColor }}
+            style={{ borderColor: topicColor }}
           >
             {post.excerpt}
           </p>
 
-          {/* Body paragraphs */}
-          <div className="space-y-6 text-[var(--yif-charcoal)]">
-            {post.body.map((paragraph, i) => (
-              <p
-                key={i}
-                className="text-base leading-8 sm:text-lg sm:leading-9"
-              >
-                {paragraph}
-              </p>
-            ))}
-          </div>
+          {/* Body — TipTap rich text */}
+          <RichTextRenderer
+            content={post.content}
+            className="text-[var(--yif-charcoal)]"
+          />
 
           {/* Divider */}
           <hr className="my-12 border-[var(--yif-cream-dark)]" />
@@ -279,14 +286,16 @@ export default async function BlogPostPage({ params }: Props) {
                   href={`/blog/${related.slug}`}
                   className="group flex flex-col rounded-xl border border-[var(--yif-cream-dark)] bg-[var(--yif-cream)] p-6 transition-shadow hover:shadow-md"
                 >
-                  <span
-                    className="mb-3 inline-flex w-fit items-center rounded-full px-2.5 py-0.5 text-xs font-semibold uppercase tracking-widest text-white"
-                    style={{
-                      backgroundColor: CATEGORY_COLORS[related.category],
-                    }}
-                  >
-                    {related.category}
-                  </span>
+                  {related.topic && (
+                    <span
+                      className="mb-3 inline-flex w-fit items-center rounded-full px-2.5 py-0.5 text-xs font-semibold uppercase tracking-widest text-white"
+                      style={{
+                        backgroundColor: related.topic.color ?? "#1a2744",
+                      }}
+                    >
+                      {related.topic.name}
+                    </span>
+                  )}
                   <h3 className="mb-2 font-display text-xl font-semibold leading-snug text-[var(--yif-navy)] group-hover:text-[var(--yif-gold)] transition-colors">
                     {related.title}
                   </h3>
@@ -294,7 +303,8 @@ export default async function BlogPostPage({ params }: Props) {
                     {related.excerpt}
                   </p>
                   <span className="mt-4 text-xs font-semibold text-[var(--yif-gold)]">
-                    {formatDate(related.date)} · {related.readTime} min
+                    {formatDate(related.publishedAt)} · {related.readTime ?? 5}{" "}
+                    min
                   </span>
                 </Link>
               ))}
