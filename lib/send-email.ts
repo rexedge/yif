@@ -11,6 +11,9 @@ import MembershipWelcomeEmail, {
 import MembershipInitializationEmail, {
   type MembershipInitializationEmailProps,
 } from "@/emails/MembershipInitializationEmail";
+import PasswordResetEmail, {
+  type PasswordResetEmailProps,
+} from "@/emails/PasswordResetEmail";
 import { createElement } from "react";
 
 export type TicketEmailData = Omit<TicketConfirmationEmailProps, never>;
@@ -120,6 +123,32 @@ export async function sendMembershipInitialization(
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     console.error("[sendMembershipInitialization] Unexpected error:", message);
+    return { success: false, error: message };
+  }
+}
+
+export type PasswordResetEmailData = Omit<PasswordResetEmailProps, never>;
+
+export async function sendPasswordReset(
+  data: PasswordResetEmailData,
+): Promise<EmailResult> {
+  try {
+    const { error } = await resend.emails.send({
+      from: `YIF <${FROM_EMAIL}>`,
+      to: [data.recipientEmail],
+      subject: "Reset Your YIF Member Portal Password",
+      react: createElement(PasswordResetEmail, data),
+    });
+
+    if (error) {
+      console.error("[sendPasswordReset] Resend error:", error);
+      return { success: false, error: error.message };
+    }
+
+    return { success: true };
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error("[sendPasswordReset] Unexpected error:", message);
     return { success: false, error: message };
   }
 }
