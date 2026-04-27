@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 
 const phones = ["+234 816 919 9745", "+1 (917) 703-0107", "+234 802 288 9403"];
 
-const emails = ["info@yifworldwide.org", "yorubaindigenesfoundation@yahoo.com"];
+const emails = ["info@yifworldwide.org", "yorubaindigenesngo@gmail.com"];
 
 const ukTeam = [
   {

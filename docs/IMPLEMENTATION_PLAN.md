@@ -168,7 +168,7 @@ app/(public)/layout.tsx
 
 - Address: 33A Bode Thomas Street, Surulere, Lagos State, Nigeria
 - Phones: +234 816 919 9745, +1 (917) 703-0107, +234 802 288 9403
-- Emails: info@yifworldwide.org, yorubaindigenesfoundation@yahoo.com
+- Emails: info@yifworldwide.org, yorubaindigenesngo@gmail.com
 - Google Maps embed (static iframe for the Lagos address)
 - Contact form: name, email, phone, subject (select: Inquiry / Donation / Membership / Scholarship / Event / Other), message, CAPTCHA placeholder
 - WhatsApp CTA button (prominent)

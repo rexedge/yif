@@ -135,10 +135,10 @@ export function Footer() {
                 </p>
                 <p>
                   <a
-                    href="mailto:yorubaindigenesfoundation@yahoo.com"
+                    href="mailto:yorubaindigenesngo@gmail.com"
                     className="hover:text-[var(--yif-gold)] transition-colors"
                   >
-                    yorubaindigenesfoundation@yahoo.com
+                    yorubaindigenesngo@gmail.com
                   </a>
                 </p>
               </div>

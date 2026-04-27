@@ -265,7 +265,7 @@ Nigeria
 **Email Addresses:**
 
 - info@yifworldwide.org
-- yorubaindigenesfoundation@yahoo.com
+- yorubaindigenesngo@gmail.com
 
 **Website URLs:**
 
