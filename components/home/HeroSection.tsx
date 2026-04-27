@@ -105,7 +105,7 @@ export function HeroSection() {
             Uniting the{" "}
             <em className="not-italic text-[var(--yif-gold)]">Global</em>
             <br />
-            Yoruba{" "}
+            Yoruba In{" "}
             <span className="relative inline-block">
               Diaspora
               <span
