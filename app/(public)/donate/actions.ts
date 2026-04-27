@@ -5,9 +5,11 @@ import {
   CURRENCIES,
   isSupportedCurrency,
   toSmallestUnit,
+  usdToNgn,
   type SupportedCurrency,
 } from "@/lib/currency";
 import { recordTransactionInit } from "@/lib/transactions";
+import { stripe, assertStripeConfigured, toStripeMinor } from "@/lib/stripe";
 import { redirect } from "next/navigation";
 
 export type DonateState = {
@@ -51,6 +53,81 @@ export async function initiateDonation(
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 
+  // ── Non-NGN via Stripe ──────────────────────────────────────────────────
+  if (currency !== "NGN") {
+    try {
+      assertStripeConfigured();
+    } catch (err) {
+      console.error("[initiateDonation] Stripe not configured:", err);
+      return {
+        error:
+          "International donations are temporarily unavailable. Please choose NGN, or contact us.",
+      };
+    }
+
+    let stripeUrl: string | null = null;
+    try {
+      const session = await stripe.checkout.sessions.create({
+        mode: "payment",
+        customer_email: email,
+        submit_type: "donate",
+        line_items: [
+          {
+            price_data: {
+              currency: currency.toLowerCase(),
+              unit_amount: toStripeMinor(amount),
+              product_data: {
+                name: `Donation to YIF — ${cause}`,
+                description:
+                  frequency === "monthly"
+                    ? "Monthly donation (one-time charge; recurring setup coming soon)"
+                    : "One-time donation",
+              },
+            },
+            quantity: 1,
+          },
+        ],
+        success_url: `${appUrl}/payment/stripe-callback?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${appUrl}/donate`,
+        metadata: {
+          purpose: "DONATION",
+          cause,
+          frequency,
+          customerName: name,
+          fullName: name,
+        },
+      });
+
+      const amountNaira = currency === "USD" ? usdToNgn(amount) : amount; // store EUR/GBP raw too
+      await recordTransactionInit({
+        provider: "stripe",
+        reference: session.id,
+        purpose: "DONATION",
+        amountNaira,
+        currency,
+        customerEmail: email,
+        customerName: name,
+        metadata: { cause, frequency, currency, originalAmount: amount },
+      }).catch((err) =>
+        console.error("[initiateDonation] tx init record failed:", err),
+      );
+
+      stripeUrl = session.url;
+    } catch (err) {
+      console.error("[initiateDonation] Stripe init failed:", err);
+      return {
+        error:
+          "We couldn't start the Stripe checkout. Please try again, or contact us if the problem persists.",
+      };
+    }
+
+    if (!stripeUrl) {
+      return { error: "Stripe did not return a checkout URL. Please retry." };
+    }
+    redirect(stripeUrl);
+  }
+
+  // ── NGN via Paystack ────────────────────────────────────────────────────
   try {
     const result = await paystackRequest<TransactionInitData>(
       "/transaction/initialize",

@@ -76,3 +76,19 @@ export function formatCurrency(
 
 /** All supported currencies use ×100 subunits (kobo / cents / pence) */
 export const toSmallestUnit = (amount: number) => Math.round(amount * 100);
+
+// ── FX ──────────────────────────────────────────────────────────────────────
+// Manual rate used for displaying NGN equivalents of USD-priced products
+// (sponsorships, international tickets). Update here when the rate moves
+// materially. Last updated: 2026-04.
+export const USD_TO_NGN = 1395;
+
+/** Convert a USD amount to NGN using the manual rate above. */
+export function usdToNgn(amountUsd: number): number {
+  return Math.round(amountUsd * USD_TO_NGN);
+}
+
+/** Convert an NGN amount to USD using the manual rate above. */
+export function ngnToUsd(amountNgn: number): number {
+  return Math.round((amountNgn / USD_TO_NGN) * 100) / 100;
+}

@@ -15,6 +15,7 @@ export async function recordTransactionInit(input: {
   purpose: TransactionPurpose;
   amountNaira: number;
   currency?: string;
+  provider?: "paystack" | "stripe";
   customerEmail: string;
   customerName?: string | null;
   customerPhone?: string | null;
@@ -25,7 +26,7 @@ export async function recordTransactionInit(input: {
   metadata?: Prisma.InputJsonValue;
 }) {
   const data = {
-    provider: "paystack",
+    provider: input.provider ?? "paystack",
     reference: input.reference,
     purpose: input.purpose,
     status: "PENDING" as TransactionStatus,
