@@ -36,7 +36,7 @@ const TIERS = [
       "All Silver benefits",
       "10% discount on event tickets",
       "Voting rights at general meetings",
-      "Mentorship programme access",
+      "Mentorship Program access",
       "Name in annual member listing",
     ],
   },
@@ -69,7 +69,7 @@ const TIERS = [
       "All Diamond benefits",
       "Complimentary annual gala seat",
       "Name in printed annual report",
-      "Programme committee invite",
+      "Program committee invite",
       "Dedicated member liaison officer",
       "Exclusive networking receptions",
     ],
@@ -285,14 +285,14 @@ export default function MembershipPage() {
                   { label: "Member directory listing", from: 0 },
                   { label: "Event ticket discount (10%)", from: 1 },
                   { label: "Voting rights", from: 1 },
-                  { label: "Mentorship programme", from: 1 },
+                  { label: "Mentorship Program", from: 1 },
                   { label: "Event ticket discount (20%)", from: 2 },
                   { label: "Scholarship nominations", from: 2 },
                   { label: "Priority registration", from: 2 },
                   { label: "Quarterly board briefings", from: 2 },
                   { label: "Annual gala seat", from: 3 },
                   { label: "Annual report listing", from: 3 },
-                  { label: "Programme committee invite", from: 3 },
+                  { label: "Program committee invite", from: 3 },
                 ].map((row) => (
                   <tr
                     key={row.label}
@@ -375,8 +375,8 @@ export default function MembershipPage() {
             &ldquo;We carry the load on our heads collectively.&rdquo;
           </p>
           <p className="text-white/50 text-sm mt-4 mb-8">
-            Your membership directly funds scholarships, cultural programmes,
-            and community advocacy. Join over 1,200 members worldwide.
+            Your membership directly funds scholarships, cultural Programs, and
+            community advocacy. Join over 1,200 members worldwide.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <a

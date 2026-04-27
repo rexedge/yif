@@ -22,9 +22,9 @@ const TIMELINE = [
   },
   {
     year: "2024–25",
-    title: "Scholarship Programme",
+    title: "Scholarship Program",
     description:
-      "Launch of the YIF Scholarship Programme 2024–2025 batch — providing top-slot scholarships in premium universities at home and abroad to Yoruba indigenes based on academic merit and financial need.",
+      "Launch of the YIF Scholarship Program 2024–2025 batch — providing top-slot scholarships in premium universities at home and abroad to Yoruba indigenes based on academic merit and financial need.",
     highlight: false,
   },
 ];

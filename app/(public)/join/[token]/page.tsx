@@ -70,7 +70,7 @@ export default async function JoinPage({ params }: Props) {
             {
               icon: "🎓",
               label: "Scholarship Access",
-              desc: "Apply for the YIF Scholarship Programme (2024–2025 Batch)",
+              desc: "Apply for the YIF Scholarship Program (2024–2025 Batch)",
             },
             {
               icon: "🏆",

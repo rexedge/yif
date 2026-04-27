@@ -72,7 +72,7 @@ export default function PrivacyPage() {
                 To send transactional emails (e.g., receipts, invitations) via
                 Resend
               </li>
-              <li>To communicate programme updates and event invitations</li>
+              <li>To communicate Program updates and event invitations</li>
               <li>
                 To comply with legal obligations under Nigerian law and NDPR
               </li>

@@ -15,7 +15,7 @@ const PROGRAMS = [
     tag: "Education",
     tagClass: "bg-[var(--yif-terracotta)]/10 text-[var(--yif-terracotta)]",
     borderClass: "border-t-[var(--yif-terracotta)]",
-    title: "Scholarship Programme",
+    title: "Scholarship Program",
     description:
       "Top-slot scholarships for exceptional Yoruba students at premium universities worldwide. Your heritage. Your future. Rewarded.",
     href: "/programs/scholarship",

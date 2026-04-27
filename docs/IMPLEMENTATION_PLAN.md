@@ -100,17 +100,17 @@ app/(public)/layout.tsx
 
 ### Sections to build (in order, top to bottom):
 
-| Section              | Key details                                                                                                                                                                                                         |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Hero**             | Full-viewport. Headline: "Uniting the Global Yoruba Diaspora". Subtext from mission statement in content inventory §1.1. CTAs: "Become a Member", "Donate Now", "Explore Events". Cultural pattern texture overlay. |
-| **Stats bar**        | Animated counters on scroll. Stats: 15+ Countries, 19 years active (founded 2005), UN/ECOSOC 2019, scholarships awarded.                                                                                            |
-| **Programs grid**    | 4 cards: Karo-Ojire Investments, Scholarship 2024–25, Events & Awards, Youth Development. Each links to its page.                                                                                                   |
-| **About teaser**     | 2-col layout: mission text (from §1.1 content inventory) + founding history blurb. CTA "Our Story".                                                                                                                 |
-| **Leadership strip** | Horizontal scroll of top 6 leaders from content inventory §2.1 with name + title.                                                                                                                                   |
-| **Testimonials**     | 3-card carousel. Use placeholder structure; real testimonials from content inventory if present.                                                                                                                    |
-| **Blog preview**     | 3 latest blog card previews (static data from §7.2 content inventory for now).                                                                                                                                      |
-| **Newsletter CTA**   | Email capture form. Server Action for submission.                                                                                                                                                                   |
-| **Donate CTA band**  | Full-width gold band. "Fund a Scholarship. Empower a Community." + donation button.                                                                                                                                 |
+| Section              | Key details                                                                                                                                                                                                            |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Hero**             | Full-viewport. Headline: "Uniting the global Yoruba in diaspora". Subtext from mission statement in content inventory §1.1. CTAs: "Become a Member", "Donate Now", "Explore Events". Cultural pattern texture overlay. |
+| **Stats bar**        | Animated counters on scroll. Stats: 15+ Countries, 19 years active (founded 2005), UN/ECOSOC 2019, scholarships awarded.                                                                                               |
+| **Programs grid**    | 4 cards: Karo-Ojire Investments, Scholarship 2024–25, Events & Awards, Youth Development. Each links to its page.                                                                                                      |
+| **About teaser**     | 2-col layout: mission text (from §1.1 content inventory) + founding history blurb. CTA "Our Story".                                                                                                                    |
+| **Leadership strip** | Horizontal scroll of top 6 leaders from content inventory §2.1 with name + title.                                                                                                                                      |
+| **Testimonials**     | 3-card carousel. Use placeholder structure; real testimonials from content inventory if present.                                                                                                                       |
+| **Blog preview**     | 3 latest blog card previews (static data from §7.2 content inventory for now).                                                                                                                                         |
+| **Newsletter CTA**   | Email capture form. Server Action for submission.                                                                                                                                                                      |
+| **Donate CTA band**  | Full-width gold band. "Fund a Scholarship. Empower a Community." + donation button.                                                                                                                                    |
 
 **Acceptance:** All sections render. Stat counters animate. No placeholder/lorem text. Mobile responsive.
 

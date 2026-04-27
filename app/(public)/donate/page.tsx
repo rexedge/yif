@@ -6,7 +6,7 @@ import DonateForm from "./DonateForm";
 export const metadata: Metadata = {
   title: "Donate | Yoruba Indigenes' Foundation",
   description:
-    "Support the Yoruba Indigenes' Foundation. Your donation funds scholarships, cultural preservation, and community development programmes worldwide.",
+    "Support the Yoruba Indigenes' Foundation. Your donation funds scholarships, cultural preservation, and community development Programs worldwide.",
 };
 
 const IMPACT_ITEMS = [
@@ -18,7 +18,7 @@ const IMPACT_ITEMS = [
   {
     icon: "🌍",
     value: "₦25k",
-    label: "supports one youth in our leadership programme",
+    label: "supports one youth in our leadership Program",
   },
   {
     icon: "📚",
@@ -110,8 +110,8 @@ export default async function DonatePage() {
           </h1>
           <p className="mt-5 text-lg text-white/70 leading-relaxed">
             Your contribution funds scholarships, cultural preservation, youth
-            development, and community programmes that uplift Yoruba people
-            across the globe.
+            development, and community Programs that uplift Yoruba people across
+            the globe.
           </p>
         </div>
       </div>

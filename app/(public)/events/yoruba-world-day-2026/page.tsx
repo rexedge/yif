@@ -253,7 +253,7 @@ export default function YorubaWorldDay2026Page() {
       <section className="mx-auto max-w-6xl px-6 py-20">
         <div className="text-center">
           <div className="text-xs tracking-wider text-[var(--yif-gold)] uppercase">
-            Programme
+            Program
           </div>
           <h2 className="mt-3 font-serif text-4xl text-[var(--yif-navy-dark)]">
             Two Days That Will Move Markets and Hearts.

@@ -37,7 +37,7 @@ export function NewsletterSection() {
           Join the Yoruba Diaspora Network
         </h2>
         <p className="text-white/70 text-base sm:text-lg leading-relaxed mb-10">
-          Receive updates on YIF programmes, scholarship openings, events, and
+          Receive updates on YIF Programs, scholarship openings, events, and
           news from the global Yoruba community.
         </p>
 

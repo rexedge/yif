@@ -128,9 +128,9 @@ export function MissionSection() {
 
             <blockquote className="border-l-4 border-[var(--yif-gold)]/60 pl-6 mb-8">
               <p className="font-display italic text-lg sm:text-xl text-[var(--yif-navy)]/80 leading-relaxed">
-                "Our mission is to genuinely and sincerely reach out to
-                corporate entities, traditional rulers, leaders, and sons and
-                daughters of the Yoruba race for progress and unity."
+                &quot;Our mission is to genuinely and sincerely reach out to
+                corporate entities, traditional rulers, leaders, sons and
+                daughters of the Yoruba race for progress and unity.&quot;
               </p>
             </blockquote>
 

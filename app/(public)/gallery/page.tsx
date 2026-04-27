@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Gallery | YIF — Yoruba Indigenes' Foundation",
   description:
-    "View photos and videos from YIF events, cultural activities, and community programmes worldwide.",
+    "View photos and videos from YIF events, cultural activities, and community Programs worldwide.",
 };
 
 const PLACEHOLDER_ITEMS = Array.from({ length: 12 }, (_, i) => ({
@@ -29,8 +29,8 @@ export default function GalleryPage() {
             Gallery
           </h1>
           <p className="text-white/60">
-            Moments from YIF events, cultural ceremonies, and community
-            programmes across Nigeria and the diaspora.
+            Moments from YIF events, cultural ceremonies, and community Programs
+            across Nigeria and the diaspora.
           </p>
         </div>
       </section>

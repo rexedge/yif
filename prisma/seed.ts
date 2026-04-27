@@ -345,7 +345,7 @@ async function seedEvents() {
       address: "Park Lane, London W1K 7TN",
       country: "United Kingdom",
       description:
-        "Join YIF UK for a glittering fundraising gala supporting the YIF Scholarship Programme. Every ticket purchased directly funds a Yoruba student's university education. An evening of Afrobeats, Yoruba cuisine, live performances, and philanthropic spirit.",
+        "Join YIF UK for a glittering fundraising gala supporting the YIF Scholarship Program. Every ticket purchased directly funds a Yoruba student's university education. An evening of Afrobeats, Yoruba cuisine, live performances, and philanthropic spirit.",
       agenda: [
         "7:00 PM — Arrival & cocktail reception",
         "7:45 PM — Welcome by Princess M. Adewunmi King",

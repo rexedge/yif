@@ -27,7 +27,7 @@ const NOTIF_ITEMS: {
     key: "notifNewsletter",
     label: "Monthly Newsletter",
     description:
-      "Monthly digest of YIF news, programmes, and community highlights.",
+      "Monthly digest of YIF news, Programs, and community highlights.",
   },
   {
     key: "notifDonationReceipts",

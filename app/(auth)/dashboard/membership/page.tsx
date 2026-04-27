@@ -39,7 +39,7 @@ const TIERS = [
       "All Silver benefits",
       "Discounted event tickets (10%)",
       "Voting rights at general meetings",
-      "Mentorship programme access",
+      "Mentorship Program access",
     ],
   },
   {
@@ -66,7 +66,7 @@ const TIERS = [
       "All Diamond benefits",
       "Complimentary gala table seat",
       "Name on annual report",
-      "Programme committee invite",
+      "Program committee invite",
       "Dedicated member liaison",
     ],
   },

@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   title: {
     template: "%s | Yoruba Indigenes' Foundation",
     default:
-      "Yoruba Indigenes' Foundation — Uniting the Global Yoruba Diaspora",
+      "Yoruba Indigenes' Foundation — Uniting the global Yoruba in diaspora",
   },
   description:
     "The Yoruba Indigenes' Foundation (YIF) is a UN/ECOSOC consultative status NGO uniting Yoruba people worldwide through culture, education, economic empowerment, and community development. Reg. IT 28744.",

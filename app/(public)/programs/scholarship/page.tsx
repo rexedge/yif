@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Scholarship Programme | YIF — Yoruba Indigenes' Foundation",
+  title: "Scholarship Program | YIF — Yoruba Indigenes' Foundation",
   description:
-    "YIF Scholarship Programme 2024–2025. Open to Yoruba indigenes with academic merit and financial need. Registration fee: ₦5,000.",
+    "YIF Scholarship Program 2024–2025. Open to Yoruba indigenes with academic merit and financial need. Registration fee: ₦5,000.",
 };
 
 export default function ScholarshipPage() {
@@ -17,7 +17,7 @@ export default function ScholarshipPage() {
             Programs
           </p>
           <h1 className="font-display text-4xl font-semibold text-white sm:text-5xl mb-4">
-            YIF Scholarship Programme
+            YIF Scholarship Program
           </h1>
           <p className="text-lg text-white/60">
             2024–2025 Batch — Empowering Yoruba students in premium universities

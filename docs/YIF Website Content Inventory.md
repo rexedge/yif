@@ -1,4 +1,5 @@
 # YIF Website Content Inventory
+
 ## Reusable Content from yifworldwide.org
 
 **Document Date:** April 22, 2026  
@@ -14,17 +15,19 @@
 **Organization Name:** Yoruba Indigenes' Foundation (YIF)
 
 **Registration Details:**
+
 - Registration Number: IT 28744
 - Founded: 2005/06
 - Status: UN/ECOSOC Special Consultative Status (granted 2019)
 
 **Founding Leadership:**
+
 - Late Chief Ambassador Segun Olusola (Founding Chairman)
 - Comrade Dr. Aderibole Olumide (Founding President)
 - Co-founders: Late Ooni of Ile-Ife (Oba Okuade Sijuade Olubuse II), Late Dr. Fredrick Fasheun, Chief Rasheed Abiodun Gbadamosi, Late Dr. Lateef Adegbite, Late General Adeyinka Adebayo (retired), Chief Mrs. Mobolaji Oshomo, Chief Mrs. Winifred Awosika, Chief Mrs. Oseyemi Awosika, Mrs. Olagoroye Oluyemisi Abisola, Mr. Dayo Onibile, Pastor Folorunsho Oguntoke, Alhaji Saola Bamidele Jimoh
 
 **Mission Statement:**
-The organization's mission is to genuinely and sincerely reach out to corporate entities, traditional rulers, leaders, organizations, and sons and daughters of the Yoruba race for progress and unity. The reach-out endeavor aims to update knowledge towards conscious and unparalleled ideas for strengthening cultural entities of Yoruba cultural values, primarily through formal teaching and learning processes in high schools, colleges, and abroad.
+The organization's mission is to genuinely and sincerely reach out to corporate entities, traditional rulers, leaders, organizations, sons and daughters of the Yoruba race for progress and unity. The reach-out endeavor aims to update knowledge towards conscious and unparalleled ideas for strengthening cultural entities of Yoruba cultural values, primarily through formal teaching and learning processes in high schools, colleges, and abroad.
 
 **Vision & Objectives:**
 
@@ -45,36 +48,38 @@ The Foundation aims to achieve the following objectives:
 
 ### 2.1 National Leadership Team
 
-| Name | Position | Notes |
-| :--- | :--- | :--- |
-| Chief Abiodun Fajobi | Chairman, Board of Trustees | |
-| Prof Oluyemisi Akinyemiju | Chairman, Advisory Board | |
-| Prince Tajudeen Olusi (MON, OON) | Life Patron YIF Worldwide | |
-| Dr. Aderibole Olumide | National President/CEO | Founding President |
-| Chief Aderounmu Adesesan | National Coordinator | |
-| Chief Mrs Oseyemi Awosika | Vice President | Co-founder |
-| Mr. Omosehin Lawson | National Secretary/CEO | |
-| Mrs. Funmilola Osifowora | Director Welfare | |
-| Ogundare Adenike | Youth Coordinator | |
-| Mrs. Kikelomo Fareo | Director Women Affairs | |
-| Chief Mrs. Osomo | Member Board of Trustee/Committee | |
-| Comrade Akintoye Olaoluwa | Director of Admin & Mobilization | |
-| Dr. Adetokunbo Adedeji | Chairman Organizing Committee | |
-| Mr. Mokelu Bayo | Director of Protocol | |
-| Mr. Sanjo Olawuyi | Director, Publicity | |
-| Chief Adebayo Odeyemi | Public Relationship Officer | |
-| Mr. Olufemi E.A Ogoigbe | Director Project/Coordinator | |
-| Otunba (Barr) Olu Adenodi | Legal Adviser | |
-| Mr. Oluwatosin Famori | Director IT & Youth Affairs | |
+| Name                             | Position                          | Notes              |
+| :------------------------------- | :-------------------------------- | :----------------- |
+| Chief Abiodun Fajobi             | Chairman, Board of Trustees       |                    |
+| Prof Oluyemisi Akinyemiju        | Chairman, Advisory Board          |                    |
+| Prince Tajudeen Olusi (MON, OON) | Life Patron YIF Worldwide         |                    |
+| Dr. Aderibole Olumide            | National President/CEO            | Founding President |
+| Chief Aderounmu Adesesan         | National Coordinator              |                    |
+| Chief Mrs Oseyemi Awosika        | Vice President                    | Co-founder         |
+| Mr. Omosehin Lawson              | National Secretary/CEO            |                    |
+| Mrs. Funmilola Osifowora         | Director Welfare                  |                    |
+| Ogundare Adenike                 | Youth Coordinator                 |                    |
+| Mrs. Kikelomo Fareo              | Director Women Affairs            |                    |
+| Chief Mrs. Osomo                 | Member Board of Trustee/Committee |                    |
+| Comrade Akintoye Olaoluwa        | Director of Admin & Mobilization  |                    |
+| Dr. Adetokunbo Adedeji           | Chairman Organizing Committee     |                    |
+| Mr. Mokelu Bayo                  | Director of Protocol              |                    |
+| Mr. Sanjo Olawuyi                | Director, Publicity               |                    |
+| Chief Adebayo Odeyemi            | Public Relationship Officer       |                    |
+| Mr. Olufemi E.A Ogoigbe          | Director Project/Coordinator      |                    |
+| Otunba (Barr) Olu Adenodi        | Legal Adviser                     |                    |
+| Mr. Oluwatosin Famori            | Director IT & Youth Affairs       |                    |
 
 ### 2.2 Patrons of the Organization
 
 **Grand Patrons:**
+
 - His Imperial Majesty, Oba Alayeluwa Okunade Sijuwade Olubuse II (Ooni of Ife) - Late
 - His Imperial Majesty, Oba Lamidi Olayiwola Adeyemi (Alaafin of Oyo)
 - His Majesty, Oba Adeyeye Enitan Ogunwusi, Ojaja II (Current Ooni of Ile-Ife)
 
 **Other Prominent Patrons:**
+
 - Asiwaju Michael Ade Ojo
 - General Adeyinka Adebayo (Retired)
 - Chief (Mrs) Mobolaji Osomo
@@ -92,35 +97,35 @@ The Foundation aims to achieve the following objectives:
 
 ### 2.3 UK Executive Team
 
-| Name | Position | Contact |
-| :--- | :--- | :--- |
-| Hon. Adeoye Ayinde Obanleowo | Director of Communications and Public Relations | adeoyeobanleowo196750@outlook.com |
-| Adeyinka Alabi | Financial Secretary | ashabialabi@hotmail.co.uk |
-| Aderemi Amokeokin Spencer | Public Relation Officer (PRO) | remmyspencer@yahoo.com |
-| Mr. Edward Kayode Adeleye | Treasurer | eadeleye79@gmail.com |
-| Amos Ogunyemi | Secretary | gentleamos18@yahoo.co.uk |
-| Jennifer Adesanya | Assistant Director of Mobilisation | jennyadesanya@gmail.com |
-| Joy Olufunmilayo Coker | Director of Mobilisation | joycoker1@yahoo.co.uk |
-| Abiola A. Makinde (ABM) | Director for Women Affair | info@positiveimpactsupport.org |
-| Princess M. Adewunmi King (Labamba) | National Co-ordinator (UK) | labamba2002@aol.com |
+| Name                                | Position                                        | Contact                           |
+| :---------------------------------- | :---------------------------------------------- | :-------------------------------- |
+| Hon. Adeoye Ayinde Obanleowo        | Director of Communications and Public Relations | adeoyeobanleowo196750@outlook.com |
+| Adeyinka Alabi                      | Financial Secretary                             | ashabialabi@hotmail.co.uk         |
+| Aderemi Amokeokin Spencer           | Public Relation Officer (PRO)                   | remmyspencer@yahoo.com            |
+| Mr. Edward Kayode Adeleye           | Treasurer                                       | eadeleye79@gmail.com              |
+| Amos Ogunyemi                       | Secretary                                       | gentleamos18@yahoo.co.uk          |
+| Jennifer Adesanya                   | Assistant Director of Mobilisation              | jennyadesanya@gmail.com           |
+| Joy Olufunmilayo Coker              | Director of Mobilisation                        | joycoker1@yahoo.co.uk             |
+| Abiola A. Makinde (ABM)             | Director for Women Affair                       | info@positiveimpactsupport.org    |
+| Princess M. Adewunmi King (Labamba) | National Co-ordinator (UK)                      | labamba2002@aol.com               |
 
 ### 2.4 Diaspora Representatives
 
-| Name | Position | Location | Contact |
-| :--- | :--- | :--- | :--- |
-| Mr Ayobami Prosper Micheal | Representative | Mali | +22351498661 |
-| Dr. Gbenga Adeyeye | Representative | South Africa | +27747422831 |
-| Princess Bolajoko Oyeronke | Coordinator | South West, Nigeria | +2348038043484 |
-| Mr Adeyemi Adetula | YIF Coordinator | Diaspora | +1436649431890 |
-| Mr Bamidele Akindola | Representative | Brazil | +5511999552841 |
-| Prince Akintunde Awoyera | Representative | China | +8613711503141 |
-| Ms. Olushola Olude | Representative | United States | +1-480-217-1937 |
-| Princess Omolabake Margret King | Representative | London, UK | +447948731711 |
-| Alhaji Abiola Olumola | Representative | Uganda | +256755708622 |
-| Princess Ogundowole Oluwaseyi | Representative | France | +33615597525 |
-| Mrs Oladipo Foluke | Representative | United States (II) | N/A |
-| Dr Ogundowole Bolu Johnson | Vice Chairman Advisory Committee | N/A | N/A |
-| Chief Mrs Oluremi Yejide Ogundowole | Member, YIF Think-Tank Group | N/A | N/A |
+| Name                                | Position                         | Location            | Contact         |
+| :---------------------------------- | :------------------------------- | :------------------ | :-------------- |
+| Mr Ayobami Prosper Micheal          | Representative                   | Mali                | +22351498661    |
+| Dr. Gbenga Adeyeye                  | Representative                   | South Africa        | +27747422831    |
+| Princess Bolajoko Oyeronke          | Coordinator                      | South West, Nigeria | +2348038043484  |
+| Mr Adeyemi Adetula                  | YIF Coordinator                  | Diaspora            | +1436649431890  |
+| Mr Bamidele Akindola                | Representative                   | Brazil              | +5511999552841  |
+| Prince Akintunde Awoyera            | Representative                   | China               | +8613711503141  |
+| Ms. Olushola Olude                  | Representative                   | United States       | +1-480-217-1937 |
+| Princess Omolabake Margret King     | Representative                   | London, UK          | +447948731711   |
+| Alhaji Abiola Olumola               | Representative                   | Uganda              | +256755708622   |
+| Princess Ogundowole Oluwaseyi       | Representative                   | France              | +33615597525    |
+| Mrs Oladipo Foluke                  | Representative                   | United States (II)  | N/A             |
+| Dr Ogundowole Bolu Johnson          | Vice Chairman Advisory Committee | N/A                 | N/A             |
+| Chief Mrs Oluremi Yejide Ogundowole | Member, YIF Think-Tank Group     | N/A                 | N/A             |
 
 ### 2.5 Executive Governors (Yoruba States)
 
@@ -155,12 +160,14 @@ The organization acknowledges the distance and narrowness in character of many i
 
 **Sources of Finance:**
 Capital accumulation for the Foundation to meet its constant, short, and long-range planning strategies comes through:
+
 - Member registration with annual stipend funds of N2,500.00, $10.00, or £10.00 per head worldwide
 - Donations from well-meaning YIF members at home and in the diaspora
 - Workshops and seminars
 - Recognition events for fallen Yoruba heroes and heroines
 
 **Membership Tiers:**
+
 - Gold: N10,000
 - Silver: N5,000
 - Platinum: N20,000
@@ -176,6 +183,7 @@ Capital accumulation for the Foundation to meet its constant, short, and long-ra
 Several students who are Yoruba indigenes now stand the chance of winning top-slot scholarships in premium universities both home and abroad with a registration fee of just N5,000.
 
 **Eligibility Criteria:**
+
 - Yoruba heritage requirement
 - Academic merit
 - Financial need
@@ -249,21 +257,25 @@ Surulere, Lagos State
 Nigeria
 
 **Phone Numbers:**
+
 - +234(080) 2526 6285
 - +234(080) 2288 9403
 - +234(080) 2526 6714
 
 **Email Addresses:**
+
 - info@yifworldwide.org
 - yorubaindigenesfoundation@yahoo.com
 
 **Website URLs:**
+
 - https://yifworldwide.org
 - https://yorubaindigenesfoundation.org
 
 ### 5.2 Regional Contact Information
 
 **UK Office Contact:**
+
 - Hon. Adeoye Ayinde Obanleowo (Director of Communications and Public Relations)
 - adeoyeobanleowo196750@outlook.com
 
@@ -276,9 +288,11 @@ Nigeria
 **Registration Fee:** N5,000.00 or $14.00 or $11.00 (GBP)
 
 **Annual Membership Stipends:**
+
 - N2,500.00, $10.00, or £10.00 per head worldwide
 
 **Membership Tiers (Economic Empowerment Project):**
+
 - Gold: N10,000
 - Silver: N5,000
 - Platinum: N20,000
@@ -287,6 +301,7 @@ Nigeria
 ### 6.2 Membership Benefits
 
 **General Benefits:**
+
 - Access to YIF programs and initiatives
 - Participation in events and awards ceremonies
 - Eligibility for scholarship programs
@@ -320,21 +335,25 @@ The website features a blog with the following categories:
 ### 7.2 Featured Blog Posts (2026)
 
 **1. "The Strength of Yoruba Heritage"**
+
 - Category: Culture
 - Description: Understanding the richness of Yoruba culture
 - Status: Published
 
 **2. "Leadership in Nigeria Today"**
+
 - Category: Politics
 - Description: Examining leadership trends in Nigeria
 - Status: Published
 
 **3. "Yoruba World Day 2026"**
+
 - Category: Events
 - Description: Branding Nigeria & Investment Portfolios
 - Status: Published
 
 **4. "Youth Development in Yoruba Land"**
+
 - Category: Youth Development
 - Description: Empowering the next generation
 - Status: Published
@@ -342,6 +361,7 @@ The website features a blog with the following categories:
 ### 7.3 Blog Post Structure
 
 Each blog post includes:
+
 - Featured image
 - Title
 - Category tag
@@ -449,32 +469,32 @@ The following statement appears multiple times throughout the website:
 
 ### 11.1 Content to Migrate (With Updates)
 
-| Content | Source Page | New Location | Status | Notes |
-| :--- | :--- | :--- | :--- | :--- |
-| Mission & Vision | About | About Page | Ready | Needs grammar review |
-| Leadership Directory | About/Homepage | Leadership Page | Ready | Verify current info |
-| Diaspora Representatives | Homepage | Diaspora Network Map | Ready | Update contact info |
-| Affiliated Organizations | Homepage | Partnerships Page | Ready | Verify current status |
-| Membership Information | Homepage | Membership Page | Ready | Needs pricing clarification |
-| Economic Empowerment Info | Homepage | Programs Page | Ready | Expand with details |
-| Scholarship Info | Homepage | Scholarship Page | Ready | Add eligibility criteria |
-| Awards Program | Homepage | Events Page | Ready | Add event calendar |
-| Contact Information | Contact | Contact Page | Ready | Verify accuracy |
-| Blog Posts | Blog | Blog Archive | Ready | Add metadata |
-| Donation Information | Donation | Donations Page | Ready | Needs payment integration |
+| Content                   | Source Page    | New Location         | Status | Notes                       |
+| :------------------------ | :------------- | :------------------- | :----- | :-------------------------- |
+| Mission & Vision          | About          | About Page           | Ready  | Needs grammar review        |
+| Leadership Directory      | About/Homepage | Leadership Page      | Ready  | Verify current info         |
+| Diaspora Representatives  | Homepage       | Diaspora Network Map | Ready  | Update contact info         |
+| Affiliated Organizations  | Homepage       | Partnerships Page    | Ready  | Verify current status       |
+| Membership Information    | Homepage       | Membership Page      | Ready  | Needs pricing clarification |
+| Economic Empowerment Info | Homepage       | Programs Page        | Ready  | Expand with details         |
+| Scholarship Info          | Homepage       | Scholarship Page     | Ready  | Add eligibility criteria    |
+| Awards Program            | Homepage       | Events Page          | Ready  | Add event calendar          |
+| Contact Information       | Contact        | Contact Page         | Ready  | Verify accuracy             |
+| Blog Posts                | Blog           | Blog Archive         | Ready  | Add metadata                |
+| Donation Information      | Donation       | Donations Page       | Ready  | Needs payment integration   |
 
 ### 11.2 Content to Create (New)
 
-| Content | Recommended Location | Priority | Notes |
-| :--- | :--- | :--- | :--- |
-| Impact Metrics Dashboard | Homepage/Dashboard | High | Add member, scholarship, donation stats |
-| Member Success Stories | About/Blog | High | Testimonials and case studies |
-| Event Calendar | Events Page | High | Upcoming events and past events archive |
-| FAQ Section | Help Center | Medium | Common questions about membership, donations |
-| Financial Transparency Report | Transparency Hub | Medium | Annual reports and fund allocation |
-| Video Content | Homepage/Blog | Medium | Leadership interviews, cultural content |
-| Organizational Timeline | About Page | Low | YIF history and milestones |
-| Governance Documents | About Page | Low | Bylaws, policies, certifications |
+| Content                       | Recommended Location | Priority | Notes                                        |
+| :---------------------------- | :------------------- | :------- | :------------------------------------------- |
+| Impact Metrics Dashboard      | Homepage/Dashboard   | High     | Add member, scholarship, donation stats      |
+| Member Success Stories        | About/Blog           | High     | Testimonials and case studies                |
+| Event Calendar                | Events Page          | High     | Upcoming events and past events archive      |
+| FAQ Section                   | Help Center          | Medium   | Common questions about membership, donations |
+| Financial Transparency Report | Transparency Hub     | Medium   | Annual reports and fund allocation           |
+| Video Content                 | Homepage/Blog        | Medium   | Leadership interviews, cultural content      |
+| Organizational Timeline       | About Page           | Low      | YIF history and milestones                   |
+| Governance Documents          | About Page           | Low      | Bylaws, policies, certifications             |
 
 ---
 
@@ -517,6 +537,7 @@ The following statement appears multiple times throughout the website:
 **Recommendations:** Review and update all content before migration to redesigned website
 
 **Next Steps:**
+
 1. Conduct editorial review of all content
 2. Verify accuracy of leadership and contact information
 3. Gather additional content (testimonials, impact metrics, event details)

@@ -4,7 +4,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Youth Development & Empowerment | YIF",
   description:
-    "YIF Youth Development and Empowerment Programme — building the next generation of Yoruba leaders at home and in the diaspora.",
+    "YIF Youth Development and Empowerment Program — building the next generation of Yoruba leaders at home and in the diaspora.",
 };
 
 export default function YouthPage() {
@@ -58,7 +58,7 @@ export default function YouthPage() {
 
         {/* Pillars */}
         <h2 className="font-display text-2xl font-semibold text-[var(--yif-navy)] mb-6">
-          Programme Pillars
+          Program Pillars
         </h2>
         <div className="grid gap-5 sm:grid-cols-3 mb-14">
           {[
@@ -98,7 +98,7 @@ export default function YouthPage() {
           </h2>
           <p className="text-white/50 text-sm mb-6">
             Join YIF to connect with our youth network and access exclusive
-            programmes.
+            Programs.
           </p>
           <Link
             href="/membership"

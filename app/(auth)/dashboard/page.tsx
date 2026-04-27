@@ -14,7 +14,7 @@ const QUICK_ACTIONS = [
     href: "/donate",
     label: "Make a Donation",
     icon: "♡",
-    desc: "Support our programmes",
+    desc: "Support our Programs",
   },
   {
     href: "/events",
