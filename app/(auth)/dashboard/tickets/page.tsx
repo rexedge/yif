@@ -131,7 +131,7 @@ export default async function TicketsPage() {
                             )}
                           </p>
 
-                          {(eventDate || event?.location) && (
+                          {(eventDate || event?.address) && (
                             <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-xs text-white/50">
                               {eventDate && (
                                 <span className="flex items-center gap-1">
