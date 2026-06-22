@@ -30,12 +30,16 @@ export type TransactionAvgAggregateOutputType = {
   amount: runtime.Decimal | null
   fees: runtime.Decimal | null
   netAmount: runtime.Decimal | null
+  baseAmount: runtime.Decimal | null
+  fxRate: runtime.Decimal | null
 }
 
 export type TransactionSumAggregateOutputType = {
   amount: runtime.Decimal | null
   fees: runtime.Decimal | null
   netAmount: runtime.Decimal | null
+  baseAmount: runtime.Decimal | null
+  fxRate: runtime.Decimal | null
 }
 
 export type TransactionMinAggregateOutputType = {
@@ -49,6 +53,9 @@ export type TransactionMinAggregateOutputType = {
   fees: runtime.Decimal | null
   netAmount: runtime.Decimal | null
   currency: string | null
+  baseAmount: runtime.Decimal | null
+  baseCurrency: string | null
+  fxRate: runtime.Decimal | null
   channel: string | null
   cardBrand: string | null
   cardLast4: string | null
@@ -62,6 +69,7 @@ export type TransactionMinAggregateOutputType = {
   memberId: string | null
   ticketId: string | null
   donationId: string | null
+  notes: string | null
   paidAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -78,6 +86,9 @@ export type TransactionMaxAggregateOutputType = {
   fees: runtime.Decimal | null
   netAmount: runtime.Decimal | null
   currency: string | null
+  baseAmount: runtime.Decimal | null
+  baseCurrency: string | null
+  fxRate: runtime.Decimal | null
   channel: string | null
   cardBrand: string | null
   cardLast4: string | null
@@ -91,6 +102,7 @@ export type TransactionMaxAggregateOutputType = {
   memberId: string | null
   ticketId: string | null
   donationId: string | null
+  notes: string | null
   paidAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -107,6 +119,9 @@ export type TransactionCountAggregateOutputType = {
   fees: number
   netAmount: number
   currency: number
+  baseAmount: number
+  baseCurrency: number
+  fxRate: number
   channel: number
   cardBrand: number
   cardLast4: number
@@ -122,6 +137,7 @@ export type TransactionCountAggregateOutputType = {
   donationId: number
   metadata: number
   rawResponse: number
+  notes: number
   paidAt: number
   createdAt: number
   updatedAt: number
@@ -133,12 +149,16 @@ export type TransactionAvgAggregateInputType = {
   amount?: true
   fees?: true
   netAmount?: true
+  baseAmount?: true
+  fxRate?: true
 }
 
 export type TransactionSumAggregateInputType = {
   amount?: true
   fees?: true
   netAmount?: true
+  baseAmount?: true
+  fxRate?: true
 }
 
 export type TransactionMinAggregateInputType = {
@@ -152,6 +172,9 @@ export type TransactionMinAggregateInputType = {
   fees?: true
   netAmount?: true
   currency?: true
+  baseAmount?: true
+  baseCurrency?: true
+  fxRate?: true
   channel?: true
   cardBrand?: true
   cardLast4?: true
@@ -165,6 +188,7 @@ export type TransactionMinAggregateInputType = {
   memberId?: true
   ticketId?: true
   donationId?: true
+  notes?: true
   paidAt?: true
   createdAt?: true
   updatedAt?: true
@@ -181,6 +205,9 @@ export type TransactionMaxAggregateInputType = {
   fees?: true
   netAmount?: true
   currency?: true
+  baseAmount?: true
+  baseCurrency?: true
+  fxRate?: true
   channel?: true
   cardBrand?: true
   cardLast4?: true
@@ -194,6 +221,7 @@ export type TransactionMaxAggregateInputType = {
   memberId?: true
   ticketId?: true
   donationId?: true
+  notes?: true
   paidAt?: true
   createdAt?: true
   updatedAt?: true
@@ -210,6 +238,9 @@ export type TransactionCountAggregateInputType = {
   fees?: true
   netAmount?: true
   currency?: true
+  baseAmount?: true
+  baseCurrency?: true
+  fxRate?: true
   channel?: true
   cardBrand?: true
   cardLast4?: true
@@ -225,6 +256,7 @@ export type TransactionCountAggregateInputType = {
   donationId?: true
   metadata?: true
   rawResponse?: true
+  notes?: true
   paidAt?: true
   createdAt?: true
   updatedAt?: true
@@ -328,6 +360,9 @@ export type TransactionGroupByOutputType = {
   fees: runtime.Decimal | null
   netAmount: runtime.Decimal | null
   currency: string
+  baseAmount: runtime.Decimal | null
+  baseCurrency: string
+  fxRate: runtime.Decimal | null
   channel: string | null
   cardBrand: string | null
   cardLast4: string | null
@@ -343,6 +378,7 @@ export type TransactionGroupByOutputType = {
   donationId: string | null
   metadata: runtime.JsonValue | null
   rawResponse: runtime.JsonValue | null
+  notes: string | null
   paidAt: Date | null
   createdAt: Date
   updatedAt: Date
@@ -382,6 +418,9 @@ export type TransactionWhereInput = {
   fees?: Prisma.DecimalNullableFilter<"Transaction"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   netAmount?: Prisma.DecimalNullableFilter<"Transaction"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currency?: Prisma.StringFilter<"Transaction"> | string
+  baseAmount?: Prisma.DecimalNullableFilter<"Transaction"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  baseCurrency?: Prisma.StringFilter<"Transaction"> | string
+  fxRate?: Prisma.DecimalNullableFilter<"Transaction"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   channel?: Prisma.StringNullableFilter<"Transaction"> | string | null
   cardBrand?: Prisma.StringNullableFilter<"Transaction"> | string | null
   cardLast4?: Prisma.StringNullableFilter<"Transaction"> | string | null
@@ -397,6 +436,7 @@ export type TransactionWhereInput = {
   donationId?: Prisma.StringNullableFilter<"Transaction"> | string | null
   metadata?: Prisma.JsonNullableFilter<"Transaction">
   rawResponse?: Prisma.JsonNullableFilter<"Transaction">
+  notes?: Prisma.StringNullableFilter<"Transaction"> | string | null
   paidAt?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Transaction"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Transaction"> | Date | string
@@ -414,6 +454,9 @@ export type TransactionOrderByWithRelationInput = {
   fees?: Prisma.SortOrderInput | Prisma.SortOrder
   netAmount?: Prisma.SortOrderInput | Prisma.SortOrder
   currency?: Prisma.SortOrder
+  baseAmount?: Prisma.SortOrderInput | Prisma.SortOrder
+  baseCurrency?: Prisma.SortOrder
+  fxRate?: Prisma.SortOrderInput | Prisma.SortOrder
   channel?: Prisma.SortOrderInput | Prisma.SortOrder
   cardBrand?: Prisma.SortOrderInput | Prisma.SortOrder
   cardLast4?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -429,6 +472,7 @@ export type TransactionOrderByWithRelationInput = {
   donationId?: Prisma.SortOrderInput | Prisma.SortOrder
   metadata?: Prisma.SortOrderInput | Prisma.SortOrder
   rawResponse?: Prisma.SortOrderInput | Prisma.SortOrder
+  notes?: Prisma.SortOrderInput | Prisma.SortOrder
   paidAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -449,6 +493,9 @@ export type TransactionWhereUniqueInput = Prisma.AtLeast<{
   fees?: Prisma.DecimalNullableFilter<"Transaction"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   netAmount?: Prisma.DecimalNullableFilter<"Transaction"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currency?: Prisma.StringFilter<"Transaction"> | string
+  baseAmount?: Prisma.DecimalNullableFilter<"Transaction"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  baseCurrency?: Prisma.StringFilter<"Transaction"> | string
+  fxRate?: Prisma.DecimalNullableFilter<"Transaction"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   channel?: Prisma.StringNullableFilter<"Transaction"> | string | null
   cardBrand?: Prisma.StringNullableFilter<"Transaction"> | string | null
   cardLast4?: Prisma.StringNullableFilter<"Transaction"> | string | null
@@ -464,6 +511,7 @@ export type TransactionWhereUniqueInput = Prisma.AtLeast<{
   donationId?: Prisma.StringNullableFilter<"Transaction"> | string | null
   metadata?: Prisma.JsonNullableFilter<"Transaction">
   rawResponse?: Prisma.JsonNullableFilter<"Transaction">
+  notes?: Prisma.StringNullableFilter<"Transaction"> | string | null
   paidAt?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Transaction"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Transaction"> | Date | string
@@ -481,6 +529,9 @@ export type TransactionOrderByWithAggregationInput = {
   fees?: Prisma.SortOrderInput | Prisma.SortOrder
   netAmount?: Prisma.SortOrderInput | Prisma.SortOrder
   currency?: Prisma.SortOrder
+  baseAmount?: Prisma.SortOrderInput | Prisma.SortOrder
+  baseCurrency?: Prisma.SortOrder
+  fxRate?: Prisma.SortOrderInput | Prisma.SortOrder
   channel?: Prisma.SortOrderInput | Prisma.SortOrder
   cardBrand?: Prisma.SortOrderInput | Prisma.SortOrder
   cardLast4?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -496,6 +547,7 @@ export type TransactionOrderByWithAggregationInput = {
   donationId?: Prisma.SortOrderInput | Prisma.SortOrder
   metadata?: Prisma.SortOrderInput | Prisma.SortOrder
   rawResponse?: Prisma.SortOrderInput | Prisma.SortOrder
+  notes?: Prisma.SortOrderInput | Prisma.SortOrder
   paidAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -520,6 +572,9 @@ export type TransactionScalarWhereWithAggregatesInput = {
   fees?: Prisma.DecimalNullableWithAggregatesFilter<"Transaction"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   netAmount?: Prisma.DecimalNullableWithAggregatesFilter<"Transaction"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currency?: Prisma.StringWithAggregatesFilter<"Transaction"> | string
+  baseAmount?: Prisma.DecimalNullableWithAggregatesFilter<"Transaction"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  baseCurrency?: Prisma.StringWithAggregatesFilter<"Transaction"> | string
+  fxRate?: Prisma.DecimalNullableWithAggregatesFilter<"Transaction"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   channel?: Prisma.StringNullableWithAggregatesFilter<"Transaction"> | string | null
   cardBrand?: Prisma.StringNullableWithAggregatesFilter<"Transaction"> | string | null
   cardLast4?: Prisma.StringNullableWithAggregatesFilter<"Transaction"> | string | null
@@ -535,6 +590,7 @@ export type TransactionScalarWhereWithAggregatesInput = {
   donationId?: Prisma.StringNullableWithAggregatesFilter<"Transaction"> | string | null
   metadata?: Prisma.JsonNullableWithAggregatesFilter<"Transaction">
   rawResponse?: Prisma.JsonNullableWithAggregatesFilter<"Transaction">
+  notes?: Prisma.StringNullableWithAggregatesFilter<"Transaction"> | string | null
   paidAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Transaction"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Transaction"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Transaction"> | Date | string
@@ -551,6 +607,9 @@ export type TransactionCreateInput = {
   fees?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   netAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currency?: string
+  baseAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  baseCurrency?: string
+  fxRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   channel?: string | null
   cardBrand?: string | null
   cardLast4?: string | null
@@ -565,6 +624,7 @@ export type TransactionCreateInput = {
   donationId?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   rawResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  notes?: string | null
   paidAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -582,6 +642,9 @@ export type TransactionUncheckedCreateInput = {
   fees?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   netAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currency?: string
+  baseAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  baseCurrency?: string
+  fxRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   channel?: string | null
   cardBrand?: string | null
   cardLast4?: string | null
@@ -597,6 +660,7 @@ export type TransactionUncheckedCreateInput = {
   donationId?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   rawResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  notes?: string | null
   paidAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -613,6 +677,9 @@ export type TransactionUpdateInput = {
   fees?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   netAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
+  baseAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  baseCurrency?: Prisma.StringFieldUpdateOperationsInput | string
+  fxRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   channel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cardBrand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cardLast4?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -627,6 +694,7 @@ export type TransactionUpdateInput = {
   donationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   rawResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -644,6 +712,9 @@ export type TransactionUncheckedUpdateInput = {
   fees?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   netAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
+  baseAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  baseCurrency?: Prisma.StringFieldUpdateOperationsInput | string
+  fxRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   channel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cardBrand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cardLast4?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -659,6 +730,7 @@ export type TransactionUncheckedUpdateInput = {
   donationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   rawResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -675,6 +747,9 @@ export type TransactionCreateManyInput = {
   fees?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   netAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currency?: string
+  baseAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  baseCurrency?: string
+  fxRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   channel?: string | null
   cardBrand?: string | null
   cardLast4?: string | null
@@ -690,6 +765,7 @@ export type TransactionCreateManyInput = {
   donationId?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   rawResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  notes?: string | null
   paidAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -706,6 +782,9 @@ export type TransactionUpdateManyMutationInput = {
   fees?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   netAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
+  baseAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  baseCurrency?: Prisma.StringFieldUpdateOperationsInput | string
+  fxRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   channel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cardBrand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cardLast4?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -720,6 +799,7 @@ export type TransactionUpdateManyMutationInput = {
   donationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   rawResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -736,6 +816,9 @@ export type TransactionUncheckedUpdateManyInput = {
   fees?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   netAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
+  baseAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  baseCurrency?: Prisma.StringFieldUpdateOperationsInput | string
+  fxRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   channel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cardBrand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cardLast4?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -751,6 +834,7 @@ export type TransactionUncheckedUpdateManyInput = {
   donationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   rawResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -777,6 +861,9 @@ export type TransactionCountOrderByAggregateInput = {
   fees?: Prisma.SortOrder
   netAmount?: Prisma.SortOrder
   currency?: Prisma.SortOrder
+  baseAmount?: Prisma.SortOrder
+  baseCurrency?: Prisma.SortOrder
+  fxRate?: Prisma.SortOrder
   channel?: Prisma.SortOrder
   cardBrand?: Prisma.SortOrder
   cardLast4?: Prisma.SortOrder
@@ -792,6 +879,7 @@ export type TransactionCountOrderByAggregateInput = {
   donationId?: Prisma.SortOrder
   metadata?: Prisma.SortOrder
   rawResponse?: Prisma.SortOrder
+  notes?: Prisma.SortOrder
   paidAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -801,6 +889,8 @@ export type TransactionAvgOrderByAggregateInput = {
   amount?: Prisma.SortOrder
   fees?: Prisma.SortOrder
   netAmount?: Prisma.SortOrder
+  baseAmount?: Prisma.SortOrder
+  fxRate?: Prisma.SortOrder
 }
 
 export type TransactionMaxOrderByAggregateInput = {
@@ -814,6 +904,9 @@ export type TransactionMaxOrderByAggregateInput = {
   fees?: Prisma.SortOrder
   netAmount?: Prisma.SortOrder
   currency?: Prisma.SortOrder
+  baseAmount?: Prisma.SortOrder
+  baseCurrency?: Prisma.SortOrder
+  fxRate?: Prisma.SortOrder
   channel?: Prisma.SortOrder
   cardBrand?: Prisma.SortOrder
   cardLast4?: Prisma.SortOrder
@@ -827,6 +920,7 @@ export type TransactionMaxOrderByAggregateInput = {
   memberId?: Prisma.SortOrder
   ticketId?: Prisma.SortOrder
   donationId?: Prisma.SortOrder
+  notes?: Prisma.SortOrder
   paidAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -843,6 +937,9 @@ export type TransactionMinOrderByAggregateInput = {
   fees?: Prisma.SortOrder
   netAmount?: Prisma.SortOrder
   currency?: Prisma.SortOrder
+  baseAmount?: Prisma.SortOrder
+  baseCurrency?: Prisma.SortOrder
+  fxRate?: Prisma.SortOrder
   channel?: Prisma.SortOrder
   cardBrand?: Prisma.SortOrder
   cardLast4?: Prisma.SortOrder
@@ -856,6 +953,7 @@ export type TransactionMinOrderByAggregateInput = {
   memberId?: Prisma.SortOrder
   ticketId?: Prisma.SortOrder
   donationId?: Prisma.SortOrder
+  notes?: Prisma.SortOrder
   paidAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -865,6 +963,8 @@ export type TransactionSumOrderByAggregateInput = {
   amount?: Prisma.SortOrder
   fees?: Prisma.SortOrder
   netAmount?: Prisma.SortOrder
+  baseAmount?: Prisma.SortOrder
+  fxRate?: Prisma.SortOrder
 }
 
 export type TransactionCreateNestedManyWithoutUserInput = {
@@ -928,6 +1028,9 @@ export type TransactionCreateWithoutUserInput = {
   fees?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   netAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currency?: string
+  baseAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  baseCurrency?: string
+  fxRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   channel?: string | null
   cardBrand?: string | null
   cardLast4?: string | null
@@ -942,6 +1045,7 @@ export type TransactionCreateWithoutUserInput = {
   donationId?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   rawResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  notes?: string | null
   paidAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -958,6 +1062,9 @@ export type TransactionUncheckedCreateWithoutUserInput = {
   fees?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   netAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currency?: string
+  baseAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  baseCurrency?: string
+  fxRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   channel?: string | null
   cardBrand?: string | null
   cardLast4?: string | null
@@ -972,6 +1079,7 @@ export type TransactionUncheckedCreateWithoutUserInput = {
   donationId?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   rawResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  notes?: string | null
   paidAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1017,6 +1125,9 @@ export type TransactionScalarWhereInput = {
   fees?: Prisma.DecimalNullableFilter<"Transaction"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   netAmount?: Prisma.DecimalNullableFilter<"Transaction"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currency?: Prisma.StringFilter<"Transaction"> | string
+  baseAmount?: Prisma.DecimalNullableFilter<"Transaction"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  baseCurrency?: Prisma.StringFilter<"Transaction"> | string
+  fxRate?: Prisma.DecimalNullableFilter<"Transaction"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   channel?: Prisma.StringNullableFilter<"Transaction"> | string | null
   cardBrand?: Prisma.StringNullableFilter<"Transaction"> | string | null
   cardLast4?: Prisma.StringNullableFilter<"Transaction"> | string | null
@@ -1032,6 +1143,7 @@ export type TransactionScalarWhereInput = {
   donationId?: Prisma.StringNullableFilter<"Transaction"> | string | null
   metadata?: Prisma.JsonNullableFilter<"Transaction">
   rawResponse?: Prisma.JsonNullableFilter<"Transaction">
+  notes?: Prisma.StringNullableFilter<"Transaction"> | string | null
   paidAt?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Transaction"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Transaction"> | Date | string
@@ -1048,6 +1160,9 @@ export type TransactionCreateManyUserInput = {
   fees?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   netAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currency?: string
+  baseAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  baseCurrency?: string
+  fxRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   channel?: string | null
   cardBrand?: string | null
   cardLast4?: string | null
@@ -1062,6 +1177,7 @@ export type TransactionCreateManyUserInput = {
   donationId?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   rawResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  notes?: string | null
   paidAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1078,6 +1194,9 @@ export type TransactionUpdateWithoutUserInput = {
   fees?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   netAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
+  baseAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  baseCurrency?: Prisma.StringFieldUpdateOperationsInput | string
+  fxRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   channel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cardBrand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cardLast4?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1092,6 +1211,7 @@ export type TransactionUpdateWithoutUserInput = {
   donationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   rawResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1108,6 +1228,9 @@ export type TransactionUncheckedUpdateWithoutUserInput = {
   fees?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   netAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
+  baseAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  baseCurrency?: Prisma.StringFieldUpdateOperationsInput | string
+  fxRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   channel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cardBrand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cardLast4?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1122,6 +1245,7 @@ export type TransactionUncheckedUpdateWithoutUserInput = {
   donationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   rawResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1138,6 +1262,9 @@ export type TransactionUncheckedUpdateManyWithoutUserInput = {
   fees?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   netAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
+  baseAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  baseCurrency?: Prisma.StringFieldUpdateOperationsInput | string
+  fxRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   channel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cardBrand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cardLast4?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1152,6 +1279,7 @@ export type TransactionUncheckedUpdateManyWithoutUserInput = {
   donationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   rawResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1170,6 +1298,9 @@ export type TransactionSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   fees?: boolean
   netAmount?: boolean
   currency?: boolean
+  baseAmount?: boolean
+  baseCurrency?: boolean
+  fxRate?: boolean
   channel?: boolean
   cardBrand?: boolean
   cardLast4?: boolean
@@ -1185,6 +1316,7 @@ export type TransactionSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   donationId?: boolean
   metadata?: boolean
   rawResponse?: boolean
+  notes?: boolean
   paidAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1202,6 +1334,9 @@ export type TransactionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   fees?: boolean
   netAmount?: boolean
   currency?: boolean
+  baseAmount?: boolean
+  baseCurrency?: boolean
+  fxRate?: boolean
   channel?: boolean
   cardBrand?: boolean
   cardLast4?: boolean
@@ -1217,6 +1352,7 @@ export type TransactionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   donationId?: boolean
   metadata?: boolean
   rawResponse?: boolean
+  notes?: boolean
   paidAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1234,6 +1370,9 @@ export type TransactionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   fees?: boolean
   netAmount?: boolean
   currency?: boolean
+  baseAmount?: boolean
+  baseCurrency?: boolean
+  fxRate?: boolean
   channel?: boolean
   cardBrand?: boolean
   cardLast4?: boolean
@@ -1249,6 +1388,7 @@ export type TransactionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   donationId?: boolean
   metadata?: boolean
   rawResponse?: boolean
+  notes?: boolean
   paidAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1266,6 +1406,9 @@ export type TransactionSelectScalar = {
   fees?: boolean
   netAmount?: boolean
   currency?: boolean
+  baseAmount?: boolean
+  baseCurrency?: boolean
+  fxRate?: boolean
   channel?: boolean
   cardBrand?: boolean
   cardLast4?: boolean
@@ -1281,12 +1424,13 @@ export type TransactionSelectScalar = {
   donationId?: boolean
   metadata?: boolean
   rawResponse?: boolean
+  notes?: boolean
   paidAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type TransactionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "provider" | "reference" | "providerTxId" | "purpose" | "status" | "amount" | "fees" | "netAmount" | "currency" | "channel" | "cardBrand" | "cardLast4" | "cardBank" | "gatewayResponse" | "ipAddress" | "customerEmail" | "customerName" | "customerPhone" | "userId" | "memberId" | "ticketId" | "donationId" | "metadata" | "rawResponse" | "paidAt" | "createdAt" | "updatedAt", ExtArgs["result"]["transaction"]>
+export type TransactionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "provider" | "reference" | "providerTxId" | "purpose" | "status" | "amount" | "fees" | "netAmount" | "currency" | "baseAmount" | "baseCurrency" | "fxRate" | "channel" | "cardBrand" | "cardLast4" | "cardBank" | "gatewayResponse" | "ipAddress" | "customerEmail" | "customerName" | "customerPhone" | "userId" | "memberId" | "ticketId" | "donationId" | "metadata" | "rawResponse" | "notes" | "paidAt" | "createdAt" | "updatedAt", ExtArgs["result"]["transaction"]>
 export type TransactionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.Transaction$userArgs<ExtArgs>
 }
@@ -1313,6 +1457,9 @@ export type $TransactionPayload<ExtArgs extends runtime.Types.Extensions.Interna
     fees: runtime.Decimal | null
     netAmount: runtime.Decimal | null
     currency: string
+    baseAmount: runtime.Decimal | null
+    baseCurrency: string
+    fxRate: runtime.Decimal | null
     channel: string | null
     cardBrand: string | null
     cardLast4: string | null
@@ -1328,6 +1475,7 @@ export type $TransactionPayload<ExtArgs extends runtime.Types.Extensions.Interna
     donationId: string | null
     metadata: runtime.JsonValue | null
     rawResponse: runtime.JsonValue | null
+    notes: string | null
     paidAt: Date | null
     createdAt: Date
     updatedAt: Date
@@ -1765,6 +1913,9 @@ export interface TransactionFieldRefs {
   readonly fees: Prisma.FieldRef<"Transaction", 'Decimal'>
   readonly netAmount: Prisma.FieldRef<"Transaction", 'Decimal'>
   readonly currency: Prisma.FieldRef<"Transaction", 'String'>
+  readonly baseAmount: Prisma.FieldRef<"Transaction", 'Decimal'>
+  readonly baseCurrency: Prisma.FieldRef<"Transaction", 'String'>
+  readonly fxRate: Prisma.FieldRef<"Transaction", 'Decimal'>
   readonly channel: Prisma.FieldRef<"Transaction", 'String'>
   readonly cardBrand: Prisma.FieldRef<"Transaction", 'String'>
   readonly cardLast4: Prisma.FieldRef<"Transaction", 'String'>
@@ -1780,6 +1931,7 @@ export interface TransactionFieldRefs {
   readonly donationId: Prisma.FieldRef<"Transaction", 'String'>
   readonly metadata: Prisma.FieldRef<"Transaction", 'Json'>
   readonly rawResponse: Prisma.FieldRef<"Transaction", 'Json'>
+  readonly notes: Prisma.FieldRef<"Transaction", 'String'>
   readonly paidAt: Prisma.FieldRef<"Transaction", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Transaction", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Transaction", 'DateTime'>

@@ -239,5 +239,5 @@ TicketConfirmationEmail.PreviewProps = {
   eventLocation: "Eko Convention Centre, Lagos",
   reference: "T202608150001",
   recipientEmail: "adewale@example.com",
-  eventsUrl: "https://yif.org/events",
+  eventsUrl: "https://www.yifww.org/events",
 } satisfies TicketConfirmationEmailProps;

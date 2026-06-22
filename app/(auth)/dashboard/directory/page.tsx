@@ -8,26 +8,6 @@ export const metadata: Metadata = {
   title: "Member Directory | YIF Member Portal",
 };
 
-const TIER_BADGE: Record<string, string> = {
-  PLATINUM: "bg-[#5dade2]/20 text-[#85c1e9] border-[#5dade2]/30",
-  DIAMOND: "bg-[#9b59b6]/20 text-[#c39bd3] border-[#9b59b6]/30",
-  GOLD: "bg-[var(--yif-gold)]/15 text-[var(--yif-gold)] border-[var(--yif-gold)]/30",
-  SILVER: "bg-white/10 text-white/60 border-white/20",
-};
-
-const TIER_COLOR: Record<string, string> = {
-  PLATINUM: "#5dade2",
-  DIAMOND: "#9b59b6",
-  GOLD: "var(--yif-gold)",
-  SILVER: "#7f8c8d",
-};
-
-const TIER_LABEL: Record<string, string> = {
-  PLATINUM: "Platinum",
-  DIAMOND: "Diamond",
-  GOLD: "Gold",
-  SILVER: "Silver",
-};
 
 function getInitials(name: string) {
   return name
@@ -50,7 +30,7 @@ export default async function DirectoryPage() {
       country: true,
       cityDistrict: true,
       continent: true,
-      member: true,
+      member: { include: { tier: { select: { name: true, color: true } } } },
     },
   });
 
@@ -83,8 +63,7 @@ export default async function DirectoryPage() {
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {members.map((m) => {
-            const tier = m.member?.tier ?? "SILVER";
-            const color = TIER_COLOR[tier] ?? "var(--yif-gold)";
+            const color = m.member?.tier?.color ?? "var(--yif-gold)";
             const initials = getInitials(m.name ?? "?");
             const joinYear = m.member?.joinedAt
               ? new Date(m.member.joinedAt).getFullYear()
@@ -120,9 +99,14 @@ export default async function DirectoryPage() {
 
                 <div className="flex items-center justify-between">
                   <span
-                    className={`rounded-full border text-xs px-2.5 py-0.5 font-medium ${TIER_BADGE[tier] ?? ""}`}
+                    className="rounded-full border text-xs px-2.5 py-0.5 font-medium"
+                    style={{
+                      backgroundColor: `color-mix(in srgb, ${color} 20%, transparent)`,
+                      color,
+                      borderColor: `color-mix(in srgb, ${color} 30%, transparent)`,
+                    }}
                   >
-                    {TIER_LABEL[tier] ?? tier}
+                    {m.member?.tier?.name ?? "Member"}
                   </span>
                   {joinYear && (
                     <span className="text-xs text-white/25">

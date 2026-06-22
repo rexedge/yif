@@ -25,9 +25,17 @@ const PURPOSE_LABELS: Record<string, string> = {
   OTHER: "Other",
 };
 
-function naira(amount: number | null | undefined): string {
+const CURRENCY_SYMBOLS: Record<string, string> = {
+  NGN: "₦",
+  USD: "$",
+  GBP: "£",
+  EUR: "€",
+};
+
+function fmtAmount(amount: number | null | undefined, currency?: string | null): string {
   if (amount == null) return "—";
-  return `₦${Number(amount).toLocaleString("en-NG", {
+  const sym = CURRENCY_SYMBOLS[currency ?? "NGN"] ?? (currency ?? "");
+  return `${sym}${Number(amount).toLocaleString("en", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })}`;
@@ -60,23 +68,24 @@ export default async function AdminTransactionsPage({
 
   const status = get("status") ?? "";
   const purpose = get("purpose") ?? "";
+  const currency = get("currency") ?? "";
+  const provider = get("provider") ?? "";
+  const dateFrom = get("from") ?? "";
+  const dateTo = get("to") ?? "";
   const q = (get("q") ?? "").trim();
   const page = Math.max(1, parseInt(get("page") ?? "1", 10) || 1);
 
   const where: Prisma.TransactionWhereInput = {
-    ...(status
+    ...(status ? { status: status as "PENDING" | "SUCCESS" | "FAILED" | "ABANDONED" | "REVERSED" } : {}),
+    ...(purpose ? { purpose: purpose as "MEMBERSHIP" | "TICKET" | "DONATION" | "OTHER" } : {}),
+    ...(currency ? { currency } : {}),
+    ...(provider ? { provider } : {}),
+    ...((dateFrom || dateTo)
       ? {
-          status: status as
-            | "PENDING"
-            | "SUCCESS"
-            | "FAILED"
-            | "ABANDONED"
-            | "REVERSED",
-        }
-      : {}),
-    ...(purpose
-      ? {
-          purpose: purpose as "MEMBERSHIP" | "TICKET" | "DONATION" | "OTHER",
+          createdAt: {
+            ...(dateFrom ? { gte: new Date(dateFrom) } : {}),
+            ...(dateTo ? { lte: new Date(dateTo + "T23:59:59Z") } : {}),
+          },
         }
       : {}),
     ...(q
@@ -90,7 +99,7 @@ export default async function AdminTransactionsPage({
       : {}),
   };
 
-  const [rows, totalCount, sumSuccess, sumFees, statusCounts] =
+  const [rows, totalCount, successByCurrency, statusCounts] =
     await Promise.all([
       prisma.transaction.findMany({
         where,
@@ -100,13 +109,11 @@ export default async function AdminTransactionsPage({
         include: { user: { select: { id: true, name: true, email: true } } },
       }),
       prisma.transaction.count({ where }),
-      prisma.transaction.aggregate({
+      prisma.transaction.groupBy({
+        by: ["currency"],
         where: { ...where, status: "SUCCESS" },
-        _sum: { amount: true, netAmount: true },
-      }),
-      prisma.transaction.aggregate({
-        where: { ...where, status: "SUCCESS" },
-        _sum: { fees: true },
+        _sum: { amount: true, fees: true, netAmount: true },
+        orderBy: { currency: "asc" },
       }),
       prisma.transaction.groupBy({
         by: ["status"],
@@ -116,27 +123,47 @@ export default async function AdminTransactionsPage({
     ]);
 
   const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
-  const grossTotal = Number(sumSuccess._sum.amount ?? 0);
-  const netTotal = Number(sumSuccess._sum.netAmount ?? 0);
-  const feesTotal = Number(sumFees._sum.fees ?? 0);
+
+  // Format multi-currency totals as "₦309,000 · $15 · £50"
+  function fmtMultiCurrency(field: "amount" | "fees" | "netAmount"): string {
+    const parts = successByCurrency
+      .filter((g) => Number(g._sum[field] ?? 0) > 0)
+      .map((g) => fmtAmount(Number(g._sum[field] ?? 0), g.currency));
+    return parts.length ? parts.join(" · ") : "—";
+  }
 
   const counts = Object.fromEntries(
     statusCounts.map((s) => [s.status, s._count._all]),
   ) as Record<string, number>;
 
-  // helper for building filter URLs while preserving other params
+  // Build filter URL preserving all current params
   const buildHref = (overrides: Record<string, string | undefined>) => {
     const sp = new URLSearchParams();
     if (q) sp.set("q", q);
     if (status) sp.set("status", status);
     if (purpose) sp.set("purpose", purpose);
+    if (currency) sp.set("currency", currency);
+    if (provider) sp.set("provider", provider);
+    if (dateFrom) sp.set("from", dateFrom);
+    if (dateTo) sp.set("to", dateTo);
     for (const [k, v] of Object.entries(overrides)) {
       if (v == null || v === "") sp.delete(k);
       else sp.set(k, v);
     }
+    sp.delete("page");
     const s = sp.toString();
     return s ? `/admin/transactions?${s}` : "/admin/transactions";
   };
+
+  // Export URL — pass all current filters
+  const exportParams = new URLSearchParams();
+  if (status) exportParams.set("status", status);
+  if (purpose) exportParams.set("purpose", purpose);
+  if (currency) exportParams.set("currency", currency);
+  if (provider) exportParams.set("provider", provider);
+  if (dateFrom) exportParams.set("from", dateFrom);
+  if (dateTo) exportParams.set("to", dateTo);
+  const exportHref = `/api/admin/export/transactions?${exportParams.toString()}`;
 
   return (
     <div className="min-h-screen bg-[var(--yif-navy-dark)] px-4 py-8 sm:px-6 lg:px-8">
@@ -150,18 +177,23 @@ export default async function AdminTransactionsPage({
             Transactions
           </h1>
           <p className="mt-1 text-white/40 text-sm">
-            Every Paystack payment, including charges and gateway response, for
-            full transparency.
+            All Paystack and Stripe payments with full audit detail.
           </p>
         </div>
+        <a
+          href={exportHref}
+          className="rounded-xl border border-white/15 text-white/60 hover:text-white hover:border-white/30 px-4 py-2 text-sm font-medium transition-colors"
+        >
+          Export CSV
+        </a>
       </div>
 
       {/* Summary cards */}
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 mb-8">
         {[
-          { label: "Gross (Successful)", value: naira(grossTotal) },
-          { label: "Paystack Fees", value: naira(feesTotal) },
-          { label: "Net Received", value: naira(netTotal) },
+          { label: "Gross (Successful)", value: fmtMultiCurrency("amount") },
+          { label: "Gateway Fees", value: fmtMultiCurrency("fees") },
+          { label: "Net Received", value: fmtMultiCurrency("netAmount") },
           { label: "Total Records", value: String(totalCount) },
         ].map((s) => (
           <div
@@ -171,7 +203,7 @@ export default async function AdminTransactionsPage({
             <p className="text-xs text-white/40 font-medium uppercase tracking-wide mb-1.5">
               {s.label}
             </p>
-            <p className="font-display text-2xl font-bold text-white">
+            <p className="font-display text-xl font-bold text-white break-all leading-tight">
               {s.value}
             </p>
           </div>
@@ -180,70 +212,122 @@ export default async function AdminTransactionsPage({
 
       {/* Filters */}
       <form
-        className="mb-6 flex flex-wrap items-end gap-3 rounded-2xl bg-white/5 border border-white/8 p-4"
+        className="mb-6 rounded-2xl bg-white/5 border border-white/8 p-4"
         action="/admin/transactions"
       >
-        <div className="flex-1 min-w-[200px]">
-          <label className="block text-xs font-medium text-white/50 mb-1.5">
-            Search reference, email or name
-          </label>
-          <input
-            type="search"
-            name="q"
-            defaultValue={q}
-            placeholder="ref_xxx or jane@…"
-            className="w-full rounded-lg bg-white/8 border border-white/10 px-3 py-2 text-sm text-white placeholder-white/30 focus:outline-none focus:border-[var(--yif-terracotta)]"
-          />
-        </div>
-        <div>
-          <label className="block text-xs font-medium text-white/50 mb-1.5">
-            Status
-          </label>
-          <select
-            name="status"
-            aria-label="Filter by status"
-            defaultValue={status}
-            className="rounded-lg bg-white/8 border border-white/10 px-3 py-2 text-sm text-white focus:outline-none"
+        <div className="flex flex-wrap items-end gap-3">
+          {/* Search */}
+          <div className="flex-1 min-w-[180px]">
+            <label className="block text-xs font-medium text-white/50 mb-1.5">
+              Search
+            </label>
+            <input
+              type="search"
+              name="q"
+              defaultValue={q}
+              placeholder="Reference, email or name…"
+              className="w-full rounded-lg bg-white/8 border border-white/10 px-3 py-2 text-sm text-white placeholder-white/30 focus:outline-none focus:border-[var(--yif-terracotta)]"
+            />
+          </div>
+
+          {/* Status */}
+          <div>
+            <label className="block text-xs font-medium text-white/50 mb-1.5">Status</label>
+            <select
+              name="status"
+              defaultValue={status}
+              className="rounded-lg bg-white/8 border border-white/10 px-3 py-2 text-sm text-white focus:outline-none"
+            >
+              <option value="">All</option>
+              <option value="SUCCESS">Success ({counts.SUCCESS ?? 0})</option>
+              <option value="PENDING">Pending ({counts.PENDING ?? 0})</option>
+              <option value="FAILED">Failed ({counts.FAILED ?? 0})</option>
+              <option value="ABANDONED">Abandoned ({counts.ABANDONED ?? 0})</option>
+              <option value="REVERSED">Reversed ({counts.REVERSED ?? 0})</option>
+            </select>
+          </div>
+
+          {/* Purpose */}
+          <div>
+            <label className="block text-xs font-medium text-white/50 mb-1.5">Purpose</label>
+            <select
+              name="purpose"
+              defaultValue={purpose}
+              className="rounded-lg bg-white/8 border border-white/10 px-3 py-2 text-sm text-white focus:outline-none"
+            >
+              <option value="">All</option>
+              <option value="MEMBERSHIP">Membership</option>
+              <option value="TICKET">Ticket</option>
+              <option value="DONATION">Donation</option>
+              <option value="OTHER">Other</option>
+            </select>
+          </div>
+
+          {/* Currency */}
+          <div>
+            <label className="block text-xs font-medium text-white/50 mb-1.5">Currency</label>
+            <select
+              name="currency"
+              defaultValue={currency}
+              className="rounded-lg bg-white/8 border border-white/10 px-3 py-2 text-sm text-white focus:outline-none"
+            >
+              <option value="">All</option>
+              <option value="NGN">NGN ₦</option>
+              <option value="USD">USD $</option>
+              <option value="GBP">GBP £</option>
+              <option value="EUR">EUR €</option>
+            </select>
+          </div>
+
+          {/* Provider */}
+          <div>
+            <label className="block text-xs font-medium text-white/50 mb-1.5">Provider</label>
+            <select
+              name="provider"
+              defaultValue={provider}
+              className="rounded-lg bg-white/8 border border-white/10 px-3 py-2 text-sm text-white focus:outline-none"
+            >
+              <option value="">All</option>
+              <option value="paystack">Paystack</option>
+              <option value="stripe">Stripe</option>
+            </select>
+          </div>
+
+          {/* Date from */}
+          <div>
+            <label className="block text-xs font-medium text-white/50 mb-1.5">From</label>
+            <input
+              type="date"
+              name="from"
+              defaultValue={dateFrom}
+              className="rounded-lg bg-white/8 border border-white/10 px-3 py-2 text-sm text-white focus:outline-none focus:border-[var(--yif-terracotta)] [color-scheme:dark]"
+            />
+          </div>
+
+          {/* Date to */}
+          <div>
+            <label className="block text-xs font-medium text-white/50 mb-1.5">To</label>
+            <input
+              type="date"
+              name="to"
+              defaultValue={dateTo}
+              className="rounded-lg bg-white/8 border border-white/10 px-3 py-2 text-sm text-white focus:outline-none focus:border-[var(--yif-terracotta)] [color-scheme:dark]"
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="rounded-lg bg-[var(--yif-terracotta)] px-5 py-2 text-sm font-semibold text-white hover:opacity-90"
           >
-            <option value="">All</option>
-            <option value="SUCCESS">Success ({counts.SUCCESS ?? 0})</option>
-            <option value="PENDING">Pending ({counts.PENDING ?? 0})</option>
-            <option value="FAILED">Failed ({counts.FAILED ?? 0})</option>
-            <option value="ABANDONED">
-              Abandoned ({counts.ABANDONED ?? 0})
-            </option>
-            <option value="REVERSED">Reversed ({counts.REVERSED ?? 0})</option>
-          </select>
-        </div>
-        <div>
-          <label className="block text-xs font-medium text-white/50 mb-1.5">
-            Purpose
-          </label>
-          <select
-            name="purpose"
-            aria-label="Filter by purpose"
-            defaultValue={purpose}
-            className="rounded-lg bg-white/8 border border-white/10 px-3 py-2 text-sm text-white focus:outline-none"
+            Apply
+          </button>
+          <Link
+            href="/admin/transactions"
+            className="text-xs text-white/50 hover:text-white underline px-2 py-2"
           >
-            <option value="">All</option>
-            <option value="MEMBERSHIP">Membership</option>
-            <option value="TICKET">Ticket</option>
-            <option value="DONATION">Donation</option>
-            <option value="OTHER">Other</option>
-          </select>
+            Reset
+          </Link>
         </div>
-        <button
-          type="submit"
-          className="rounded-lg bg-[var(--yif-terracotta)] px-5 py-2 text-sm font-semibold text-white hover:opacity-90"
-        >
-          Apply
-        </button>
-        <Link
-          href="/admin/transactions"
-          className="text-xs text-white/50 hover:text-white underline px-2 py-2"
-        >
-          Reset
-        </Link>
       </form>
 
       {/* Table */}
@@ -256,10 +340,10 @@ export default async function AdminTransactionsPage({
                 <th className="px-4 py-3 font-medium">Reference</th>
                 <th className="px-4 py-3 font-medium">Customer</th>
                 <th className="px-4 py-3 font-medium">Purpose</th>
+                <th className="px-4 py-3 font-medium">Provider</th>
                 <th className="px-4 py-3 font-medium text-right">Amount</th>
                 <th className="px-4 py-3 font-medium text-right">Fees</th>
                 <th className="px-4 py-3 font-medium text-right">Net</th>
-                <th className="px-4 py-3 font-medium">Channel</th>
                 <th className="px-4 py-3 font-medium">Status</th>
                 <th className="px-4 py-3" />
               </tr>
@@ -277,34 +361,32 @@ export default async function AdminTransactionsPage({
               ) : (
                 rows.map((t) => (
                   <tr key={t.id} className="hover:bg-white/3">
-                    <td className="px-4 py-3 text-white/70 whitespace-nowrap">
+                    <td className="px-4 py-3 text-white/70 whitespace-nowrap text-xs">
                       {formatDate(t.createdAt)}
                     </td>
-                    <td className="px-4 py-3 font-mono text-xs text-white/60">
+                    <td className="px-4 py-3 font-mono text-[11px] text-white/60 max-w-[140px] truncate">
                       {t.reference}
                     </td>
                     <td className="px-4 py-3 text-white/80">
-                      <div className="font-medium">
+                      <div className="font-medium text-sm">
                         {t.customerName ?? t.user?.name ?? "—"}
                       </div>
-                      <div className="text-xs text-white/40">
-                        {t.customerEmail}
-                      </div>
+                      <div className="text-xs text-white/40">{t.customerEmail}</div>
                     </td>
-                    <td className="px-4 py-3 text-white/70">
+                    <td className="px-4 py-3 text-white/70 text-sm">
                       {PURPOSE_LABELS[t.purpose] ?? t.purpose}
                     </td>
-                    <td className="px-4 py-3 text-right font-medium text-white">
-                      {naira(Number(t.amount))}
+                    <td className="px-4 py-3 text-white/50 text-xs capitalize">
+                      {t.provider}
                     </td>
-                    <td className="px-4 py-3 text-right text-white/60">
-                      {t.fees != null ? naira(Number(t.fees)) : "—"}
+                    <td className="px-4 py-3 text-right font-medium text-white text-sm">
+                      {fmtAmount(Number(t.amount), t.currency)}
                     </td>
-                    <td className="px-4 py-3 text-right text-white/80">
-                      {t.netAmount != null ? naira(Number(t.netAmount)) : "—"}
+                    <td className="px-4 py-3 text-right text-white/60 text-sm">
+                      {t.fees != null ? fmtAmount(Number(t.fees), t.currency) : "—"}
                     </td>
-                    <td className="px-4 py-3 text-white/60 capitalize">
-                      {t.channel ?? "—"}
+                    <td className="px-4 py-3 text-right text-white/80 text-sm">
+                      {t.netAmount != null ? fmtAmount(Number(t.netAmount), t.currency) : "—"}
                     </td>
                     <td className="px-4 py-3">
                       <span

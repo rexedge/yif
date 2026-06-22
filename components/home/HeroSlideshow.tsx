@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 type PlaceImage = {
   src: string;
@@ -97,34 +97,23 @@ const PLACE_IMAGES: PlaceImage[] = [
 
 const INTERVAL_MS = 6500;
 
-function shuffle<T>(input: readonly T[]): T[] {
-  const arr = [...input];
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-}
-
 export function HeroSlideshow() {
-  // Randomise order once per mount so each visit feels fresh.
-  const slides = useMemo(() => shuffle(PLACE_IMAGES), []);
   const [active, setActive] = useState(0);
 
   useEffect(() => {
-    if (slides.length <= 1) return;
+    if (PLACE_IMAGES.length <= 1) return;
     const id = window.setInterval(() => {
-      setActive((i) => (i + 1) % slides.length);
+      setActive((i) => (i + 1) % PLACE_IMAGES.length);
     }, INTERVAL_MS);
     return () => window.clearInterval(id);
-  }, [slides.length]);
+  }, []);
 
-  const current = slides[active];
+  const current = PLACE_IMAGES[active];
 
   return (
     <>
       <div aria-hidden className="absolute inset-0 overflow-hidden">
-        {slides.map((slide, i) => (
+        {PLACE_IMAGES.map((slide, i) => (
           <div
             key={slide.src}
             className={`absolute inset-0 transition-opacity duration-1400 ease-in-out ${

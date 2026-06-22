@@ -62,6 +62,16 @@ export type Account = Prisma.AccountModel
  */
 export type Verification = Prisma.VerificationModel
 /**
+ * Model MembershipTier
+ * 
+ */
+export type MembershipTier = Prisma.MembershipTierModel
+/**
+ * Model MembershipPlanPrice
+ * 
+ */
+export type MembershipPlanPrice = Prisma.MembershipPlanPriceModel
+/**
  * Model Member
  * 
  */

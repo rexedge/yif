@@ -5,6 +5,7 @@
 import type Stripe from "stripe";
 import { prisma } from "@/lib/prisma";
 import { fromStripeMinor } from "@/lib/stripe";
+import { convertToNgn } from "@/lib/fx";
 import {
   sendTicketConfirmation,
   sendDonationThankYou,
@@ -15,8 +16,6 @@ import type {
   TransactionPurpose,
   TransactionStatus,
 } from "@/generated/prisma/enums";
-
-type Tier = "BRONZE" | "SILVER" | "GOLD" | "DIAMOND" | "PLATINUM";
 
 function mapPurpose(value: unknown): TransactionPurpose {
   if (
@@ -73,6 +72,10 @@ export async function fulfillStripeCheckoutSession(
   const fees = feeMinor != null ? fromStripeMinor(feeMinor) : null;
   const netAmount = fees != null ? amount - fees : null;
 
+  // Freeze the NGN-equivalent at fulfillment time for consolidated reporting.
+  // Rates are cached in-memory, so converting cheaply covers all statuses.
+  const fx = amount > 0 ? await convertToNgn(amount, currency).catch(() => null) : null;
+
   const customerEmail =
     session.customer_details?.email ??
     session.customer_email ??
@@ -92,6 +95,9 @@ export async function fulfillStripeCheckoutSession(
     fees,
     netAmount,
     currency,
+    baseAmount: fx?.baseAmount ?? null,
+    baseCurrency: "NGN",
+    fxRate: fx?.fxRate ?? null,
     channel: charge?.payment_method_details?.type ?? "card",
     cardBrand: charge?.payment_method_details?.card?.brand ?? null,
     cardLast4: charge?.payment_method_details?.card?.last4 ?? null,
@@ -107,19 +113,26 @@ export async function fulfillStripeCheckoutSession(
     rawResponse: JSON.parse(JSON.stringify(session)) as Prisma.InputJsonValue,
   };
 
+  // Resolve userId from email so transactions are visible in the user's dashboard.
+  const userRecord = customerEmail
+    ? await prisma.user.findUnique({ where: { email: customerEmail }, select: { id: true } }).catch(() => null)
+    : null;
+  const userId = userRecord?.id ?? null;
+
   // Upsert keyed on session.id (stored as reference).
   const existing = await prisma.transaction.findUnique({
     where: { reference: session.id },
-    select: { id: true, status: true },
+    select: { id: true, status: true, userId: true },
   });
 
   await prisma.transaction.upsert({
     where: { reference: session.id },
-    update,
+    update: { ...update, userId: existing?.userId ?? userId },
     create: {
       provider: "stripe",
       reference: session.id,
       purpose,
+      userId,
       ...update,
     },
   });
@@ -138,7 +151,7 @@ async function runFulfillmentSideEffects(
   currency: string,
 ): Promise<void> {
   const purpose = mapPurpose(meta.purpose);
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://yif.org";
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.yifww.org";
   const recipientEmail =
     session.customer_details?.email ??
     session.customer_email ??
@@ -202,12 +215,14 @@ async function runFulfillmentSideEffects(
     const paymentType =
       typeof meta.paymentType === "string" ? meta.paymentType : "membership";
     const membershipTier =
-      typeof meta.membershipTier === "string" ? meta.membershipTier : "BRONZE";
-    const toTier = typeof meta.toTier === "string" ? meta.toTier : "";
+      typeof meta.membershipTier === "string" ? meta.membershipTier : "";
+    // tierId is the DB id of the target tier (set in all new checkout metadata)
+    const tierId = typeof meta.tierId === "string" ? meta.tierId : "";
+    const toTierId = typeof meta.toTierId === "string" ? meta.toTierId : tierId;
 
     let membershipNumber = "";
     try {
-      if (paymentType === "membership" && memberId) {
+      if (paymentType === "membership" && memberId && tierId) {
         const year = new Date().getFullYear();
         const count = await prisma.member.count({
           where: { status: "ACTIVE" },
@@ -218,6 +233,7 @@ async function runFulfillmentSideEffects(
         await prisma.member.update({
           where: { id: memberId },
           data: {
+            tierId,
             status: "ACTIVE",
             expiresAt,
             membershipNumber,
@@ -228,17 +244,17 @@ async function runFulfillmentSideEffects(
         (paymentType === "membership_upgrade" ||
           paymentType === "membership_renewal") &&
         memberId &&
-        toTier
+        toTierId
       ) {
         const expiresAt = new Date();
         expiresAt.setFullYear(expiresAt.getFullYear() + 1);
         await prisma.member.update({
           where: { id: memberId },
           data: {
-            tier: toTier as Tier,
+            tierId: toTierId,
             status: "ACTIVE",
             expiresAt,
-            pendingTier: null,
+            pendingTierId: null,
             paystackRef: session.id,
           },
         });

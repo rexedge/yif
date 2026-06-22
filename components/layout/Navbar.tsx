@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
@@ -33,7 +34,13 @@ export function Navbar() {
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
           {/* Logo / wordmark */}
           <Link href="/" className="flex items-center gap-3 group">
-            <YIFLogo />
+            <Image
+              src="/apple-touch-icon.png"
+              alt="YIF Logo"
+              width={40}
+              height={40}
+              className="h-10 w-10 rounded-full"
+            />
             <span className="flex flex-col leading-tight">
               <span className="font-display text-xl font-semibold tracking-wide text-white group-hover:text-[var(--yif-gold)] transition-colors">
                 YIF
@@ -179,36 +186,6 @@ export function Navbar() {
         )}
       </nav>
     </header>
-  );
-}
-
-function YIFLogo() {
-  return (
-    <div className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--yif-gold)]/60 bg-[var(--yif-gold)]/10">
-      <svg
-        width="22"
-        height="22"
-        viewBox="0 0 22 22"
-        fill="none"
-        aria-hidden="true"
-      >
-        {/* Simplified Adinkra-inspired mark */}
-        <circle
-          cx="11"
-          cy="11"
-          r="9"
-          stroke="var(--yif-gold)"
-          strokeWidth="1.2"
-        />
-        <path
-          d="M11 3 L11 19 M3 11 L19 11"
-          stroke="var(--yif-gold)"
-          strokeWidth="1.2"
-          strokeLinecap="round"
-        />
-        <circle cx="11" cy="11" r="3" fill="var(--yif-gold)" />
-      </svg>
-    </div>
   );
 }
 

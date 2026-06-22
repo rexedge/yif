@@ -9,6 +9,8 @@ const NAV_ITEMS = [
   { label: "Events", href: "/admin/events", icon: "◷" },
   { label: "Donations", href: "/admin/donations", icon: "◆" },
   { label: "Transactions", href: "/admin/transactions", icon: "₦" },
+  { label: "Revenue", href: "/admin/revenue", icon: "↗" },
+  { label: "Tiers & Pricing", href: "/admin/settings/tiers", icon: "⊹" },
 ];
 
 export default function AdminShell({

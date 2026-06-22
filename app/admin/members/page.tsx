@@ -19,10 +19,20 @@ export default async function AdminMembersPage({
   const sp = await searchParams;
   const justInvited = sp.invited === "1";
 
-  const members = await prisma.member.findMany({
-    orderBy: { joinedAt: "desc" },
-    include: { user: { select: { id: true, name: true, email: true } } },
-  });
+  const [members, availableTiers] = await Promise.all([
+    prisma.member.findMany({
+      orderBy: { joinedAt: "desc" },
+      include: {
+        user: { select: { id: true, name: true, email: true } },
+        tier: { select: { name: true, color: true, slug: true } },
+      },
+    }),
+    prisma.membershipTier.findMany({
+      where: { isActive: true },
+      orderBy: { sortOrder: "asc" },
+      select: { name: true, slug: true },
+    }),
+  ]);
 
   return (
     <div className="min-h-screen bg-[var(--yif-navy-dark)] px-4 py-8 sm:px-6 lg:px-8">
@@ -52,7 +62,7 @@ export default async function AdminMembersPage({
           </p>
         </div>
       )}
-      <MembersTable members={members} />
+      <MembersTable members={members} tiers={availableTiers} />
     </div>
   );
 }

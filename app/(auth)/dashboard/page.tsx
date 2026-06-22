@@ -45,38 +45,49 @@ export default async function DashboardPage() {
   const userId = session.user.id;
   const firstName = session.user.name?.split(" ")[0] ?? "Member";
 
-  const [member, recentDonations, upcomingTickets, donationStats, ticketCount] =
-    await Promise.all([
-      prisma.member.findUnique({ where: { userId } }),
-      prisma.donation.findMany({
-        where: { userId, status: "COMPLETED" },
-        orderBy: { createdAt: "desc" },
-        take: 3,
-      }),
-      prisma.ticket.findMany({
-        where: { userId, status: { in: ["CONFIRMED", "PENDING"] } },
-        include: { event: true },
-        orderBy: { createdAt: "desc" },
-        take: 2,
-      }),
-      prisma.donation.aggregate({
-        where: { userId, status: "COMPLETED" },
-        _sum: { amount: true },
-        _count: { id: true },
-      }),
-      prisma.ticket.count({ where: { userId, status: "USED" } }),
-    ]);
+  // Read flat metadata key off a Transaction row (set at init time).
+  const metaStr = (
+    metadata: unknown,
+    key: string,
+  ): string => {
+    if (metadata && typeof metadata === "object" && !Array.isArray(metadata)) {
+      const v = (metadata as Record<string, unknown>)[key];
+      if (typeof v === "string") return v;
+      if (typeof v === "number") return String(v);
+    }
+    return "";
+  };
 
-  const totalDonated = donationStats._sum.amount
-    ? `₦${Number(donationStats._sum.amount).toLocaleString("en-NG")}`
-    : "₦0";
-  const donationCount = donationStats._count.id;
+  const [member, donationTx, ticketTx] = await Promise.all([
+    prisma.member.findUnique({ where: { userId }, include: { tier: true } }),
+    prisma.transaction.findMany({
+      where: { userId, purpose: "DONATION", status: "SUCCESS" },
+      orderBy: { createdAt: "desc" },
+      select: { id: true, amount: true, currency: true, baseAmount: true, metadata: true, createdAt: true },
+    }),
+    prisma.transaction.findMany({
+      where: { userId, purpose: "TICKET", status: "SUCCESS" },
+      orderBy: { createdAt: "desc" },
+      select: { id: true, amount: true, currency: true, reference: true, metadata: true, createdAt: true },
+    }),
+  ]);
+
+  const recentDonations = donationTx.slice(0, 3);
+  const recentTickets = ticketTx.slice(0, 2);
+
+  // Consolidated lifetime total in NGN-equivalent (baseAmount frozen at payment).
+  const totalDonatedNgn = donationTx.reduce(
+    (acc, d) => acc + Number(d.baseAmount ?? d.amount ?? 0),
+    0,
+  );
+  const hasForeignDonation = donationTx.some((d) => d.currency !== "NGN");
+  const totalDonated = `${hasForeignDonation ? "≈" : ""}₦${totalDonatedNgn.toLocaleString("en-NG")}`;
+  const donationCount = donationTx.length;
+  const ticketCount = ticketTx.length;
   const memberYear = member?.joinedAt
     ? new Date(member.joinedAt).getFullYear()
     : new Date(session.user.createdAt).getFullYear();
-  const tierLabel = member?.tier
-    ? member.tier.charAt(0) + member.tier.slice(1).toLowerCase()
-    : "—";
+  const tierLabel = member?.tier?.name ?? "—";
   const memberStatus = member?.status ?? "PENDING";
   const memberExpiry = member?.expiresAt
     ? new Date(member.expiresAt).toLocaleDateString("en-GB", {
@@ -102,9 +113,9 @@ export default async function DashboardPage() {
       color: "var(--yif-green)",
     },
     {
-      label: "Events Attended",
+      label: "Tickets Purchased",
       value: String(ticketCount),
-      sub: `${upcomingTickets.length} upcoming registered`,
+      sub: `${recentTickets.length} recent`,
       color: "var(--yif-terracotta)",
     },
     {
@@ -190,9 +201,9 @@ export default async function DashboardPage() {
               View all →
             </Link>
           </div>
-          {upcomingTickets.length === 0 ? (
+          {recentTickets.length === 0 ? (
             <div className="px-5 py-8 text-center text-white/40 text-sm">
-              No upcoming tickets.{" "}
+              No tickets yet.{" "}
               <Link
                 href="/events"
                 className="text-[var(--yif-gold)] hover:underline"
@@ -202,27 +213,30 @@ export default async function DashboardPage() {
             </div>
           ) : (
             <div className="divide-y divide-white/5">
-              {upcomingTickets.map((t) => (
+              {recentTickets.map((t) => (
                 <div key={t.id} className="px-5 py-4">
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-white leading-snug truncate">
-                        {t.event.title}
+                        {metaStr(t.metadata, "eventTitle") || "Event ticket"}
                       </p>
                       <p className="text-xs text-white/40 mt-1">
-                        {new Date(t.event.date).toLocaleDateString("en-GB", {
+                        Purchased{" "}
+                        {new Date(t.createdAt).toLocaleDateString("en-GB", {
                           day: "numeric",
                           month: "short",
                           year: "numeric",
                         })}
-                        {t.event.location ? ` · ${t.event.location}` : ""}
                       </p>
                       <p className="text-xs text-white/40">
-                        {t.tierName} × {t.quantity}
+                        {metaStr(t.metadata, "tierName") || "Ticket"}
+                        {metaStr(t.metadata, "quantity")
+                          ? ` × ${metaStr(t.metadata, "quantity")}`
+                          : ""}
                       </p>
                     </div>
-                    <span className="shrink-0 rounded-full bg-[var(--yif-green)]/20 text-[var(--yif-green)] text-xs px-2 py-0.5 font-medium">
-                      {t.status.charAt(0) + t.status.slice(1).toLowerCase()}
+                    <span className="shrink-0 text-sm font-semibold text-[var(--yif-gold)]">
+                      {t.currency} {Number(t.amount).toLocaleString()}
                     </span>
                   </div>
                   <p className="text-xs text-white/20 mt-2 font-mono">
@@ -265,7 +279,9 @@ export default async function DashboardPage() {
                   className="flex items-center justify-between px-5 py-4"
                 >
                   <div>
-                    <p className="text-sm font-medium text-white">{d.cause}</p>
+                    <p className="text-sm font-medium text-white">
+                      {metaStr(d.metadata, "cause") || "General Fund"}
+                    </p>
                     <p className="text-xs text-white/40 mt-0.5">
                       {new Date(d.createdAt).toLocaleDateString("en-GB", {
                         day: "numeric",
@@ -276,10 +292,10 @@ export default async function DashboardPage() {
                   </div>
                   <div className="text-right">
                     <p className="text-sm font-semibold text-[var(--yif-gold)]">
-                      ₦{Number(d.amount).toLocaleString("en-NG")}
+                      {d.currency} {Number(d.amount).toLocaleString()}
                     </p>
                     <span className="text-xs text-[var(--yif-green)]">
-                      {d.status.charAt(0) + d.status.slice(1).toLowerCase()}
+                      Completed
                     </span>
                   </div>
                 </div>

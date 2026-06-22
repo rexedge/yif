@@ -11,6 +11,8 @@ import {
 import { recordTransactionInit } from "@/lib/transactions";
 import { stripe, assertStripeConfigured, toStripeMinor } from "@/lib/stripe";
 import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 export type DonateState = {
   error?: string;
@@ -51,7 +53,11 @@ export async function initiateDonation(
     };
   }
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.yifww.org";
+
+  // Attach userId if the donor is logged in.
+  const authSession = await auth.api.getSession({ headers: await headers() }).catch(() => null);
+  const userId = authSession?.user.id ?? null;
 
   // ── Non-NGN via Stripe ──────────────────────────────────────────────────
   if (currency !== "NGN") {
@@ -107,6 +113,7 @@ export async function initiateDonation(
         currency,
         customerEmail: email,
         customerName: name,
+        userId,
         metadata: { cause, frequency, currency, originalAmount: amount },
       }).catch((err) =>
         console.error("[initiateDonation] tx init record failed:", err),
@@ -170,6 +177,7 @@ export async function initiateDonation(
       currency,
       customerEmail: email,
       customerName: name,
+      userId,
       metadata: { cause, frequency, currency },
     }).catch((err) =>
       console.error("[initiateDonation] tx init record failed:", err),

@@ -42,16 +42,18 @@ export default async function AdminDashboardPage() {
     pendingMembers,
   ] = await Promise.all([
     prisma.member.count(),
-    prisma.transaction.aggregate({
-      _sum: { amount: true },
+    prisma.transaction.groupBy({
+      by: ["currency"],
       where: { purpose: "DONATION", status: "SUCCESS" },
+      _sum: { amount: true },
+      orderBy: { currency: "asc" },
     }),
     prisma.event.count({ where: { date: { gte: startOfYear } } }),
     prisma.user.count(),
     prisma.member.findMany({
       orderBy: { joinedAt: "desc" },
       take: 4,
-      include: { user: { select: { name: true } } },
+      include: { user: { select: { name: true } }, tier: { select: { name: true } } },
     }),
     prisma.transaction.findMany({
       orderBy: { createdAt: "desc" },
@@ -60,17 +62,26 @@ export default async function AdminDashboardPage() {
     }),
     prisma.member.findMany({
       where: { status: "PENDING" },
-      include: { user: { select: { name: true } } },
+      include: { user: { select: { name: true } }, tier: { select: { name: true } } },
       orderBy: { joinedAt: "desc" },
       take: 5,
     }),
   ]);
 
-  const totalDonations = Number(donationAgg._sum.amount ?? 0);
+  // Build per-currency donation totals e.g. "₦309k · $15 · £50"
+  const donationSummary = donationAgg
+    .filter((g) => Number(g._sum.amount ?? 0) > 0)
+    .map((g) => {
+      const amt = Number(g._sum.amount ?? 0);
+      if (g.currency === "NGN") return formatNaira(amt);
+      const sym: Record<string, string> = { USD: "$", GBP: "£", EUR: "€" };
+      return `${sym[g.currency] ?? g.currency}${amt.toLocaleString()}`;
+    })
+    .join(" · ") || "₦0";
 
   const STATS = [
     { label: "Total Members", value: String(memberCount) },
-    { label: "Total Donations", value: formatNaira(totalDonations) },
+    { label: "Donations", value: donationSummary },
     { label: "Events This Year", value: String(eventCount) },
     { label: "Registered Users", value: String(userCount) },
   ];
@@ -80,14 +91,14 @@ export default async function AdminDashboardPage() {
       time: timeAgo(m.joinedAt),
       icon: "◈",
       color: "#c9913d",
-      text: `${m.user.name} joined as ${m.tier.charAt(0) + m.tier.slice(1).toLowerCase()} member`,
+      text: `${m.user.name} joined as ${m.tier.name} member`,
       date: m.joinedAt,
     })),
     ...recentDonations.map((d) => ({
       time: timeAgo(d.createdAt),
       icon: "◆",
       color: "#2d6a4f",
-      text: `${formatNaira(Number(d.amount))} donation received${d.customerName ? ` — ${d.customerName}` : ""}`,
+      text: `${d.currency === "NGN" ? formatNaira(Number(d.amount)) : `${d.currency} ${Number(d.amount).toLocaleString()}`} donation received${d.customerName ? ` — ${d.customerName}` : ""}`,
       date: d.createdAt,
     })),
   ]
@@ -188,7 +199,7 @@ export default async function AdminDashboardPage() {
                       {p.user.name}
                     </p>
                     <span className="text-xs text-[var(--yif-gold)] font-medium capitalize">
-                      {p.tier.charAt(0) + p.tier.slice(1).toLowerCase()}
+                      {p.tier.name}
                     </span>
                   </div>
                   <p className="text-xs text-white/35 mb-2">Awaiting review</p>

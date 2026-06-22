@@ -14,7 +14,9 @@ export const metadata: Metadata = {
     title: "About the Yoruba Indigenes' Foundation",
     description:
       "Rooted in heritage, united in purpose. Discover YIF's founding story, national leadership, global diaspora network, and 20+ years of advancing Yoruba unity.",
+    images: [{ url: "/logo.jpg", width: 1200, height: 630, alt: "Yoruba Indigenes' Foundation" }],
   },
+  twitter: { card: "summary_large_image", images: ["/logo.jpg"] },
 };
 
 export default function AboutPage() {

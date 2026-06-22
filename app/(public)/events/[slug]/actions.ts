@@ -42,7 +42,7 @@ export async function checkoutTickets(
   if (!tier) return { error: "Invalid ticket tier." };
 
   const totalNaira = Number(tier.price) * qty;
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.yifww.org";
 
   try {
     const result = await paystackRequest<TransactionInitData>(
@@ -89,6 +89,7 @@ export async function checkoutTickets(
       customerEmail: email,
       customerName: name,
       metadata: {
+        eventId: event.id,
         eventSlug: slug,
         eventTitle: event.title,
         tierId: tier.id,

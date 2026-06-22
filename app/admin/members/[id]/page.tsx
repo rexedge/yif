@@ -16,23 +16,28 @@ export const metadata: Metadata = { title: "Member Detail | Admin — YIF" };
 
 type Props = { params: Promise<{ id: string }> };
 
-const TIERS = ["associate", "full", "student", "senior", "patron", "honorary"];
-
 export default async function MemberDetailPage({ params }: Props) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session || session.user.role !== "admin") redirect("/dashboard");
 
   const { id } = await params;
-  const user = await prisma.user.findUnique({
+  const [user, availableTiers] = await Promise.all([
+  prisma.user.findUnique({
     where: { id },
     include: {
-      member: true,
+      member: { include: { tier: true } },
       transactions: {
         orderBy: { createdAt: "desc" },
         take: 10,
       },
     },
-  });
+  }),
+  prisma.membershipTier.findMany({
+    where: { isActive: true },
+    orderBy: { sortOrder: "asc" },
+    select: { name: true, slug: true },
+  }),
+  ]);
   if (!user) notFound();
 
   const isBanned = user.banned;
@@ -102,7 +107,7 @@ export default async function MemberDetailPage({ params }: Props) {
               )}
               {member && (
                 <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-[var(--yif-gold)]/15 text-[var(--yif-gold)] border border-[var(--yif-gold)]/25 capitalize">
-                  {member.tier} Member
+                  {member.tier.name} Member
                 </span>
               )}
               {member && (
@@ -158,16 +163,17 @@ export default async function MemberDetailPage({ params }: Props) {
               <form action={handleTierChange} className="flex gap-3">
                 <select
                   name="tier"
-                  defaultValue={member.tier}
+                  defaultValue={member.tier.slug}
+                  aria-label="Membership tier"
                   className="flex-1 rounded-xl bg-white/5 border border-white/10 px-3 py-2 text-sm text-white outline-none focus:border-[var(--yif-gold)]/40 appearance-none"
                 >
-                  {TIERS.map((t) => (
+                  {availableTiers.map((t) => (
                     <option
-                      key={t}
-                      value={t}
-                      className="bg-[#1a2744] capitalize"
+                      key={t.slug}
+                      value={t.slug}
+                      className="bg-[#1a2744]"
                     >
-                      {t.charAt(0).toUpperCase() + t.slice(1)}
+                      {t.name}
                     </option>
                   ))}
                 </select>

@@ -39,14 +39,24 @@ export default async function DonationsPage() {
   const totalDonated = donations.reduce((acc, d) => acc + Number(d.amount), 0);
   const totalCount = donations.length;
 
+  // Totals only make sense within a single currency; show NGN total if mixed.
+  const ngnDonations = donations.filter((d) => d.currency === "NGN");
+  const ngnTotal = ngnDonations.reduce((acc, d) => acc + Number(d.amount), 0);
+  const ngnThisYear = ngnDonations
+    .filter((d) => new Date(d.createdAt).getFullYear() === currentYear)
+    .reduce((acc, d) => acc + Number(d.amount), 0);
+  const hasForeign = donations.some((d) => d.currency !== "NGN");
+
   const summary = [
     {
-      label: "Total Donated (All Time)",
-      value: `₦${totalDonated.toLocaleString("en-NG")}`,
+      label: "Total Donated (NGN)",
+      value: hasForeign
+        ? `₦${ngnTotal.toLocaleString("en-NG")} + foreign`
+        : `₦${totalDonated.toLocaleString("en-NG")}`,
     },
     {
       label: `This Year (${currentYear})`,
-      value: `₦${thisYearTotal.toLocaleString("en-NG")}`,
+      value: `₦${ngnThisYear.toLocaleString("en-NG")}${hasForeign ? " + foreign" : ""}`,
     },
     { label: "Transactions", value: String(totalCount) },
   ];
@@ -142,7 +152,7 @@ export default async function DonationsPage() {
                     {year}
                   </h2>
                   <span className="text-sm text-[var(--yif-gold)] font-semibold">
-                    ₦{yearTotal.toLocaleString("en-NG")} total
+                    ₦{yearDonations.filter(d => d.currency === "NGN").reduce((a, d) => a + Number(d.amount), 0).toLocaleString("en-NG")}{yearDonations.some(d => d.currency !== "NGN") ? " + foreign" : ""} total
                   </span>
                 </div>
                 <div className="rounded-xl bg-white/5 border border-white/10 overflow-hidden">
@@ -185,7 +195,7 @@ export default async function DonationsPage() {
                           </td>
                           <td className="px-5 py-4 text-right">
                             <p className="font-semibold text-white">
-                              ₦{Number(d.amount).toLocaleString("en-NG")}
+                              {d.currency} {Number(d.amount).toLocaleString()}
                             </p>
                             <p className="text-xs text-[var(--yif-green)] mt-0.5">
                               Completed

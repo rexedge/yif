@@ -244,5 +244,5 @@ DonationThankYouEmail.PreviewProps = {
   frequency: "monthly",
   reference: "D2026042301",
   recipientEmail: "chiamaka@example.com",
-  donateUrl: "https://yif.org/donate",
+  donateUrl: "https://www.yifww.org/donate",
 } satisfies DonationThankYouEmailProps;

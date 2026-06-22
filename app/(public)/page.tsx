@@ -17,7 +17,9 @@ export const metadata: Metadata = {
     description:
       "Uniting the global Yoruba in diaspora through culture, education, and economic empowerment.",
     type: "website",
+    images: [{ url: "/logo.jpg", width: 1200, height: 630, alt: "Yoruba Indigenes' Foundation" }],
   },
+  twitter: { card: "summary_large_image", images: ["/logo.jpg"] },
 };
 
 export default function HomePage() {

@@ -46,7 +46,7 @@ export async function buyDelegatePass(
 
   const tier = event.tiers[0];
   const totalNaira = Number(tier.price) * qty;
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.yifww.org";
 
   // ── USD via Stripe ──────────────────────────────────────────────────────
   if (currency !== "NGN") {
@@ -105,6 +105,7 @@ export async function buyDelegatePass(
         customerName: name,
         customerPhone: phone || null,
         metadata: {
+          eventId: event.id,
           eventSlug: YWD_SLUG,
           eventTitle: YWD_EVENT.title,
           tierId: tier.id,
@@ -180,6 +181,7 @@ export async function buyDelegatePass(
       customerName: name,
       customerPhone: phone || null,
       metadata: {
+        eventId: event.id,
         eventSlug: YWD_SLUG,
         eventTitle: YWD_EVENT.title,
         tierId: tier.id,

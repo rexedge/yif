@@ -1,80 +1,21 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { getActiveTiers } from "@/lib/membership";
+import { TierCards } from "./TierCards";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Membership | YIF",
   description:
     "Join the Yoruba Indigenes' Foundation as a member and be part of a global community committed to Yoruba unity and progress.",
+  openGraph: {
+    title: "Join YIF — Membership",
+    description: "Choose a membership tier and join the global Yoruba community.",
+    images: [{ url: "/logo.jpg", width: 1200, height: 630, alt: "YIF Membership" }],
+  },
+  twitter: { card: "summary_large_image", images: ["/logo.jpg"] },
 };
-
-const TIERS = [
-  {
-    name: "Silver",
-    slug: "silver",
-    price: "₦5,000",
-    period: "/year",
-    color: "#7f8c8d",
-    badge: null,
-    summary: "Start your journey as a YIF community member.",
-    benefits: [
-      "Access to monthly e-newsletter",
-      "Cultural events invitations",
-      "Member directory listing",
-      "Online community forum access",
-      "YIF Welcome Kit (digital)",
-    ],
-  },
-  {
-    name: "Gold",
-    slug: "gold",
-    price: "₦10,000",
-    period: "/year",
-    color: "#c9913d",
-    badge: null,
-    summary: "Full member privileges with voting rights.",
-    benefits: [
-      "All Silver benefits",
-      "10% discount on event tickets",
-      "Voting rights at general meetings",
-      "Mentorship Program access",
-      "Name in annual member listing",
-    ],
-  },
-  {
-    name: "Diamond",
-    slug: "diamond",
-    price: "₦15,000",
-    period: "/year",
-    color: "#9b59b6",
-    badge: "Most Popular",
-    summary: "Enhanced access and scholarship nomination rights.",
-    benefits: [
-      "All Gold benefits",
-      "20% discount on event tickets",
-      "Priority event registration",
-      "Scholarship nomination rights",
-      "Quarterly board briefings",
-      "YIF Ambassador certificate",
-    ],
-  },
-  {
-    name: "Platinum",
-    slug: "platinum",
-    price: "₦20,000",
-    period: "/year",
-    color: "#5dade2",
-    badge: "Elite",
-    summary: "Leadership-level recognition and board access.",
-    benefits: [
-      "All Diamond benefits",
-      "Complimentary annual gala seat",
-      "Name in printed annual report",
-      "Program committee invite",
-      "Dedicated member liaison officer",
-      "Exclusive networking receptions",
-    ],
-  },
-];
 
 const STEPS = [
   {
@@ -90,7 +31,7 @@ const STEPS = [
   {
     num: "03",
     title: "Make Payment",
-    desc: "Pay securely via Paystack — card, bank transfer, or mobile money.",
+    desc: "Pay securely via Paystack (NGN) or Stripe (USD, GBP, EUR).",
   },
   {
     num: "04",
@@ -99,7 +40,25 @@ const STEPS = [
   },
 ];
 
-export default function MembershipPage() {
+const BENEFIT_ROWS = [
+  { label: "Newsletter & community forum" },
+  { label: "Cultural event invitations" },
+  { label: "Member directory listing" },
+  { label: "Event ticket discount (10%)" },
+  { label: "Voting rights at general meetings" },
+  { label: "Mentorship Programme access" },
+  { label: "Event ticket discount (20%)" },
+  { label: "Scholarship nomination rights" },
+  { label: "Priority event registration" },
+  { label: "Quarterly board briefings" },
+  { label: "Complimentary annual gala seat" },
+  { label: "Annual report listing" },
+  { label: "Programme committee invite" },
+];
+
+export default async function MembershipPage() {
+  const tiers = await getActiveTiers();
+
   return (
     <>
       {/* Hero */}
@@ -110,7 +69,6 @@ export default function MembershipPage() {
             "linear-gradient(160deg, var(--yif-navy) 0%, var(--yif-navy-dark) 60%, #0d1526 100%)",
         }}
       >
-        {/* Background pattern */}
         <div
           className="absolute inset-0 opacity-[0.03]"
           style={{
@@ -146,7 +104,6 @@ export default function MembershipPage() {
               Sign In
             </Link>
           </div>
-          {/* Stats strip */}
           <div className="mt-12 grid grid-cols-3 gap-4 max-w-sm mx-auto">
             {[
               { n: "1,200+", l: "Members" },
@@ -165,10 +122,7 @@ export default function MembershipPage() {
       </section>
 
       {/* Tiers */}
-      <section
-        id="tiers"
-        className="py-20 px-4 sm:px-6 lg:px-8 bg-[var(--yif-cream)]"
-      >
+      <section id="tiers" className="py-20 px-4 sm:px-6 lg:px-8 bg-[var(--yif-cream)]">
         <div className="mx-auto max-w-7xl">
           <div className="text-center mb-12">
             <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[var(--yif-gold)] mb-2">
@@ -179,77 +133,14 @@ export default function MembershipPage() {
             </h2>
             <p className="mt-3 text-[var(--muted)] max-w-xl mx-auto text-sm">
               All memberships are renewed annually and include access to the YIF
-              Member Portal.
+              Member Portal. Toggle the currency to pay in your preferred denomination.
             </p>
           </div>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {TIERS.map((tier) => (
-              <div
-                key={tier.slug}
-                className="relative rounded-2xl bg-white border flex flex-col overflow-hidden shadow-sm hover:shadow-md transition-shadow"
-                style={{
-                  borderColor: `color-mix(in srgb, ${tier.color} 25%, #e5e7eb)`,
-                }}
-              >
-                {tier.badge && (
-                  <div
-                    className="absolute top-0 right-0 text-white text-xs font-bold px-3 py-1 rounded-bl-xl"
-                    style={{ backgroundColor: tier.color }}
-                  >
-                    {tier.badge}
-                  </div>
-                )}
-                <div className="px-5 pt-6 pb-4">
-                  <p
-                    className="font-display text-lg font-semibold"
-                    style={{ color: tier.color }}
-                  >
-                    {tier.name}
-                  </p>
-                  <p className="font-display text-3xl font-bold text-[var(--yif-navy)] mt-1">
-                    {tier.price}
-                    <span className="text-sm font-sans font-normal text-[var(--muted)]">
-                      {tier.period}
-                    </span>
-                  </p>
-                  <p className="text-xs text-[var(--muted)] mt-2">
-                    {tier.summary}
-                  </p>
-                </div>
-                <div className="px-5 pb-4 flex-1">
-                  <ul className="space-y-2">
-                    {tier.benefits.map((b) => (
-                      <li
-                        key={b}
-                        className="flex items-start gap-2 text-sm text-[var(--yif-charcoal)]"
-                      >
-                        <span
-                          className="mt-0.5 shrink-0 font-bold"
-                          style={{ color: tier.color }}
-                        >
-                          ✓
-                        </span>
-                        {b}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div className="px-5 pb-5">
-                  <Link
-                    href={`/membership/apply?tier=${tier.slug}`}
-                    className="block w-full text-center rounded-xl py-2.5 text-sm font-semibold transition-colors text-white"
-                    style={{ backgroundColor: tier.color }}
-                  >
-                    Join as {tier.name}
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
+          <TierCards tiers={tiers} />
         </div>
       </section>
 
-      {/* Benefits comparison table */}
+      {/* Benefits comparison */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-[var(--yif-cream-dark)]">
         <div className="mx-auto max-w-5xl">
           <div className="text-center mb-10">
@@ -267,11 +158,11 @@ export default function MembershipPage() {
                   <th className="text-left px-5 py-4 text-[var(--yif-navy)] font-semibold">
                     Benefit
                   </th>
-                  {TIERS.map((t) => (
+                  {tiers.map((t) => (
                     <th
                       key={t.slug}
                       className="px-3 py-4 text-center font-display font-semibold"
-                      style={{ color: t.color }}
+                      style={{ color: t.color ?? undefined }}
                     >
                       {t.name}
                     </th>
@@ -279,21 +170,7 @@ export default function MembershipPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-[var(--yif-cream-dark)]">
-                {[
-                  { label: "Newsletter & community", from: 0 },
-                  { label: "Cultural event invitations", from: 0 },
-                  { label: "Member directory listing", from: 0 },
-                  { label: "Event ticket discount (10%)", from: 1 },
-                  { label: "Voting rights", from: 1 },
-                  { label: "Mentorship Program", from: 1 },
-                  { label: "Event ticket discount (20%)", from: 2 },
-                  { label: "Scholarship nominations", from: 2 },
-                  { label: "Priority registration", from: 2 },
-                  { label: "Quarterly board briefings", from: 2 },
-                  { label: "Annual gala seat", from: 3 },
-                  { label: "Annual report listing", from: 3 },
-                  { label: "Program committee invite", from: 3 },
-                ].map((row) => (
+                {BENEFIT_ROWS.map((row, rowIdx) => (
                   <tr
                     key={row.label}
                     className="hover:bg-[var(--yif-cream)]/50 transition-colors"
@@ -301,22 +178,27 @@ export default function MembershipPage() {
                     <td className="px-5 py-3 text-[var(--yif-charcoal)]">
                       {row.label}
                     </td>
-                    {TIERS.map((t, i) => (
-                      <td key={t.slug} className="px-3 py-3 text-center">
-                        {i >= row.from ? (
-                          <span
-                            style={{ color: t.color }}
-                            className="font-bold text-base"
-                          >
-                            ✓
-                          </span>
-                        ) : (
-                          <span className="text-[var(--muted)]/30 text-base">
-                            –
-                          </span>
-                        )}
-                      </td>
-                    ))}
+                    {tiers.map((t, tierIdx) => {
+                      // Tiers are sorted by sortOrder; higher-tier tiers include more benefits
+                      // First 3 rows → all tiers; rows 3-5 → tier ≥ 1; rows 6-9 → tier ≥ 2; rows 10+ → tier ≥ 3
+                      const threshold =
+                        rowIdx < 3 ? 0 : rowIdx < 6 ? 1 : rowIdx < 10 ? 2 : 3;
+                      const included = tierIdx >= threshold;
+                      return (
+                        <td key={t.slug} className="px-3 py-3 text-center">
+                          {included ? (
+                            <span
+                              style={{ color: t.color ?? undefined }}
+                              className="font-bold text-base"
+                            >
+                              ✓
+                            </span>
+                          ) : (
+                            <span className="text-[var(--muted)]/30 text-base">–</span>
+                          )}
+                        </td>
+                      );
+                    })}
                   </tr>
                 ))}
               </tbody>
@@ -360,8 +242,7 @@ export default function MembershipPage() {
       <section
         className="py-20 px-4 sm:px-6 lg:px-8"
         style={{
-          background:
-            "linear-gradient(135deg, var(--yif-navy) 0%, var(--yif-navy-dark) 100%)",
+          background: "linear-gradient(135deg, var(--yif-navy) 0%, var(--yif-navy-dark) 100%)",
         }}
       >
         <div className="mx-auto max-w-2xl text-center">
@@ -375,7 +256,7 @@ export default function MembershipPage() {
             &ldquo;We carry the load on our heads collectively.&rdquo;
           </p>
           <p className="text-white/50 text-sm mt-4 mb-8">
-            Your membership directly funds scholarships, cultural Programs, and
+            Your membership directly funds scholarships, cultural programmes, and
             community advocacy. Join over 1,200 members worldwide.
           </p>
           <div className="flex flex-wrap justify-center gap-4">

@@ -84,8 +84,8 @@ export default async function PaymentCallbackPage({ searchParams }: Props) {
   const paymentType = getField("payment_type");
   const memberId = getField("member_id");
   const membershipTier = getField("membership_tier");
-  const fromTier = getField("from_tier");
-  const toTier = getField("to_tier");
+  const tierId = getField("tier_id");
+  const toTierId = getField("to_tier_id");
 
   const isMembershipFlow =
     paymentType === "membership" ||
@@ -100,19 +100,22 @@ export default async function PaymentCallbackPage({ searchParams }: Props) {
       : donationType === "donation"
         ? "DONATION"
         : "OTHER";
-  await recordTransactionVerified(data, { purpose }).catch((err) => {
+
+  // Link transaction to a registered user if their email matches.
+  const linkedUser = await prisma.user
+    .findUnique({ where: { email: data.customer.email }, select: { id: true } })
+    .catch(() => null);
+
+  await recordTransactionVerified(data, { purpose, userId: linkedUser?.id ?? null }).catch((err) => {
     console.error("[callback] tx verify record failed:", err);
   });
 
   // Membership activation — run before sending email
   let membershipNumber = "";
-  if (success && paymentType === "membership" && memberId) {
+  if (success && paymentType === "membership" && memberId && tierId) {
     try {
-      // Generate a unique membership number: YIF-YYYY-NNNN
       const year = new Date().getFullYear();
-      const count = await prisma.member.count({
-        where: { status: "ACTIVE" },
-      });
+      const count = await prisma.member.count({ where: { status: "ACTIVE" } });
       membershipNumber = `YIF-${year}-${String(count + 1).padStart(4, "0")}`;
 
       const expiresAt = new Date();
@@ -121,6 +124,7 @@ export default async function PaymentCallbackPage({ searchParams }: Props) {
       await prisma.member.update({
         where: { id: memberId },
         data: {
+          tierId,
           status: "ACTIVE",
           expiresAt,
           membershipNumber,
@@ -138,7 +142,7 @@ export default async function PaymentCallbackPage({ searchParams }: Props) {
     (paymentType === "membership_upgrade" ||
       paymentType === "membership_renewal") &&
     memberId &&
-    toTier
+    toTierId
   ) {
     try {
       const expiresAt = new Date();
@@ -146,10 +150,10 @@ export default async function PaymentCallbackPage({ searchParams }: Props) {
       await prisma.member.update({
         where: { id: memberId },
         data: {
-          tier: toTier as "BRONZE" | "SILVER" | "GOLD" | "DIAMOND" | "PLATINUM",
+          tierId: toTierId,
           status: "ACTIVE",
           expiresAt,
-          pendingTier: null,
+          pendingTierId: null,
           paystackRef: data.reference,
         },
       });
@@ -160,7 +164,7 @@ export default async function PaymentCallbackPage({ searchParams }: Props) {
 
   // Send transactional email — failures must not block page render
   if (success) {
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://yif.org";
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.yifww.org";
     const customerEmail = data.customer.email;
     const formattedAmount = `${currency} ${amountPaid.toLocaleString()}`;
 
@@ -265,23 +269,16 @@ export default async function PaymentCallbackPage({ searchParams }: Props) {
               </p>
             ) : paymentType === "membership_upgrade" ? (
               <p className="text-[var(--muted)] mb-6">
-                You\'ve moved from{" "}
-                <strong className="text-[var(--yif-navy)]">
-                  {fromTier.charAt(0) + fromTier.slice(1).toLowerCase()}
-                </strong>{" "}
-                to{" "}
-                <strong className="text-[var(--yif-navy)]">
-                  {toTier.charAt(0) + toTier.slice(1).toLowerCase()}
-                </strong>{" "}
-                — your new benefits start immediately.
+                Your membership tier has been upgraded — your new benefits start
+                immediately.
               </p>
             ) : paymentType === "membership_renewal" ? (
               <p className="text-[var(--muted)] mb-6">
                 Your{" "}
                 <strong className="text-[var(--yif-navy)]">
-                  {toTier.charAt(0) + toTier.slice(1).toLowerCase()}
+                  {membershipTier || "membership"}
                 </strong>{" "}
-                membership has been renewed for another year.
+                has been renewed for another year.
               </p>
             ) : eventTitle ? (
               <p className="text-[var(--muted)] mb-6">

@@ -7,7 +7,7 @@ import { sendPasswordReset } from "./send-email";
 /**
  * Resolve the canonical site URL.
  * In production, BETTER_AUTH_URL MUST be set to the deployed origin
- * (e.g. https://yif.org). NEXT_PUBLIC_APP_URL is accepted as a fallback.
+ * (e.g. https://www.yifww.org). NEXT_PUBLIC_APP_URL is accepted as a fallback.
  */
 const siteUrl =
   process.env.BETTER_AUTH_URL ??

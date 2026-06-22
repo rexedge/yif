@@ -27,37 +27,37 @@ export type AggregateMember = {
 export type MemberMinAggregateOutputType = {
   id: string | null
   userId: string | null
-  tier: $Enums.MembershipTier | null
+  tierId: string | null
   status: $Enums.MembershipStatus | null
   joinedAt: Date | null
   expiresAt: Date | null
   membershipNumber: string | null
   paystackRef: string | null
-  pendingTier: $Enums.MembershipTier | null
+  pendingTierId: string | null
 }
 
 export type MemberMaxAggregateOutputType = {
   id: string | null
   userId: string | null
-  tier: $Enums.MembershipTier | null
+  tierId: string | null
   status: $Enums.MembershipStatus | null
   joinedAt: Date | null
   expiresAt: Date | null
   membershipNumber: string | null
   paystackRef: string | null
-  pendingTier: $Enums.MembershipTier | null
+  pendingTierId: string | null
 }
 
 export type MemberCountAggregateOutputType = {
   id: number
   userId: number
-  tier: number
+  tierId: number
   status: number
   joinedAt: number
   expiresAt: number
   membershipNumber: number
   paystackRef: number
-  pendingTier: number
+  pendingTierId: number
   _all: number
 }
 
@@ -65,37 +65,37 @@ export type MemberCountAggregateOutputType = {
 export type MemberMinAggregateInputType = {
   id?: true
   userId?: true
-  tier?: true
+  tierId?: true
   status?: true
   joinedAt?: true
   expiresAt?: true
   membershipNumber?: true
   paystackRef?: true
-  pendingTier?: true
+  pendingTierId?: true
 }
 
 export type MemberMaxAggregateInputType = {
   id?: true
   userId?: true
-  tier?: true
+  tierId?: true
   status?: true
   joinedAt?: true
   expiresAt?: true
   membershipNumber?: true
   paystackRef?: true
-  pendingTier?: true
+  pendingTierId?: true
 }
 
 export type MemberCountAggregateInputType = {
   id?: true
   userId?: true
-  tier?: true
+  tierId?: true
   status?: true
   joinedAt?: true
   expiresAt?: true
   membershipNumber?: true
   paystackRef?: true
-  pendingTier?: true
+  pendingTierId?: true
   _all?: true
 }
 
@@ -174,13 +174,13 @@ export type MemberGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 export type MemberGroupByOutputType = {
   id: string
   userId: string
-  tier: $Enums.MembershipTier
+  tierId: string
   status: $Enums.MembershipStatus
   joinedAt: Date
   expiresAt: Date | null
   membershipNumber: string | null
   paystackRef: string | null
-  pendingTier: $Enums.MembershipTier | null
+  pendingTierId: string | null
   _count: MemberCountAggregateOutputType | null
   _min: MemberMinAggregateOutputType | null
   _max: MemberMaxAggregateOutputType | null
@@ -207,27 +207,31 @@ export type MemberWhereInput = {
   NOT?: Prisma.MemberWhereInput | Prisma.MemberWhereInput[]
   id?: Prisma.StringFilter<"Member"> | string
   userId?: Prisma.StringFilter<"Member"> | string
-  tier?: Prisma.EnumMembershipTierFilter<"Member"> | $Enums.MembershipTier
+  tierId?: Prisma.StringFilter<"Member"> | string
   status?: Prisma.EnumMembershipStatusFilter<"Member"> | $Enums.MembershipStatus
   joinedAt?: Prisma.DateTimeFilter<"Member"> | Date | string
   expiresAt?: Prisma.DateTimeNullableFilter<"Member"> | Date | string | null
   membershipNumber?: Prisma.StringNullableFilter<"Member"> | string | null
   paystackRef?: Prisma.StringNullableFilter<"Member"> | string | null
-  pendingTier?: Prisma.EnumMembershipTierNullableFilter<"Member"> | $Enums.MembershipTier | null
+  pendingTierId?: Prisma.StringNullableFilter<"Member"> | string | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  tier?: Prisma.XOR<Prisma.MembershipTierScalarRelationFilter, Prisma.MembershipTierWhereInput>
+  pendingTier?: Prisma.XOR<Prisma.MembershipTierNullableScalarRelationFilter, Prisma.MembershipTierWhereInput> | null
 }
 
 export type MemberOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  tier?: Prisma.SortOrder
+  tierId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   joinedAt?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
   membershipNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   paystackRef?: Prisma.SortOrderInput | Prisma.SortOrder
-  pendingTier?: Prisma.SortOrderInput | Prisma.SortOrder
+  pendingTierId?: Prisma.SortOrderInput | Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
+  tier?: Prisma.MembershipTierOrderByWithRelationInput
+  pendingTier?: Prisma.MembershipTierOrderByWithRelationInput
 }
 
 export type MemberWhereUniqueInput = Prisma.AtLeast<{
@@ -237,25 +241,27 @@ export type MemberWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.MemberWhereInput | Prisma.MemberWhereInput[]
   OR?: Prisma.MemberWhereInput[]
   NOT?: Prisma.MemberWhereInput | Prisma.MemberWhereInput[]
-  tier?: Prisma.EnumMembershipTierFilter<"Member"> | $Enums.MembershipTier
+  tierId?: Prisma.StringFilter<"Member"> | string
   status?: Prisma.EnumMembershipStatusFilter<"Member"> | $Enums.MembershipStatus
   joinedAt?: Prisma.DateTimeFilter<"Member"> | Date | string
   expiresAt?: Prisma.DateTimeNullableFilter<"Member"> | Date | string | null
   paystackRef?: Prisma.StringNullableFilter<"Member"> | string | null
-  pendingTier?: Prisma.EnumMembershipTierNullableFilter<"Member"> | $Enums.MembershipTier | null
+  pendingTierId?: Prisma.StringNullableFilter<"Member"> | string | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  tier?: Prisma.XOR<Prisma.MembershipTierScalarRelationFilter, Prisma.MembershipTierWhereInput>
+  pendingTier?: Prisma.XOR<Prisma.MembershipTierNullableScalarRelationFilter, Prisma.MembershipTierWhereInput> | null
 }, "id" | "userId" | "membershipNumber">
 
 export type MemberOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  tier?: Prisma.SortOrder
+  tierId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   joinedAt?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
   membershipNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   paystackRef?: Prisma.SortOrderInput | Prisma.SortOrder
-  pendingTier?: Prisma.SortOrderInput | Prisma.SortOrder
+  pendingTierId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.MemberCountOrderByAggregateInput
   _max?: Prisma.MemberMaxOrderByAggregateInput
   _min?: Prisma.MemberMinOrderByAggregateInput
@@ -267,96 +273,94 @@ export type MemberScalarWhereWithAggregatesInput = {
   NOT?: Prisma.MemberScalarWhereWithAggregatesInput | Prisma.MemberScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Member"> | string
   userId?: Prisma.StringWithAggregatesFilter<"Member"> | string
-  tier?: Prisma.EnumMembershipTierWithAggregatesFilter<"Member"> | $Enums.MembershipTier
+  tierId?: Prisma.StringWithAggregatesFilter<"Member"> | string
   status?: Prisma.EnumMembershipStatusWithAggregatesFilter<"Member"> | $Enums.MembershipStatus
   joinedAt?: Prisma.DateTimeWithAggregatesFilter<"Member"> | Date | string
   expiresAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Member"> | Date | string | null
   membershipNumber?: Prisma.StringNullableWithAggregatesFilter<"Member"> | string | null
   paystackRef?: Prisma.StringNullableWithAggregatesFilter<"Member"> | string | null
-  pendingTier?: Prisma.EnumMembershipTierNullableWithAggregatesFilter<"Member"> | $Enums.MembershipTier | null
+  pendingTierId?: Prisma.StringNullableWithAggregatesFilter<"Member"> | string | null
 }
 
 export type MemberCreateInput = {
   id?: string
-  tier?: $Enums.MembershipTier
   status?: $Enums.MembershipStatus
   joinedAt?: Date | string
   expiresAt?: Date | string | null
   membershipNumber?: string | null
   paystackRef?: string | null
-  pendingTier?: $Enums.MembershipTier | null
   user: Prisma.UserCreateNestedOneWithoutMemberInput
+  tier: Prisma.MembershipTierCreateNestedOneWithoutMembersInput
+  pendingTier?: Prisma.MembershipTierCreateNestedOneWithoutPendingMembersInput
 }
 
 export type MemberUncheckedCreateInput = {
   id?: string
   userId: string
-  tier?: $Enums.MembershipTier
+  tierId: string
   status?: $Enums.MembershipStatus
   joinedAt?: Date | string
   expiresAt?: Date | string | null
   membershipNumber?: string | null
   paystackRef?: string | null
-  pendingTier?: $Enums.MembershipTier | null
+  pendingTierId?: string | null
 }
 
 export type MemberUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  tier?: Prisma.EnumMembershipTierFieldUpdateOperationsInput | $Enums.MembershipTier
   status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   membershipNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paystackRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  pendingTier?: Prisma.NullableEnumMembershipTierFieldUpdateOperationsInput | $Enums.MembershipTier | null
   user?: Prisma.UserUpdateOneRequiredWithoutMemberNestedInput
+  tier?: Prisma.MembershipTierUpdateOneRequiredWithoutMembersNestedInput
+  pendingTier?: Prisma.MembershipTierUpdateOneWithoutPendingMembersNestedInput
 }
 
 export type MemberUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  tier?: Prisma.EnumMembershipTierFieldUpdateOperationsInput | $Enums.MembershipTier
+  tierId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   membershipNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paystackRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  pendingTier?: Prisma.NullableEnumMembershipTierFieldUpdateOperationsInput | $Enums.MembershipTier | null
+  pendingTierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type MemberCreateManyInput = {
   id?: string
   userId: string
-  tier?: $Enums.MembershipTier
+  tierId: string
   status?: $Enums.MembershipStatus
   joinedAt?: Date | string
   expiresAt?: Date | string | null
   membershipNumber?: string | null
   paystackRef?: string | null
-  pendingTier?: $Enums.MembershipTier | null
+  pendingTierId?: string | null
 }
 
 export type MemberUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  tier?: Prisma.EnumMembershipTierFieldUpdateOperationsInput | $Enums.MembershipTier
   status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   membershipNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paystackRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  pendingTier?: Prisma.NullableEnumMembershipTierFieldUpdateOperationsInput | $Enums.MembershipTier | null
 }
 
 export type MemberUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  tier?: Prisma.EnumMembershipTierFieldUpdateOperationsInput | $Enums.MembershipTier
+  tierId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   membershipNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paystackRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  pendingTier?: Prisma.NullableEnumMembershipTierFieldUpdateOperationsInput | $Enums.MembershipTier | null
+  pendingTierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type MemberNullableScalarRelationFilter = {
@@ -364,40 +368,50 @@ export type MemberNullableScalarRelationFilter = {
   isNot?: Prisma.MemberWhereInput | null
 }
 
+export type MemberListRelationFilter = {
+  every?: Prisma.MemberWhereInput
+  some?: Prisma.MemberWhereInput
+  none?: Prisma.MemberWhereInput
+}
+
+export type MemberOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
+}
+
 export type MemberCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  tier?: Prisma.SortOrder
+  tierId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   joinedAt?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   membershipNumber?: Prisma.SortOrder
   paystackRef?: Prisma.SortOrder
-  pendingTier?: Prisma.SortOrder
+  pendingTierId?: Prisma.SortOrder
 }
 
 export type MemberMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  tier?: Prisma.SortOrder
+  tierId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   joinedAt?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   membershipNumber?: Prisma.SortOrder
   paystackRef?: Prisma.SortOrder
-  pendingTier?: Prisma.SortOrder
+  pendingTierId?: Prisma.SortOrder
 }
 
 export type MemberMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  tier?: Prisma.SortOrder
+  tierId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   joinedAt?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   membershipNumber?: Prisma.SortOrder
   paystackRef?: Prisma.SortOrder
-  pendingTier?: Prisma.SortOrder
+  pendingTierId?: Prisma.SortOrder
 }
 
 export type MemberCreateNestedOneWithoutUserInput = {
@@ -432,38 +446,114 @@ export type MemberUncheckedUpdateOneWithoutUserNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.MemberUpdateToOneWithWhereWithoutUserInput, Prisma.MemberUpdateWithoutUserInput>, Prisma.MemberUncheckedUpdateWithoutUserInput>
 }
 
-export type EnumMembershipTierFieldUpdateOperationsInput = {
-  set?: $Enums.MembershipTier
+export type MemberCreateNestedManyWithoutTierInput = {
+  create?: Prisma.XOR<Prisma.MemberCreateWithoutTierInput, Prisma.MemberUncheckedCreateWithoutTierInput> | Prisma.MemberCreateWithoutTierInput[] | Prisma.MemberUncheckedCreateWithoutTierInput[]
+  connectOrCreate?: Prisma.MemberCreateOrConnectWithoutTierInput | Prisma.MemberCreateOrConnectWithoutTierInput[]
+  createMany?: Prisma.MemberCreateManyTierInputEnvelope
+  connect?: Prisma.MemberWhereUniqueInput | Prisma.MemberWhereUniqueInput[]
+}
+
+export type MemberCreateNestedManyWithoutPendingTierInput = {
+  create?: Prisma.XOR<Prisma.MemberCreateWithoutPendingTierInput, Prisma.MemberUncheckedCreateWithoutPendingTierInput> | Prisma.MemberCreateWithoutPendingTierInput[] | Prisma.MemberUncheckedCreateWithoutPendingTierInput[]
+  connectOrCreate?: Prisma.MemberCreateOrConnectWithoutPendingTierInput | Prisma.MemberCreateOrConnectWithoutPendingTierInput[]
+  createMany?: Prisma.MemberCreateManyPendingTierInputEnvelope
+  connect?: Prisma.MemberWhereUniqueInput | Prisma.MemberWhereUniqueInput[]
+}
+
+export type MemberUncheckedCreateNestedManyWithoutTierInput = {
+  create?: Prisma.XOR<Prisma.MemberCreateWithoutTierInput, Prisma.MemberUncheckedCreateWithoutTierInput> | Prisma.MemberCreateWithoutTierInput[] | Prisma.MemberUncheckedCreateWithoutTierInput[]
+  connectOrCreate?: Prisma.MemberCreateOrConnectWithoutTierInput | Prisma.MemberCreateOrConnectWithoutTierInput[]
+  createMany?: Prisma.MemberCreateManyTierInputEnvelope
+  connect?: Prisma.MemberWhereUniqueInput | Prisma.MemberWhereUniqueInput[]
+}
+
+export type MemberUncheckedCreateNestedManyWithoutPendingTierInput = {
+  create?: Prisma.XOR<Prisma.MemberCreateWithoutPendingTierInput, Prisma.MemberUncheckedCreateWithoutPendingTierInput> | Prisma.MemberCreateWithoutPendingTierInput[] | Prisma.MemberUncheckedCreateWithoutPendingTierInput[]
+  connectOrCreate?: Prisma.MemberCreateOrConnectWithoutPendingTierInput | Prisma.MemberCreateOrConnectWithoutPendingTierInput[]
+  createMany?: Prisma.MemberCreateManyPendingTierInputEnvelope
+  connect?: Prisma.MemberWhereUniqueInput | Prisma.MemberWhereUniqueInput[]
+}
+
+export type MemberUpdateManyWithoutTierNestedInput = {
+  create?: Prisma.XOR<Prisma.MemberCreateWithoutTierInput, Prisma.MemberUncheckedCreateWithoutTierInput> | Prisma.MemberCreateWithoutTierInput[] | Prisma.MemberUncheckedCreateWithoutTierInput[]
+  connectOrCreate?: Prisma.MemberCreateOrConnectWithoutTierInput | Prisma.MemberCreateOrConnectWithoutTierInput[]
+  upsert?: Prisma.MemberUpsertWithWhereUniqueWithoutTierInput | Prisma.MemberUpsertWithWhereUniqueWithoutTierInput[]
+  createMany?: Prisma.MemberCreateManyTierInputEnvelope
+  set?: Prisma.MemberWhereUniqueInput | Prisma.MemberWhereUniqueInput[]
+  disconnect?: Prisma.MemberWhereUniqueInput | Prisma.MemberWhereUniqueInput[]
+  delete?: Prisma.MemberWhereUniqueInput | Prisma.MemberWhereUniqueInput[]
+  connect?: Prisma.MemberWhereUniqueInput | Prisma.MemberWhereUniqueInput[]
+  update?: Prisma.MemberUpdateWithWhereUniqueWithoutTierInput | Prisma.MemberUpdateWithWhereUniqueWithoutTierInput[]
+  updateMany?: Prisma.MemberUpdateManyWithWhereWithoutTierInput | Prisma.MemberUpdateManyWithWhereWithoutTierInput[]
+  deleteMany?: Prisma.MemberScalarWhereInput | Prisma.MemberScalarWhereInput[]
+}
+
+export type MemberUpdateManyWithoutPendingTierNestedInput = {
+  create?: Prisma.XOR<Prisma.MemberCreateWithoutPendingTierInput, Prisma.MemberUncheckedCreateWithoutPendingTierInput> | Prisma.MemberCreateWithoutPendingTierInput[] | Prisma.MemberUncheckedCreateWithoutPendingTierInput[]
+  connectOrCreate?: Prisma.MemberCreateOrConnectWithoutPendingTierInput | Prisma.MemberCreateOrConnectWithoutPendingTierInput[]
+  upsert?: Prisma.MemberUpsertWithWhereUniqueWithoutPendingTierInput | Prisma.MemberUpsertWithWhereUniqueWithoutPendingTierInput[]
+  createMany?: Prisma.MemberCreateManyPendingTierInputEnvelope
+  set?: Prisma.MemberWhereUniqueInput | Prisma.MemberWhereUniqueInput[]
+  disconnect?: Prisma.MemberWhereUniqueInput | Prisma.MemberWhereUniqueInput[]
+  delete?: Prisma.MemberWhereUniqueInput | Prisma.MemberWhereUniqueInput[]
+  connect?: Prisma.MemberWhereUniqueInput | Prisma.MemberWhereUniqueInput[]
+  update?: Prisma.MemberUpdateWithWhereUniqueWithoutPendingTierInput | Prisma.MemberUpdateWithWhereUniqueWithoutPendingTierInput[]
+  updateMany?: Prisma.MemberUpdateManyWithWhereWithoutPendingTierInput | Prisma.MemberUpdateManyWithWhereWithoutPendingTierInput[]
+  deleteMany?: Prisma.MemberScalarWhereInput | Prisma.MemberScalarWhereInput[]
+}
+
+export type MemberUncheckedUpdateManyWithoutTierNestedInput = {
+  create?: Prisma.XOR<Prisma.MemberCreateWithoutTierInput, Prisma.MemberUncheckedCreateWithoutTierInput> | Prisma.MemberCreateWithoutTierInput[] | Prisma.MemberUncheckedCreateWithoutTierInput[]
+  connectOrCreate?: Prisma.MemberCreateOrConnectWithoutTierInput | Prisma.MemberCreateOrConnectWithoutTierInput[]
+  upsert?: Prisma.MemberUpsertWithWhereUniqueWithoutTierInput | Prisma.MemberUpsertWithWhereUniqueWithoutTierInput[]
+  createMany?: Prisma.MemberCreateManyTierInputEnvelope
+  set?: Prisma.MemberWhereUniqueInput | Prisma.MemberWhereUniqueInput[]
+  disconnect?: Prisma.MemberWhereUniqueInput | Prisma.MemberWhereUniqueInput[]
+  delete?: Prisma.MemberWhereUniqueInput | Prisma.MemberWhereUniqueInput[]
+  connect?: Prisma.MemberWhereUniqueInput | Prisma.MemberWhereUniqueInput[]
+  update?: Prisma.MemberUpdateWithWhereUniqueWithoutTierInput | Prisma.MemberUpdateWithWhereUniqueWithoutTierInput[]
+  updateMany?: Prisma.MemberUpdateManyWithWhereWithoutTierInput | Prisma.MemberUpdateManyWithWhereWithoutTierInput[]
+  deleteMany?: Prisma.MemberScalarWhereInput | Prisma.MemberScalarWhereInput[]
+}
+
+export type MemberUncheckedUpdateManyWithoutPendingTierNestedInput = {
+  create?: Prisma.XOR<Prisma.MemberCreateWithoutPendingTierInput, Prisma.MemberUncheckedCreateWithoutPendingTierInput> | Prisma.MemberCreateWithoutPendingTierInput[] | Prisma.MemberUncheckedCreateWithoutPendingTierInput[]
+  connectOrCreate?: Prisma.MemberCreateOrConnectWithoutPendingTierInput | Prisma.MemberCreateOrConnectWithoutPendingTierInput[]
+  upsert?: Prisma.MemberUpsertWithWhereUniqueWithoutPendingTierInput | Prisma.MemberUpsertWithWhereUniqueWithoutPendingTierInput[]
+  createMany?: Prisma.MemberCreateManyPendingTierInputEnvelope
+  set?: Prisma.MemberWhereUniqueInput | Prisma.MemberWhereUniqueInput[]
+  disconnect?: Prisma.MemberWhereUniqueInput | Prisma.MemberWhereUniqueInput[]
+  delete?: Prisma.MemberWhereUniqueInput | Prisma.MemberWhereUniqueInput[]
+  connect?: Prisma.MemberWhereUniqueInput | Prisma.MemberWhereUniqueInput[]
+  update?: Prisma.MemberUpdateWithWhereUniqueWithoutPendingTierInput | Prisma.MemberUpdateWithWhereUniqueWithoutPendingTierInput[]
+  updateMany?: Prisma.MemberUpdateManyWithWhereWithoutPendingTierInput | Prisma.MemberUpdateManyWithWhereWithoutPendingTierInput[]
+  deleteMany?: Prisma.MemberScalarWhereInput | Prisma.MemberScalarWhereInput[]
 }
 
 export type EnumMembershipStatusFieldUpdateOperationsInput = {
   set?: $Enums.MembershipStatus
 }
 
-export type NullableEnumMembershipTierFieldUpdateOperationsInput = {
-  set?: $Enums.MembershipTier | null
-}
-
 export type MemberCreateWithoutUserInput = {
   id?: string
-  tier?: $Enums.MembershipTier
   status?: $Enums.MembershipStatus
   joinedAt?: Date | string
   expiresAt?: Date | string | null
   membershipNumber?: string | null
   paystackRef?: string | null
-  pendingTier?: $Enums.MembershipTier | null
+  tier: Prisma.MembershipTierCreateNestedOneWithoutMembersInput
+  pendingTier?: Prisma.MembershipTierCreateNestedOneWithoutPendingMembersInput
 }
 
 export type MemberUncheckedCreateWithoutUserInput = {
   id?: string
-  tier?: $Enums.MembershipTier
+  tierId: string
   status?: $Enums.MembershipStatus
   joinedAt?: Date | string
   expiresAt?: Date | string | null
   membershipNumber?: string | null
   paystackRef?: string | null
-  pendingTier?: $Enums.MembershipTier | null
+  pendingTierId?: string | null
 }
 
 export type MemberCreateOrConnectWithoutUserInput = {
@@ -484,24 +574,223 @@ export type MemberUpdateToOneWithWhereWithoutUserInput = {
 
 export type MemberUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  tier?: Prisma.EnumMembershipTierFieldUpdateOperationsInput | $Enums.MembershipTier
   status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   membershipNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paystackRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  pendingTier?: Prisma.NullableEnumMembershipTierFieldUpdateOperationsInput | $Enums.MembershipTier | null
+  tier?: Prisma.MembershipTierUpdateOneRequiredWithoutMembersNestedInput
+  pendingTier?: Prisma.MembershipTierUpdateOneWithoutPendingMembersNestedInput
 }
 
 export type MemberUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  tier?: Prisma.EnumMembershipTierFieldUpdateOperationsInput | $Enums.MembershipTier
+  tierId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   membershipNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paystackRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  pendingTier?: Prisma.NullableEnumMembershipTierFieldUpdateOperationsInput | $Enums.MembershipTier | null
+  pendingTierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type MemberCreateWithoutTierInput = {
+  id?: string
+  status?: $Enums.MembershipStatus
+  joinedAt?: Date | string
+  expiresAt?: Date | string | null
+  membershipNumber?: string | null
+  paystackRef?: string | null
+  user: Prisma.UserCreateNestedOneWithoutMemberInput
+  pendingTier?: Prisma.MembershipTierCreateNestedOneWithoutPendingMembersInput
+}
+
+export type MemberUncheckedCreateWithoutTierInput = {
+  id?: string
+  userId: string
+  status?: $Enums.MembershipStatus
+  joinedAt?: Date | string
+  expiresAt?: Date | string | null
+  membershipNumber?: string | null
+  paystackRef?: string | null
+  pendingTierId?: string | null
+}
+
+export type MemberCreateOrConnectWithoutTierInput = {
+  where: Prisma.MemberWhereUniqueInput
+  create: Prisma.XOR<Prisma.MemberCreateWithoutTierInput, Prisma.MemberUncheckedCreateWithoutTierInput>
+}
+
+export type MemberCreateManyTierInputEnvelope = {
+  data: Prisma.MemberCreateManyTierInput | Prisma.MemberCreateManyTierInput[]
+  skipDuplicates?: boolean
+}
+
+export type MemberCreateWithoutPendingTierInput = {
+  id?: string
+  status?: $Enums.MembershipStatus
+  joinedAt?: Date | string
+  expiresAt?: Date | string | null
+  membershipNumber?: string | null
+  paystackRef?: string | null
+  user: Prisma.UserCreateNestedOneWithoutMemberInput
+  tier: Prisma.MembershipTierCreateNestedOneWithoutMembersInput
+}
+
+export type MemberUncheckedCreateWithoutPendingTierInput = {
+  id?: string
+  userId: string
+  tierId: string
+  status?: $Enums.MembershipStatus
+  joinedAt?: Date | string
+  expiresAt?: Date | string | null
+  membershipNumber?: string | null
+  paystackRef?: string | null
+}
+
+export type MemberCreateOrConnectWithoutPendingTierInput = {
+  where: Prisma.MemberWhereUniqueInput
+  create: Prisma.XOR<Prisma.MemberCreateWithoutPendingTierInput, Prisma.MemberUncheckedCreateWithoutPendingTierInput>
+}
+
+export type MemberCreateManyPendingTierInputEnvelope = {
+  data: Prisma.MemberCreateManyPendingTierInput | Prisma.MemberCreateManyPendingTierInput[]
+  skipDuplicates?: boolean
+}
+
+export type MemberUpsertWithWhereUniqueWithoutTierInput = {
+  where: Prisma.MemberWhereUniqueInput
+  update: Prisma.XOR<Prisma.MemberUpdateWithoutTierInput, Prisma.MemberUncheckedUpdateWithoutTierInput>
+  create: Prisma.XOR<Prisma.MemberCreateWithoutTierInput, Prisma.MemberUncheckedCreateWithoutTierInput>
+}
+
+export type MemberUpdateWithWhereUniqueWithoutTierInput = {
+  where: Prisma.MemberWhereUniqueInput
+  data: Prisma.XOR<Prisma.MemberUpdateWithoutTierInput, Prisma.MemberUncheckedUpdateWithoutTierInput>
+}
+
+export type MemberUpdateManyWithWhereWithoutTierInput = {
+  where: Prisma.MemberScalarWhereInput
+  data: Prisma.XOR<Prisma.MemberUpdateManyMutationInput, Prisma.MemberUncheckedUpdateManyWithoutTierInput>
+}
+
+export type MemberScalarWhereInput = {
+  AND?: Prisma.MemberScalarWhereInput | Prisma.MemberScalarWhereInput[]
+  OR?: Prisma.MemberScalarWhereInput[]
+  NOT?: Prisma.MemberScalarWhereInput | Prisma.MemberScalarWhereInput[]
+  id?: Prisma.StringFilter<"Member"> | string
+  userId?: Prisma.StringFilter<"Member"> | string
+  tierId?: Prisma.StringFilter<"Member"> | string
+  status?: Prisma.EnumMembershipStatusFilter<"Member"> | $Enums.MembershipStatus
+  joinedAt?: Prisma.DateTimeFilter<"Member"> | Date | string
+  expiresAt?: Prisma.DateTimeNullableFilter<"Member"> | Date | string | null
+  membershipNumber?: Prisma.StringNullableFilter<"Member"> | string | null
+  paystackRef?: Prisma.StringNullableFilter<"Member"> | string | null
+  pendingTierId?: Prisma.StringNullableFilter<"Member"> | string | null
+}
+
+export type MemberUpsertWithWhereUniqueWithoutPendingTierInput = {
+  where: Prisma.MemberWhereUniqueInput
+  update: Prisma.XOR<Prisma.MemberUpdateWithoutPendingTierInput, Prisma.MemberUncheckedUpdateWithoutPendingTierInput>
+  create: Prisma.XOR<Prisma.MemberCreateWithoutPendingTierInput, Prisma.MemberUncheckedCreateWithoutPendingTierInput>
+}
+
+export type MemberUpdateWithWhereUniqueWithoutPendingTierInput = {
+  where: Prisma.MemberWhereUniqueInput
+  data: Prisma.XOR<Prisma.MemberUpdateWithoutPendingTierInput, Prisma.MemberUncheckedUpdateWithoutPendingTierInput>
+}
+
+export type MemberUpdateManyWithWhereWithoutPendingTierInput = {
+  where: Prisma.MemberScalarWhereInput
+  data: Prisma.XOR<Prisma.MemberUpdateManyMutationInput, Prisma.MemberUncheckedUpdateManyWithoutPendingTierInput>
+}
+
+export type MemberCreateManyTierInput = {
+  id?: string
+  userId: string
+  status?: $Enums.MembershipStatus
+  joinedAt?: Date | string
+  expiresAt?: Date | string | null
+  membershipNumber?: string | null
+  paystackRef?: string | null
+  pendingTierId?: string | null
+}
+
+export type MemberCreateManyPendingTierInput = {
+  id?: string
+  userId: string
+  tierId: string
+  status?: $Enums.MembershipStatus
+  joinedAt?: Date | string
+  expiresAt?: Date | string | null
+  membershipNumber?: string | null
+  paystackRef?: string | null
+}
+
+export type MemberUpdateWithoutTierInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
+  joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  membershipNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paystackRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  user?: Prisma.UserUpdateOneRequiredWithoutMemberNestedInput
+  pendingTier?: Prisma.MembershipTierUpdateOneWithoutPendingMembersNestedInput
+}
+
+export type MemberUncheckedUpdateWithoutTierInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
+  joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  membershipNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paystackRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pendingTierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type MemberUncheckedUpdateManyWithoutTierInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
+  joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  membershipNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paystackRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pendingTierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type MemberUpdateWithoutPendingTierInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
+  joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  membershipNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paystackRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  user?: Prisma.UserUpdateOneRequiredWithoutMemberNestedInput
+  tier?: Prisma.MembershipTierUpdateOneRequiredWithoutMembersNestedInput
+}
+
+export type MemberUncheckedUpdateWithoutPendingTierInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  tierId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
+  joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  membershipNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paystackRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type MemberUncheckedUpdateManyWithoutPendingTierInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  tierId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
+  joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  membershipNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paystackRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -509,80 +798,94 @@ export type MemberUncheckedUpdateWithoutUserInput = {
 export type MemberSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
-  tier?: boolean
+  tierId?: boolean
   status?: boolean
   joinedAt?: boolean
   expiresAt?: boolean
   membershipNumber?: boolean
   paystackRef?: boolean
-  pendingTier?: boolean
+  pendingTierId?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  tier?: boolean | Prisma.MembershipTierDefaultArgs<ExtArgs>
+  pendingTier?: boolean | Prisma.Member$pendingTierArgs<ExtArgs>
 }, ExtArgs["result"]["member"]>
 
 export type MemberSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
-  tier?: boolean
+  tierId?: boolean
   status?: boolean
   joinedAt?: boolean
   expiresAt?: boolean
   membershipNumber?: boolean
   paystackRef?: boolean
-  pendingTier?: boolean
+  pendingTierId?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  tier?: boolean | Prisma.MembershipTierDefaultArgs<ExtArgs>
+  pendingTier?: boolean | Prisma.Member$pendingTierArgs<ExtArgs>
 }, ExtArgs["result"]["member"]>
 
 export type MemberSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
-  tier?: boolean
+  tierId?: boolean
   status?: boolean
   joinedAt?: boolean
   expiresAt?: boolean
   membershipNumber?: boolean
   paystackRef?: boolean
-  pendingTier?: boolean
+  pendingTierId?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  tier?: boolean | Prisma.MembershipTierDefaultArgs<ExtArgs>
+  pendingTier?: boolean | Prisma.Member$pendingTierArgs<ExtArgs>
 }, ExtArgs["result"]["member"]>
 
 export type MemberSelectScalar = {
   id?: boolean
   userId?: boolean
-  tier?: boolean
+  tierId?: boolean
   status?: boolean
   joinedAt?: boolean
   expiresAt?: boolean
   membershipNumber?: boolean
   paystackRef?: boolean
-  pendingTier?: boolean
+  pendingTierId?: boolean
 }
 
-export type MemberOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "tier" | "status" | "joinedAt" | "expiresAt" | "membershipNumber" | "paystackRef" | "pendingTier", ExtArgs["result"]["member"]>
+export type MemberOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "tierId" | "status" | "joinedAt" | "expiresAt" | "membershipNumber" | "paystackRef" | "pendingTierId", ExtArgs["result"]["member"]>
 export type MemberInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  tier?: boolean | Prisma.MembershipTierDefaultArgs<ExtArgs>
+  pendingTier?: boolean | Prisma.Member$pendingTierArgs<ExtArgs>
 }
 export type MemberIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  tier?: boolean | Prisma.MembershipTierDefaultArgs<ExtArgs>
+  pendingTier?: boolean | Prisma.Member$pendingTierArgs<ExtArgs>
 }
 export type MemberIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  tier?: boolean | Prisma.MembershipTierDefaultArgs<ExtArgs>
+  pendingTier?: boolean | Prisma.Member$pendingTierArgs<ExtArgs>
 }
 
 export type $MemberPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Member"
   objects: {
     user: Prisma.$UserPayload<ExtArgs>
+    tier: Prisma.$MembershipTierPayload<ExtArgs>
+    pendingTier: Prisma.$MembershipTierPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     userId: string
-    tier: $Enums.MembershipTier
+    tierId: string
     status: $Enums.MembershipStatus
     joinedAt: Date
     expiresAt: Date | null
     membershipNumber: string | null
     paystackRef: string | null
-    pendingTier: $Enums.MembershipTier | null
+    pendingTierId: string | null
   }, ExtArgs["result"]["member"]>
   composites: {}
 }
@@ -978,6 +1281,8 @@ readonly fields: MemberFieldRefs;
 export interface Prisma__MemberClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  tier<T extends Prisma.MembershipTierDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MembershipTierDefaultArgs<ExtArgs>>): Prisma.Prisma__MembershipTierClient<runtime.Types.Result.GetResult<Prisma.$MembershipTierPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  pendingTier<T extends Prisma.Member$pendingTierArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Member$pendingTierArgs<ExtArgs>>): Prisma.Prisma__MembershipTierClient<runtime.Types.Result.GetResult<Prisma.$MembershipTierPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1009,13 +1314,13 @@ export interface Prisma__MemberClient<T, Null = never, ExtArgs extends runtime.T
 export interface MemberFieldRefs {
   readonly id: Prisma.FieldRef<"Member", 'String'>
   readonly userId: Prisma.FieldRef<"Member", 'String'>
-  readonly tier: Prisma.FieldRef<"Member", 'MembershipTier'>
+  readonly tierId: Prisma.FieldRef<"Member", 'String'>
   readonly status: Prisma.FieldRef<"Member", 'MembershipStatus'>
   readonly joinedAt: Prisma.FieldRef<"Member", 'DateTime'>
   readonly expiresAt: Prisma.FieldRef<"Member", 'DateTime'>
   readonly membershipNumber: Prisma.FieldRef<"Member", 'String'>
   readonly paystackRef: Prisma.FieldRef<"Member", 'String'>
-  readonly pendingTier: Prisma.FieldRef<"Member", 'MembershipTier'>
+  readonly pendingTierId: Prisma.FieldRef<"Member", 'String'>
 }
     
 
@@ -1414,6 +1719,25 @@ export type MemberDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Limit how many Members to delete.
    */
   limit?: number
+}
+
+/**
+ * Member.pendingTier
+ */
+export type Member$pendingTierArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MembershipTier
+   */
+  select?: Prisma.MembershipTierSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MembershipTier
+   */
+  omit?: Prisma.MembershipTierOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MembershipTierInclude<ExtArgs> | null
+  where?: Prisma.MembershipTierWhereInput
 }
 
 /**

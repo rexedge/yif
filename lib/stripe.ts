@@ -23,7 +23,7 @@ function getStripe(): Stripe {
     typescript: true,
     appInfo: {
       name: "YIF",
-      url: "https://yif.org",
+      url: "https://www.yifww.org",
     },
   });
   return _stripe;

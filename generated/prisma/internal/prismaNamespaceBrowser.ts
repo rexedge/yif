@@ -55,6 +55,8 @@ export const ModelName = {
   Session: 'Session',
   Account: 'Account',
   Verification: 'Verification',
+  MembershipTier: 'MembershipTier',
+  MembershipPlanPrice: 'MembershipPlanPrice',
   Member: 'Member',
   Event: 'Event',
   EventTicketTier: 'EventTicketTier',
@@ -158,16 +160,45 @@ export const VerificationScalarFieldEnum = {
 export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[keyof typeof VerificationScalarFieldEnum]
 
 
+export const MembershipTierScalarFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  name: 'name',
+  description: 'description',
+  color: 'color',
+  badge: 'badge',
+  sortOrder: 'sortOrder',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MembershipTierScalarFieldEnum = (typeof MembershipTierScalarFieldEnum)[keyof typeof MembershipTierScalarFieldEnum]
+
+
+export const MembershipPlanPriceScalarFieldEnum = {
+  id: 'id',
+  tierId: 'tierId',
+  currency: 'currency',
+  amount: 'amount',
+  isActive: 'isActive',
+  updatedAt: 'updatedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type MembershipPlanPriceScalarFieldEnum = (typeof MembershipPlanPriceScalarFieldEnum)[keyof typeof MembershipPlanPriceScalarFieldEnum]
+
+
 export const MemberScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
-  tier: 'tier',
+  tierId: 'tierId',
   status: 'status',
   joinedAt: 'joinedAt',
   expiresAt: 'expiresAt',
   membershipNumber: 'membershipNumber',
   paystackRef: 'paystackRef',
-  pendingTier: 'pendingTier'
+  pendingTierId: 'pendingTierId'
 } as const
 
 export type MemberScalarFieldEnum = (typeof MemberScalarFieldEnum)[keyof typeof MemberScalarFieldEnum]
@@ -312,6 +343,9 @@ export const TransactionScalarFieldEnum = {
   fees: 'fees',
   netAmount: 'netAmount',
   currency: 'currency',
+  baseAmount: 'baseAmount',
+  baseCurrency: 'baseCurrency',
+  fxRate: 'fxRate',
   channel: 'channel',
   cardBrand: 'cardBrand',
   cardLast4: 'cardLast4',
@@ -327,6 +361,7 @@ export const TransactionScalarFieldEnum = {
   donationId: 'donationId',
   metadata: 'metadata',
   rawResponse: 'rawResponse',
+  notes: 'notes',
   paidAt: 'paidAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

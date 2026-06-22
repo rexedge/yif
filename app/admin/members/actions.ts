@@ -6,7 +6,6 @@ import { headers } from "next/headers";
 import { randomBytes } from "crypto";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import type { MembershipTier } from "@/generated/prisma/enums";
 import { resend, FROM_EMAIL } from "@/lib/resend";
 
 async function requireAdmin() {
@@ -37,11 +36,15 @@ export async function unbanMember(userId: string) {
   revalidatePath("/admin/members");
 }
 
-export async function changeMemberTier(memberId: string, tier: string) {
+export async function changeMemberTier(memberId: string, tierSlug: string) {
   await requireAdmin();
+  const tierRecord = await prisma.membershipTier.findUnique({
+    where: { slug: tierSlug },
+  });
+  if (!tierRecord) throw new Error(`Tier not found: ${tierSlug}`);
   await prisma.member.update({
     where: { id: memberId },
-    data: { tier: tier as MembershipTier },
+    data: { tierId: tierRecord.id },
   });
   revalidatePath("/admin/members");
 }
@@ -72,7 +75,7 @@ export async function inviteMember(formData: FormData) {
     },
   });
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://yifworldwide.org";
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.yifww.org";
   const joinUrl = `${appUrl}/join/${token}`;
 
   await resend.emails.send({

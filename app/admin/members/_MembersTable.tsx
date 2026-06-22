@@ -2,13 +2,6 @@
 
 import { useState } from "react";
 
-const TIER_COLORS: Record<string, string> = {
-  PLATINUM: "#5dade2",
-  DIAMOND: "#9b59b6",
-  GOLD: "#c9913d",
-  SILVER: "#7f8c8d",
-};
-
 const STATUS_STYLES: Record<string, string> = {
   ACTIVE:
     "bg-[var(--yif-green)]/15 text-[var(--yif-green)] border-[var(--yif-green)]/25",
@@ -19,20 +12,25 @@ const STATUS_STYLES: Record<string, string> = {
   SUSPENDED: "bg-white/8 text-white/40 border-white/12",
 };
 
-const ALL_TIERS = ["All", "PLATINUM", "DIAMOND", "GOLD", "SILVER"];
 const ALL_STATUSES = ["All", "ACTIVE", "PENDING", "EXPIRED", "SUSPENDED"];
 
 export type MemberRow = {
   id: string;
-  tier: string;
+  tier: { name: string; color: string | null; slug: string };
   status: string;
   joinedAt: Date;
   user: { id: string; name: string; email: string };
 };
 
-export function MembersTable({ members }: { members: MemberRow[] }) {
+export function MembersTable({
+  members,
+  tiers,
+}: {
+  members: MemberRow[];
+  tiers: { name: string; slug: string }[];
+}) {
   const [search, setSearch] = useState("");
-  const [tier, setTier] = useState("All");
+  const [tierSlug, setTierSlug] = useState("all");
   const [status, setStatus] = useState("All");
 
   const filtered = members.filter((m) => {
@@ -40,7 +38,7 @@ export function MembersTable({ members }: { members: MemberRow[] }) {
       !search ||
       m.user.name.toLowerCase().includes(search.toLowerCase()) ||
       m.user.email.toLowerCase().includes(search.toLowerCase());
-    const matchTier = tier === "All" || m.tier === tier;
+    const matchTier = tierSlug === "all" || m.tier.slug === tierSlug;
     const matchStatus = status === "All" || m.status === status;
     return matchSearch && matchTier && matchStatus;
   });
@@ -57,17 +55,18 @@ export function MembersTable({ members }: { members: MemberRow[] }) {
           className="flex-1 min-w-[200px] rounded-xl bg-white/5 border border-white/10 px-4 py-2.5 text-sm text-white placeholder:text-white/25 outline-none focus:border-[var(--yif-gold)]/40 transition-colors"
         />
         <div className="flex gap-2 flex-wrap">
-          {ALL_TIERS.map((t) => (
+          {[{ name: "All", slug: "all" }, ...tiers].map((t) => (
             <button
-              key={t}
-              onClick={() => setTier(t)}
+              key={t.slug}
+              type="button"
+              onClick={() => setTierSlug(t.slug)}
               className={`px-3 py-2 text-xs rounded-lg border font-medium transition-colors ${
-                tier === t
+                tierSlug === t.slug
                   ? "border-[var(--yif-gold)]/50 bg-[var(--yif-gold)]/15 text-[var(--yif-gold)]"
                   : "border-white/10 text-white/40 hover:text-white/70 hover:border-white/20"
               }`}
             >
-              {t === "All" ? "All" : t.charAt(0) + t.slice(1).toLowerCase()}
+              {t.name}
             </button>
           ))}
         </div>
@@ -121,9 +120,8 @@ export function MembersTable({ members }: { members: MemberRow[] }) {
                 </tr>
               ) : (
                 filtered.map((m) => {
-                  const tierColor = TIER_COLORS[m.tier] ?? "#7f8c8d";
-                  const tierLabel =
-                    m.tier.charAt(0) + m.tier.slice(1).toLowerCase();
+                  const tierColor = m.tier.color ?? "#7f8c8d";
+                  const tierLabel = m.tier.name;
                   const statusLabel =
                     m.status.charAt(0) + m.status.slice(1).toLowerCase();
                   const initials = m.user.name

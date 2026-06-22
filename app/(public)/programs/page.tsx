@@ -17,7 +17,9 @@ export const metadata: Metadata = {
     description:
       "Four pillars driving Yoruba advancement — economic empowerment, education, cultural recognition, and youth development.",
     type: "website",
+    images: [{ url: "/logo.jpg", width: 1200, height: 630, alt: "Yoruba Indigenes' Foundation" }],
   },
+  twitter: { card: "summary_large_image", images: ["/logo.jpg"] },
 };
 
 export default function ProgramsPage() {

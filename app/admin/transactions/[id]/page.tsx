@@ -4,6 +4,7 @@ import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { NotesForm } from "./NotesForm";
 
 export const metadata: Metadata = { title: "Transaction | YIF Admin" };
 
@@ -15,9 +16,20 @@ const STATUS_STYLES: Record<string, string> = {
   REVERSED: "bg-purple-500/15 text-purple-400 border-purple-500/20",
 };
 
-function naira(amount: number | null | undefined): string {
+const CURRENCY_SYMBOLS: Record<string, string> = {
+  NGN: "₦",
+  USD: "$",
+  GBP: "£",
+  EUR: "€",
+};
+
+function money(
+  amount: number | null | undefined,
+  currency = "NGN",
+): string {
   if (amount == null) return "—";
-  return `₦${Number(amount).toLocaleString("en-NG", {
+  const sym = CURRENCY_SYMBOLS[currency] ?? `${currency} `;
+  return `${sym}${Number(amount).toLocaleString("en", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })}`;
@@ -61,10 +73,20 @@ export default async function TransactionDetailPage({
     ["Provider", tx.provider],
     ["Provider Tx ID", tx.providerTxId ?? "—"],
     ["Purpose", tx.purpose],
-    ["Amount", naira(Number(tx.amount))],
-    ["Paystack Fees", tx.fees != null ? naira(Number(tx.fees)) : "—"],
-    ["Net Received", tx.netAmount != null ? naira(Number(tx.netAmount)) : "—"],
+    ["Amount", money(Number(tx.amount), tx.currency)],
+    ["Fees", tx.fees != null ? money(Number(tx.fees), tx.currency) : "—"],
+    ["Net Received", tx.netAmount != null ? money(Number(tx.netAmount), tx.currency) : "—"],
     ["Currency", tx.currency],
+    [
+      "NGN Equivalent",
+      tx.baseAmount != null
+        ? `${money(Number(tx.baseAmount))}${
+            tx.fxRate != null && tx.currency !== "NGN"
+              ? ` (@ ₦${Number(tx.fxRate).toLocaleString("en", { maximumFractionDigits: 2 })}/${tx.currency})`
+              : ""
+          }`
+        : "—",
+    ],
     ["Channel", tx.channel ?? "—"],
     [
       "Card",
@@ -153,6 +175,8 @@ export default async function TransactionDetailPage({
         </div>
 
         <div className="space-y-6">
+          <NotesForm txId={tx.id} initialNote={tx.notes} />
+
           {tx.metadata != null && (
             <div className="rounded-2xl bg-white/5 border border-white/8 overflow-hidden">
               <div className="px-6 py-4 border-b border-white/8">

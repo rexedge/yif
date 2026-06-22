@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { fromKobo, type TransactionVerifyData } from "@/lib/paystack";
+import { convertToNgn } from "@/lib/fx";
 import type { Prisma } from "@/generated/prisma/client";
 import type {
   TransactionPurpose,
@@ -67,6 +68,12 @@ export async function recordTransactionVerified(
   const amount = fromKobo(data.amount);
   const fees = data.fees != null ? fromKobo(data.fees) : null;
   const netAmount = fees != null ? amount - fees : null;
+  const currency = data.currency ?? "NGN";
+
+  // Freeze the NGN-equivalent at verify time for consolidated reporting.
+  // Rates are cached in-memory, so converting every final-state row is cheap
+  // and keeps failed/abandoned totals meaningful too.
+  const fx = amount > 0 ? await convertToNgn(amount, currency).catch(() => null) : null;
 
   const update = {
     providerTxId: String(data.id),
@@ -74,7 +81,10 @@ export async function recordTransactionVerified(
     amount,
     fees,
     netAmount,
-    currency: data.currency ?? "NGN",
+    currency,
+    baseAmount: fx?.baseAmount ?? null,
+    baseCurrency: "NGN",
+    fxRate: fx?.fxRate ?? null,
     channel: data.channel ?? null,
     cardBrand: data.authorization?.brand ?? null,
     cardLast4: data.authorization?.last4 ?? null,

@@ -9,17 +9,6 @@
 * 🟢 You can import this file directly.
 */
 
-export const MembershipTier = {
-  BRONZE: 'BRONZE',
-  SILVER: 'SILVER',
-  GOLD: 'GOLD',
-  DIAMOND: 'DIAMOND',
-  PLATINUM: 'PLATINUM'
-} as const
-
-export type MembershipTier = (typeof MembershipTier)[keyof typeof MembershipTier]
-
-
 export const MembershipStatus = {
   ACTIVE: 'ACTIVE',
   EXPIRED: 'EXPIRED',

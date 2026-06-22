@@ -388,6 +388,8 @@ export const ModelName = {
   Session: 'Session',
   Account: 'Account',
   Verification: 'Verification',
+  MembershipTier: 'MembershipTier',
+  MembershipPlanPrice: 'MembershipPlanPrice',
   Member: 'Member',
   Event: 'Event',
   EventTicketTier: 'EventTicketTier',
@@ -413,7 +415,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification" | "member" | "event" | "eventTicketTier" | "blogTopic" | "blogPost" | "invitation" | "ticket" | "donation" | "scholarshipApplication" | "transaction"
+    modelProps: "user" | "session" | "account" | "verification" | "membershipTier" | "membershipPlanPrice" | "member" | "event" | "eventTicketTier" | "blogTopic" | "blogPost" | "invitation" | "ticket" | "donation" | "scholarshipApplication" | "transaction"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -710,6 +712,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.VerificationCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.VerificationCountAggregateOutputType> | number
+        }
+      }
+    }
+    MembershipTier: {
+      payload: Prisma.$MembershipTierPayload<ExtArgs>
+      fields: Prisma.MembershipTierFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.MembershipTierFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MembershipTierPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.MembershipTierFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MembershipTierPayload>
+        }
+        findFirst: {
+          args: Prisma.MembershipTierFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MembershipTierPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.MembershipTierFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MembershipTierPayload>
+        }
+        findMany: {
+          args: Prisma.MembershipTierFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MembershipTierPayload>[]
+        }
+        create: {
+          args: Prisma.MembershipTierCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MembershipTierPayload>
+        }
+        createMany: {
+          args: Prisma.MembershipTierCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.MembershipTierCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MembershipTierPayload>[]
+        }
+        delete: {
+          args: Prisma.MembershipTierDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MembershipTierPayload>
+        }
+        update: {
+          args: Prisma.MembershipTierUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MembershipTierPayload>
+        }
+        deleteMany: {
+          args: Prisma.MembershipTierDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.MembershipTierUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.MembershipTierUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MembershipTierPayload>[]
+        }
+        upsert: {
+          args: Prisma.MembershipTierUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MembershipTierPayload>
+        }
+        aggregate: {
+          args: Prisma.MembershipTierAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateMembershipTier>
+        }
+        groupBy: {
+          args: Prisma.MembershipTierGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MembershipTierGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.MembershipTierCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MembershipTierCountAggregateOutputType> | number
+        }
+      }
+    }
+    MembershipPlanPrice: {
+      payload: Prisma.$MembershipPlanPricePayload<ExtArgs>
+      fields: Prisma.MembershipPlanPriceFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.MembershipPlanPriceFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MembershipPlanPricePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.MembershipPlanPriceFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MembershipPlanPricePayload>
+        }
+        findFirst: {
+          args: Prisma.MembershipPlanPriceFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MembershipPlanPricePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.MembershipPlanPriceFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MembershipPlanPricePayload>
+        }
+        findMany: {
+          args: Prisma.MembershipPlanPriceFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MembershipPlanPricePayload>[]
+        }
+        create: {
+          args: Prisma.MembershipPlanPriceCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MembershipPlanPricePayload>
+        }
+        createMany: {
+          args: Prisma.MembershipPlanPriceCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.MembershipPlanPriceCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MembershipPlanPricePayload>[]
+        }
+        delete: {
+          args: Prisma.MembershipPlanPriceDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MembershipPlanPricePayload>
+        }
+        update: {
+          args: Prisma.MembershipPlanPriceUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MembershipPlanPricePayload>
+        }
+        deleteMany: {
+          args: Prisma.MembershipPlanPriceDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.MembershipPlanPriceUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.MembershipPlanPriceUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MembershipPlanPricePayload>[]
+        }
+        upsert: {
+          args: Prisma.MembershipPlanPriceUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MembershipPlanPricePayload>
+        }
+        aggregate: {
+          args: Prisma.MembershipPlanPriceAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateMembershipPlanPrice>
+        }
+        groupBy: {
+          args: Prisma.MembershipPlanPriceGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MembershipPlanPriceGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.MembershipPlanPriceCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MembershipPlanPriceCountAggregateOutputType> | number
         }
       }
     }
@@ -1567,16 +1717,45 @@ export const VerificationScalarFieldEnum = {
 export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[keyof typeof VerificationScalarFieldEnum]
 
 
+export const MembershipTierScalarFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  name: 'name',
+  description: 'description',
+  color: 'color',
+  badge: 'badge',
+  sortOrder: 'sortOrder',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MembershipTierScalarFieldEnum = (typeof MembershipTierScalarFieldEnum)[keyof typeof MembershipTierScalarFieldEnum]
+
+
+export const MembershipPlanPriceScalarFieldEnum = {
+  id: 'id',
+  tierId: 'tierId',
+  currency: 'currency',
+  amount: 'amount',
+  isActive: 'isActive',
+  updatedAt: 'updatedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type MembershipPlanPriceScalarFieldEnum = (typeof MembershipPlanPriceScalarFieldEnum)[keyof typeof MembershipPlanPriceScalarFieldEnum]
+
+
 export const MemberScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
-  tier: 'tier',
+  tierId: 'tierId',
   status: 'status',
   joinedAt: 'joinedAt',
   expiresAt: 'expiresAt',
   membershipNumber: 'membershipNumber',
   paystackRef: 'paystackRef',
-  pendingTier: 'pendingTier'
+  pendingTierId: 'pendingTierId'
 } as const
 
 export type MemberScalarFieldEnum = (typeof MemberScalarFieldEnum)[keyof typeof MemberScalarFieldEnum]
@@ -1721,6 +1900,9 @@ export const TransactionScalarFieldEnum = {
   fees: 'fees',
   netAmount: 'netAmount',
   currency: 'currency',
+  baseAmount: 'baseAmount',
+  baseCurrency: 'baseCurrency',
+  fxRate: 'fxRate',
   channel: 'channel',
   cardBrand: 'cardBrand',
   cardLast4: 'cardLast4',
@@ -1736,6 +1918,7 @@ export const TransactionScalarFieldEnum = {
   donationId: 'donationId',
   metadata: 'metadata',
   rawResponse: 'rawResponse',
+  notes: 'notes',
   paidAt: 'paidAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -1834,16 +2017,30 @@ export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
 
 
 /**
- * Reference to a field of type 'MembershipTier'
+ * Reference to a field of type 'Int'
  */
-export type EnumMembershipTierFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MembershipTier'>
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
     
 
 
 /**
- * Reference to a field of type 'MembershipTier[]'
+ * Reference to a field of type 'Int[]'
  */
-export type ListEnumMembershipTierFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MembershipTier[]'>
+export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Decimal'
+ */
+export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
+    
+
+
+/**
+ * Reference to a field of type 'Decimal[]'
+ */
+export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
     
 
 
@@ -1872,34 +2069,6 @@ export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'J
  * Reference to a field of type 'QueryMode'
  */
 export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
-    
-
-
-/**
- * Reference to a field of type 'Decimal'
- */
-export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
-    
-
-
-/**
- * Reference to a field of type 'Decimal[]'
- */
-export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
-    
-
-
-/**
- * Reference to a field of type 'Int'
- */
-export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
-
-
-/**
- * Reference to a field of type 'Int[]'
- */
-export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
 
 
@@ -2100,6 +2269,8 @@ export type GlobalOmitConfig = {
   session?: Prisma.SessionOmit
   account?: Prisma.AccountOmit
   verification?: Prisma.VerificationOmit
+  membershipTier?: Prisma.MembershipTierOmit
+  membershipPlanPrice?: Prisma.MembershipPlanPriceOmit
   member?: Prisma.MemberOmit
   event?: Prisma.EventOmit
   eventTicketTier?: Prisma.EventTicketTierOmit

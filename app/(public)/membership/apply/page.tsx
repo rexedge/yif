@@ -1,10 +1,14 @@
 import { Suspense } from "react";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
+import { getActiveTiers } from "@/lib/membership";
 import { MembershipApplyForm } from "./_form";
 
 export default async function MembershipApplyPage() {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const [session, tiers] = await Promise.all([
+    auth.api.getSession({ headers: await headers() }),
+    getActiveTiers(),
+  ]);
   const isLoggedIn = Boolean(session);
 
   return (
@@ -15,7 +19,7 @@ export default async function MembershipApplyPage() {
         </div>
       }
     >
-      <MembershipApplyForm isLoggedIn={isLoggedIn} />
+      <MembershipApplyForm isLoggedIn={isLoggedIn} tiers={tiers} />
     </Suspense>
   );
 }

@@ -11,7 +11,9 @@ export const metadata: Metadata = {
     description:
       "Reach our Lagos headquarters, UK regional office, or global diaspora representatives.",
     type: "website",
+    images: [{ url: "/logo.jpg", width: 1200, height: 630, alt: "Yoruba Indigenes' Foundation" }],
   },
+  twitter: { card: "summary_large_image", images: ["/logo.jpg"] },
 };
 
 /* ── Data ─────────────────────────────────────────── */

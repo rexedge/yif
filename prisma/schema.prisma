@@ -102,12 +102,40 @@ model Verification {
 
 // ─── App models ─────────────────────────────────────────────────────────────
 
-enum MembershipTier {
-  BRONZE
-  SILVER
-  GOLD
-  DIAMOND
-  PLATINUM
+// Dynamic membership tiers — admin can create, rename, reorder, or archive
+// tiers at any time without a code deploy.
+model MembershipTier {
+  id          String   @id @default(cuid())
+  slug        String   @unique // URL/code key e.g. "silver", "gold"
+  name        String           // Display label e.g. "Silver", "Gold"
+  description String?
+  color       String?          // hex color for badge styling
+  badge       String?          // optional label e.g. "Most Popular"
+  sortOrder   Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  members        Member[]            @relation("MemberCurrentTier")
+  pendingMembers Member[]            @relation("MemberPendingTier")
+  prices         MembershipPlanPrice[]
+
+  @@map("membership_tier")
+}
+
+// Per-tier, per-currency pricing managed by admin.
+model MembershipPlanPrice {
+  id        String         @id @default(cuid())
+  tierId    String
+  tier      MembershipTier @relation(fields: [tierId], references: [id], onDelete: Cascade)
+  currency  String         // NGN | USD | GBP | EUR
+  amount    Decimal        @db.Decimal(10, 2)
+  isActive  Boolean        @default(true)
+  updatedAt DateTime       @updatedAt
+  createdAt DateTime       @default(now())
+
+  @@unique([tierId, currency])
+  @@map("membership_plan_price")
 }
 
 enum MembershipStatus {
@@ -121,14 +149,16 @@ model Member {
   id               String          @id @default(cuid())
   userId           String          @unique
   user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  tier             MembershipTier  @default(SILVER)
+  tierId           String
+  tier             MembershipTier  @relation("MemberCurrentTier", fields: [tierId], references: [id])
   status           MembershipStatus @default(PENDING)
   joinedAt         DateTime        @default(now())
   expiresAt        DateTime?
   membershipNumber String?         @unique
   paystackRef      String?
-  // Scheduled tier change: set for downgrades, applied at next renewal
-  pendingTier      MembershipTier?
+  // Scheduled tier change applied at next renewal (downgrade path)
+  pendingTierId    String?
+  pendingTier      MembershipTier? @relation("MemberPendingTier", fields: [pendingTierId], references: [id])
 
   @@map("member")
 }
@@ -289,9 +319,6 @@ model ScholarshipApplication {
 }
 
 // ─── Transactions ───────────────────────────────────────────────────────────
-// Single source of truth for every payment processed through Paystack.
-// Records the full lifecycle (init → verify) including fees / channel / raw
-// gateway response so the admin panel can show transparent financials.
 
 enum TransactionPurpose {
   MEMBERSHIP
@@ -312,17 +339,24 @@ model Transaction {
   id              String             @id @default(cuid())
   provider        String             @default("paystack")
   reference       String             @unique
-  providerTxId    String?            // Paystack numeric id (stored as string)
+  providerTxId    String?
   purpose         TransactionPurpose @default(OTHER)
   status          TransactionStatus  @default(PENDING)
 
-  // Money (all stored in NGN base units, not kobo, for human-readable reports)
+  // Money (stored in base units, not subunits, for human-readable reports)
   amount          Decimal            @db.Decimal(12, 2)
   fees            Decimal?           @db.Decimal(12, 2)
   netAmount       Decimal?           @db.Decimal(12, 2)
   currency        String             @default("NGN")
 
-  // Channel info (card, bank, ussd, mobile_money, qr, bank_transfer, etc.)
+  // NGN-equivalent frozen at payment time, for consolidated reporting.
+  // baseAmount = amount × fxRate, where fxRate is NGN per 1 unit of `currency`
+  // (1 for NGN). Captured once on SUCCESS so historical reports never drift.
+  baseAmount      Decimal?           @db.Decimal(14, 2)
+  baseCurrency    String             @default("NGN")
+  fxRate          Decimal?           @db.Decimal(18, 8)
+
+  // Channel info
   channel         String?
   cardBrand       String?
   cardLast4       String?
@@ -335,17 +369,19 @@ model Transaction {
   customerName    String?
   customerPhone   String?
 
-  // Linkage — optional FKs (no relations, kept loose so a tx can exist
-  // before/without the related domain row)
+  // Linkage (loose FKs — no cascades, tx rows outlive related records)
   userId          String?
   user            User?              @relation(fields: [userId], references: [id], onDelete: SetNull)
   memberId        String?
   ticketId        String?
   donationId      String?
 
-  // Raw payloads for full transparency / audit
-  metadata        Json?              // metadata sent to Paystack at init
-  rawResponse     Json?              // full /transaction/verify response
+  // Raw payloads for full audit trail
+  metadata        Json?
+  rawResponse     Json?
+
+  // Admin annotation
+  notes           String?
 
   paidAt          DateTime?
   createdAt       DateTime           @default(now())
@@ -355,5 +391,7 @@ model Transaction {
   @@index([purpose])
   @@index([userId])
   @@index([createdAt])
+  @@index([currency])
+  @@index([provider])
   @@map("transaction")
 }

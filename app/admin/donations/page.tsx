@@ -35,19 +35,28 @@ export default async function AdminDonationsPage() {
 
   const BASE = { purpose: "DONATION" as const, status: "SUCCESS" as const };
 
-  const [allTimeAgg, thisYearAgg, avgAgg, completedCount, donations] =
+  const CURRENCY_SYMBOLS: Record<string, string> = { NGN: "₦", USD: "$", GBP: "£", EUR: "€" };
+
+  function fmtAmount(amount: number, currency: string): string {
+    const sym = CURRENCY_SYMBOLS[currency] ?? currency;
+    return `${sym}${amount.toLocaleString("en", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  }
+
+  // Group aggregates by currency so we never mix units
+  const [allTimeByCurrency, thisYearByCurrency, completedCount, donations] =
     await Promise.all([
-      prisma.transaction.aggregate({
-        _sum: { amount: true },
+      prisma.transaction.groupBy({
+        by: ["currency"],
         where: BASE,
-      }),
-      prisma.transaction.aggregate({
         _sum: { amount: true },
-        where: { ...BASE, createdAt: { gte: startOfYear } },
-      }),
-      prisma.transaction.aggregate({
         _avg: { amount: true },
-        where: BASE,
+        orderBy: { currency: "asc" },
+      }),
+      prisma.transaction.groupBy({
+        by: ["currency"],
+        where: { ...BASE, createdAt: { gte: startOfYear } },
+        _sum: { amount: true },
+        orderBy: { currency: "asc" },
       }),
       prisma.transaction.count({ where: BASE }),
       prisma.transaction.findMany({
@@ -60,6 +69,7 @@ export default async function AdminDonationsPage() {
           customerName: true,
           customerEmail: true,
           amount: true,
+          currency: true,
           netAmount: true,
           channel: true,
           status: true,
@@ -70,13 +80,28 @@ export default async function AdminDonationsPage() {
       }),
     ]);
 
-  const totalAll = Number(allTimeAgg._sum.amount ?? 0);
-  const totalYear = Number(thisYearAgg._sum.amount ?? 0);
-  const avgAmount = Number(avgAgg._avg.amount ?? 0);
+  function summariseByCurrency(rows: { currency: string; _sum: { amount: unknown } }[]): string {
+    const parts = rows
+      .filter((g) => Number(g._sum.amount ?? 0) > 0)
+      .map((g) => fmtAmount(Number(g._sum.amount ?? 0), g.currency));
+    return parts.join(" · ") || "₦0";
+  }
 
-  // Group by cause in-memory (cause lives in JSON metadata)
+  const totalAllLabel = summariseByCurrency(allTimeByCurrency);
+  const totalYearLabel = summariseByCurrency(thisYearByCurrency);
+
+  // Average: only meaningful per-currency; show NGN avg or first available
+  const ngnAvg = allTimeByCurrency.find((g) => g.currency === "NGN");
+  const avgLabel = ngnAvg
+    ? formatNaira(Number(ngnAvg._avg?.amount ?? 0))
+    : allTimeByCurrency[0]
+      ? fmtAmount(Number(allTimeByCurrency[0]._avg?.amount ?? 0), allTimeByCurrency[0].currency)
+      : "₦0";
+
+  // Cause breakdown — NGN only (mixing currencies in a % bar is meaningless)
+  const ngnDonations = donations.filter((d) => d.currency === "NGN");
   const causeMap = new Map<string, number>();
-  for (const d of donations) {
+  for (const d of ngnDonations) {
     const cause = getCause(d.metadata);
     causeMap.set(cause, (causeMap.get(cause) ?? 0) + Number(d.amount));
   }
@@ -104,17 +129,20 @@ export default async function AdminDonationsPage() {
             Financial overview and donor report
           </p>
         </div>
-        <button className="rounded-xl bg-white/6 border border-white/10 text-white/60 px-5 py-2.5 text-sm font-medium hover:bg-white/10 hover:text-white transition-colors">
+        <a
+          href="/api/admin/export/transactions?purpose=DONATION"
+          className="rounded-xl bg-white/6 border border-white/10 text-white/60 px-5 py-2.5 text-sm font-medium hover:bg-white/10 hover:text-white transition-colors"
+        >
           Export CSV
-        </button>
+        </a>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 mb-8">
         {[
-          { label: "Total Raised (All Time)", value: formatNaira(totalAll) },
-          { label: "This Year", value: formatNaira(totalYear) },
-          { label: "Average Donation", value: formatNaira(avgAmount) },
+          { label: "Total Raised (All Time)", value: totalAllLabel },
+          { label: "This Year", value: totalYearLabel },
+          { label: "Avg Donation (NGN)", value: avgLabel },
           { label: "Completed Donations", value: String(completedCount) },
         ].map((s) => (
           <div
@@ -134,9 +162,10 @@ export default async function AdminDonationsPage() {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 mb-8">
         {/* Cause Breakdown */}
         <div className="rounded-2xl bg-white/5 border border-white/8 px-6 py-6">
-          <h2 className="font-display text-lg font-semibold text-white mb-5">
+          <h2 className="font-display text-lg font-semibold text-white mb-1">
             By Cause
           </h2>
+          <p className="text-xs text-white/30 mb-5">NGN donations only</p>
           <div className="space-y-4">
             {CAUSES.map((c) => (
               <div key={c.name}>
@@ -252,7 +281,7 @@ export default async function AdminDonationsPage() {
                       {getCause(d.metadata)}
                     </td>
                     <td className="px-4 py-3.5 text-white/80 font-semibold text-sm">
-                      {formatNaira(Number(d.amount))}
+                      {fmtAmount(Number(d.amount), d.currency)}
                     </td>
                     <td className="px-4 py-3.5 text-white/35 text-xs hidden md:table-cell">
                       {(d.paidAt ?? d.createdAt).toLocaleDateString("en-GB", {

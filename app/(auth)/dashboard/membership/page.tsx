@@ -95,6 +95,7 @@ export default async function MembershipPage() {
 
   const member = await prisma.member.findUnique({
     where: { userId: session.user.id },
+    include: { tier: true, pendingTier: true },
   });
 
   if (!member) {
@@ -133,7 +134,7 @@ export default async function MembershipPage() {
     );
   }
 
-  const currentTier = TIERS.find((t) => t.dbKey === member.tier) ?? TIERS[0];
+  const currentTier = TIERS.find((t) => t.dbKey === member.tier.slug.toUpperCase()) ?? TIERS[0];
   const expiryDate = member.expiresAt
     ? new Date(member.expiresAt).toLocaleDateString("en-GB", {
         day: "numeric",
@@ -142,9 +143,9 @@ export default async function MembershipPage() {
       })
     : "—";
   const statusLabel = member.status as string;
-  const currentOrder = TIER_ORDER[member.tier] ?? 0;
+  const currentOrder = member.tier.sortOrder;
   const pendingTierData = member.pendingTier
-    ? TIERS.find((t) => t.dbKey === member.pendingTier)
+    ? TIERS.find((t) => t.dbKey === member.pendingTier!.slug.toUpperCase())
     : null;
 
   return (
@@ -253,7 +254,7 @@ export default async function MembershipPage() {
         </h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {TIERS.map((tier) => {
-            const isCurrent = tier.dbKey === member.tier;
+            const isCurrent = tier.dbKey === member.tier.slug.toUpperCase();
             return (
               <div
                 key={tier.name}

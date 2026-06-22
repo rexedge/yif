@@ -25,12 +25,24 @@ export const metadata: Metadata = {
   description:
     "The Yoruba Indigenes' Foundation (YIF) is a UN/ECOSOC consultative status NGO uniting Yoruba people worldwide through culture, education, economic empowerment, and community development. Reg. IT 28744.",
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://yifworldwide.org",
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.yifww.org",
   ),
   openGraph: {
     siteName: "Yoruba Indigenes' Foundation",
     locale: "en_US",
     type: "website",
+    images: [
+      {
+        url: "/logo.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Yoruba Indigenes' Foundation",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/logo.jpg"],
   },
 };
 

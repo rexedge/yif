@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { TrustBadge } from "./TrustBadge";
 import { AnkaraBorder } from "@/components/shared/AnkaraBorder";
@@ -58,6 +59,15 @@ export function Footer() {
         {/* Top: logo + mission + socials */}
         <div className="mb-12 grid gap-10 lg:grid-cols-[2fr_1fr]">
           <div>
+            <div className="mb-4 flex items-center gap-3">
+              <Image
+                src="/apple-touch-icon.png"
+                alt="YIF Logo"
+                width={48}
+                height={48}
+                className="h-16 w-16 rounded-full"
+              />
+            </div>
             <p className="font-display text-2xl font-semibold text-white">
               Yoruba Indigenes&apos; Foundation
             </p>

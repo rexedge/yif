@@ -31,6 +31,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: "article",
       publishedTime: post.publishedAt?.toISOString(),
       authors: [post.authorName],
+      images: [
+        {
+          url: post.imageUrl ?? "/logo.jpg",
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      images: [post.imageUrl ?? "/logo.jpg"],
     },
   };
 }
@@ -187,7 +199,7 @@ export default async function BlogPostPage({ params }: Props) {
               Share:
             </span>
             <a
-              href={`https://twitter.com/intent/tweet?text=${encodedTitle}&url=https://yifworldwide.org${postPath}`}
+              href={`https://twitter.com/intent/tweet?text=${encodedTitle}&url=https://www.yifww.org${postPath}`}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Share on X / Twitter"
@@ -205,7 +217,7 @@ export default async function BlogPostPage({ params }: Props) {
               X / Twitter
             </a>
             <a
-              href={`https://www.facebook.com/sharer/sharer.php?u=https://yifworldwide.org${postPath}`}
+              href={`https://www.facebook.com/sharer/sharer.php?u=https://www.yifww.org${postPath}`}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Share on Facebook"
@@ -223,7 +235,7 @@ export default async function BlogPostPage({ params }: Props) {
               Facebook
             </a>
             <a
-              href={`https://api.whatsapp.com/send?text=${encodedTitle}%20https://yifworldwide.org${postPath}`}
+              href={`https://api.whatsapp.com/send?text=${encodedTitle}%20https://www.yifww.org${postPath}`}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Share on WhatsApp"

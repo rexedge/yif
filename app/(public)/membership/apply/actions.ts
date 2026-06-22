@@ -7,26 +7,18 @@ import { APIError } from "better-auth/api";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { paystackRequest, toKobo } from "@/lib/paystack";
+import { stripe, assertStripeConfigured, toStripeMinor } from "@/lib/stripe";
 import { recordTransactionInit } from "@/lib/transactions";
 import { sendMembershipInitialization } from "@/lib/send-email";
+import { getTierBySlug, getPriceForCurrency } from "@/lib/membership";
 import { COUNTRY_CONTINENT } from "@/lib/countries";
 
-const TIER_PRICES: Record<string, number> = {
-  SILVER: 5000,
-  GOLD: 10000,
-  DIAMOND: 15000,
-  PLATINUM: 20000,
-};
-
-const TIER_SLUGS: Record<string, string> = {
-  silver: "SILVER",
-  gold: "GOLD",
-  diamond: "DIAMOND",
-  platinum: "PLATINUM",
-};
+const SUPPORTED_CURRENCIES = ["NGN", "USD", "GBP", "EUR"] as const;
+type SupportedCurrency = (typeof SUPPORTED_CURRENCIES)[number];
 
 const baseSchema = z.object({
-  tierSlug: z.enum(["silver", "gold", "diamond", "platinum"]),
+  tierSlug: z.string().min(1, "Select a membership tier"),
+  currency: z.enum(SUPPORTED_CURRENCIES).default("NGN"),
   phone: z.string().min(7, "Enter a valid phone number"),
   country: z.string().min(2, "Enter your country"),
   stateProvince: z.string().optional(),
@@ -53,6 +45,7 @@ export async function startMembershipApplication(
 
   const raw = {
     tierSlug: formData.get("tierSlug"),
+    currency: (formData.get("currency") as string | null) ?? "NGN",
     phone: formData.get("phone"),
     country: formData.get("country"),
     stateProvince: formData.get("stateProvince") || undefined,
@@ -68,16 +61,22 @@ export async function startMembershipApplication(
     return { fieldErrors: parsed.error.flatten().fieldErrors };
   }
 
-  const { tierSlug, phone, country, stateProvince, cityDistrict } = parsed.data;
+  const { tierSlug, currency, phone, country, stateProvince, cityDistrict } =
+    parsed.data;
   const continent = COUNTRY_CONTINENT[country] ?? null;
-  const dbTier = TIER_SLUGS[tierSlug];
-  const priceNaira = TIER_PRICES[dbTier];
 
-  if (!priceNaira) {
-    return { error: "Invalid membership tier selected." };
+  // Fetch tier from DB
+  const tier = await getTierBySlug(tierSlug);
+  if (!tier) {
+    return { error: "The selected membership tier was not found." };
   }
 
-  // Resolve user — either from existing session or by registering a new account
+  const price = getPriceForCurrency(tier, currency);
+  if (!price || price <= 0) {
+    return { error: `Pricing for ${currency} is not available for this tier.` };
+  }
+
+  // Resolve user
   let userId: string;
   let userEmail: string;
   let userName: string;
@@ -91,7 +90,6 @@ export async function startMembershipApplication(
       typeof registrationSchema
     >;
 
-    // Reject if account already exists — direct them to log in
     const existing = await prisma.user.findUnique({ where: { email } });
     if (existing) {
       return {
@@ -122,122 +120,189 @@ export async function startMembershipApplication(
     }
   }
 
-  // Update user profile with contact details
+  // Update user profile
   await prisma.user.update({
     where: { id: userId },
-    data: {
-      phone,
-      country,
-      stateProvince: stateProvince ?? null,
-      cityDistrict,
-      continent,
-    },
+    data: { phone, country, stateProvince: stateProvince ?? null, cityDistrict, continent },
   });
 
   // Create or update member record in PENDING state
   const member = await prisma.member.upsert({
     where: { userId },
-    update: {
-      tier: dbTier as "SILVER" | "GOLD" | "DIAMOND" | "PLATINUM",
-      status: "PENDING",
-    },
-    create: {
-      userId,
-      tier: dbTier as "SILVER" | "GOLD" | "DIAMOND" | "PLATINUM",
-      status: "PENDING",
-    },
+    update: { tierId: tier.id, status: "PENDING" },
+    create: { userId, tierId: tier.id, status: "PENDING" },
   });
 
-  // Initiate Paystack payment
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.yifww.org";
 
-  type PaystackInitResponse = {
-    authorization_url: string;
-    access_code: string;
-    reference: string;
-  };
+  // ── NGN → Paystack ──────────────────────────────────────────────
+  if (currency === "NGN") {
+    type PaystackInitResponse = {
+      authorization_url: string;
+      access_code: string;
+      reference: string;
+    };
 
-  let paystackData: PaystackInitResponse;
-  try {
-    const result = await paystackRequest<PaystackInitResponse>(
-      "/transaction/initialize",
-      {
-        method: "POST",
-        body: JSON.stringify({
-          email: userEmail,
-          amount: toKobo(priceNaira),
-          callback_url: `${appUrl}/payment/callback`,
-          metadata: {
-            custom_fields: [
-              {
-                display_name: "Payment Type",
-                variable_name: "payment_type",
-                value: "membership",
-              },
-              {
-                display_name: "Member ID",
-                variable_name: "member_id",
-                value: member.id,
-              },
-              {
-                display_name: "Membership Tier",
-                variable_name: "membership_tier",
-                value: dbTier,
-              },
-              {
-                display_name: "Full Name",
-                variable_name: "full_name",
-                value: userName,
-              },
-            ],
-          },
-        }),
+    let paystackData: PaystackInitResponse;
+    try {
+      const result = await paystackRequest<PaystackInitResponse>(
+        "/transaction/initialize",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            email: userEmail,
+            amount: toKobo(price),
+            callback_url: `${appUrl}/payment/callback`,
+            metadata: {
+              custom_fields: [
+                {
+                  display_name: "Payment Type",
+                  variable_name: "payment_type",
+                  value: "membership",
+                },
+                {
+                  display_name: "Member ID",
+                  variable_name: "member_id",
+                  value: member.id,
+                },
+                {
+                  display_name: "Tier ID",
+                  variable_name: "tier_id",
+                  value: tier.id,
+                },
+                {
+                  display_name: "Membership Tier",
+                  variable_name: "membership_tier",
+                  value: tier.name,
+                },
+                {
+                  display_name: "Full Name",
+                  variable_name: "full_name",
+                  value: userName,
+                },
+              ],
+            },
+          }),
+        },
+      );
+      paystackData = result.data;
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Payment setup failed.";
+      return { error: msg };
+    }
+
+    await prisma.member.update({
+      where: { id: member.id },
+      data: { paystackRef: paystackData.reference },
+    });
+
+    await recordTransactionInit({
+      reference: paystackData.reference,
+      purpose: "MEMBERSHIP",
+      amountNaira: price,
+      currency: "NGN",
+      provider: "paystack",
+      customerEmail: userEmail,
+      customerName: userName,
+      customerPhone: phone,
+      userId,
+      memberId: member.id,
+      metadata: {
+        tierId: tier.id,
+        tierName: tier.name,
+        country,
+        stateProvince: stateProvince ?? null,
+        cityDistrict,
       },
+    }).catch((err) =>
+      console.error("[startMembershipApplication] tx init record failed:", err),
     );
-    paystackData = result.data;
+
+    sendMembershipInitialization({
+      recipientName: userName,
+      tierName: tier.name,
+      amountNaira: `₦${price.toLocaleString("en-NG")}`,
+      reference: paystackData.reference,
+      paymentUrl: paystackData.authorization_url,
+      recipientEmail: userEmail,
+    }).catch((err) =>
+      console.error("[startMembershipApplication] init email failed:", err),
+    );
+
+    redirect(paystackData.authorization_url);
+  }
+
+  // ── USD / GBP / EUR → Stripe ─────────────────────────────────────
+  try {
+    assertStripeConfigured();
+  } catch {
+    return { error: "International payments are not yet configured. Please pay in NGN." };
+  }
+
+  const currencyCode = currency.toLowerCase() as Lowercase<SupportedCurrency>;
+
+  let checkoutSession: { url: string | null; id: string };
+  try {
+    checkoutSession = await stripe.checkout.sessions.create({
+      mode: "payment",
+      currency: currencyCode,
+      line_items: [
+        {
+          quantity: 1,
+          price_data: {
+            currency: currencyCode,
+            unit_amount: toStripeMinor(price),
+            product_data: {
+              name: `YIF ${tier.name} Membership`,
+              description: tier.description ?? `Annual ${tier.name} membership`,
+            },
+          },
+        },
+      ],
+      customer_email: userEmail,
+      success_url: `${appUrl}/payment/stripe-callback?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${appUrl}/membership`,
+      metadata: {
+        purpose: "MEMBERSHIP",
+        paymentType: "membership",
+        tierId: tier.id,
+        membershipTier: tier.name,
+        memberId: member.id,
+        userId,
+        customerEmail: userEmail,
+        customerName: userName,
+      },
+    });
   } catch (err) {
-    const msg = err instanceof Error ? err.message : "Payment setup failed.";
+    const msg = err instanceof Error ? err.message : "Stripe checkout failed.";
     return { error: msg };
   }
 
-  // Store reference on the member record
-  await prisma.member.update({
-    where: { id: member.id },
-    data: { paystackRef: paystackData.reference },
-  });
+  if (!checkoutSession.url) {
+    return { error: "Failed to create payment session. Please try again." };
+  }
 
-  // Record the pending transaction for admin transparency
   await recordTransactionInit({
-    reference: paystackData.reference,
+    reference: checkoutSession.id,
     purpose: "MEMBERSHIP",
-    amountNaira: priceNaira,
+    amountNaira: price,
+    currency,
+    provider: "stripe",
     customerEmail: userEmail,
     customerName: userName,
     customerPhone: phone,
     userId,
     memberId: member.id,
     metadata: {
-      tier: dbTier,
+      tierId: tier.id,
+      tierName: tier.name,
       country,
       stateProvince: stateProvince ?? null,
       cityDistrict,
     },
   }).catch((err) =>
-    console.error("[startMembershipApplication] tx init record failed:", err),
+    console.error("[startMembershipApplication] stripe tx init failed:", err),
   );
 
-  // Send membership initialization email (fire-and-forget — don't block redirect)
-  const tierDisplayName = dbTier.charAt(0) + dbTier.slice(1).toLowerCase();
-  sendMembershipInitialization({
-    recipientName: userName,
-    tierName: tierDisplayName,
-    amountNaira: `₦${priceNaira.toLocaleString("en-NG")}`,
-    reference: paystackData.reference,
-    paymentUrl: paystackData.authorization_url,
-    recipientEmail: userEmail,
-  }).catch((err) =>
-    console.error("[startMembershipApplication] init email failed:", err),
-  );
-
-  redirect(paystackData.authorization_url);
+  redirect(checkoutSession.url);
 }
