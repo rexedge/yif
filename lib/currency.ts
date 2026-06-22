@@ -62,6 +62,16 @@ export function isSupportedCurrency(c: string): c is SupportedCurrency {
   return SUPPORTED_CURRENCIES.includes(c as SupportedCurrency);
 }
 
+/** Symbol for any currency code (falls back to the code itself). */
+export function currencySymbol(code: string): string {
+  return CURRENCIES[code as SupportedCurrency]?.symbol ?? code;
+}
+
+/** Format a USD base/report amount as whole dollars, e.g. `$1,250`. */
+export function formatUsd(amount: number): string {
+  return `$${Math.floor(amount).toLocaleString("en-US")}`;
+}
+
 export function formatCurrency(
   amount: number,
   currency: SupportedCurrency,

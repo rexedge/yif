@@ -32,31 +32,25 @@ export default async function DonationsPage() {
   });
 
   const currentYear = new Date().getFullYear();
-  const thisYearTotal = donations
-    .filter((d) => new Date(d.createdAt).getFullYear() === currentYear)
-    .reduce((acc, d) => acc + Number(d.amount), 0);
-
-  const totalDonated = donations.reduce((acc, d) => acc + Number(d.amount), 0);
   const totalCount = donations.length;
 
-  // Totals only make sense within a single currency; show NGN total if mixed.
-  const ngnDonations = donations.filter((d) => d.currency === "NGN");
-  const ngnTotal = ngnDonations.reduce((acc, d) => acc + Number(d.amount), 0);
-  const ngnThisYear = ngnDonations
+  // Consolidated totals in USD-equivalent (baseAmount frozen at payment time).
+  const totalDonatedUsd = donations.reduce(
+    (acc, d) => acc + Number(d.baseAmount ?? 0),
+    0,
+  );
+  const thisYearUsd = donations
     .filter((d) => new Date(d.createdAt).getFullYear() === currentYear)
-    .reduce((acc, d) => acc + Number(d.amount), 0);
-  const hasForeign = donations.some((d) => d.currency !== "NGN");
+    .reduce((acc, d) => acc + Number(d.baseAmount ?? 0), 0);
 
   const summary = [
     {
-      label: "Total Donated (NGN)",
-      value: hasForeign
-        ? `₦${ngnTotal.toLocaleString("en-NG")} + foreign`
-        : `₦${totalDonated.toLocaleString("en-NG")}`,
+      label: "Total Donated (USD)",
+      value: `$${Math.floor(totalDonatedUsd).toLocaleString("en-US")}`,
     },
     {
       label: `This Year (${currentYear})`,
-      value: `₦${ngnThisYear.toLocaleString("en-NG")}${hasForeign ? " + foreign" : ""}`,
+      value: `$${Math.floor(thisYearUsd).toLocaleString("en-US")}`,
     },
     { label: "Transactions", value: String(totalCount) },
   ];
@@ -141,9 +135,10 @@ export default async function DonationsPage() {
         <div className="space-y-8">
           {years.map((year) => {
             const yearDonations = byYear.get(year)!;
-            const yearTotal = yearDonations
-              .filter((d) => d.status === "SUCCESS")
-              .reduce((acc, d) => acc + Number(d.amount), 0);
+            const yearTotalUsd = yearDonations.reduce(
+              (acc, d) => acc + Number(d.baseAmount ?? 0),
+              0,
+            );
 
             return (
               <section key={year}>
@@ -152,7 +147,7 @@ export default async function DonationsPage() {
                     {year}
                   </h2>
                   <span className="text-sm text-[var(--yif-gold)] font-semibold">
-                    ₦{yearDonations.filter(d => d.currency === "NGN").reduce((a, d) => a + Number(d.amount), 0).toLocaleString("en-NG")}{yearDonations.some(d => d.currency !== "NGN") ? " + foreign" : ""} total
+                    ${Math.floor(yearTotalUsd).toLocaleString("en-US")} total
                   </span>
                 </div>
                 <div className="rounded-xl bg-white/5 border border-white/10 overflow-hidden">

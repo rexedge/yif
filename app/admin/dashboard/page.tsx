@@ -4,6 +4,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { formatUsd } from "@/lib/currency";
 
 export const metadata: Metadata = { title: "Admin Overview | YIF" };
 
@@ -19,10 +20,10 @@ function timeAgo(date: Date): string {
   return `${days} days ago`;
 }
 
-function formatNaira(amount: number): string {
-  if (amount >= 1_000_000) return `₦${(amount / 1_000_000).toFixed(1)}M`;
-  if (amount >= 1_000) return `₦${(amount / 1_000).toFixed(0)}k`;
-  return `₦${amount.toLocaleString()}`;
+function formatUsdCompact(amount: number): string {
+  if (amount >= 1_000_000) return `$${(amount / 1_000_000).toFixed(1)}M`;
+  if (amount >= 1_000) return `$${(amount / 1_000).toFixed(0)}k`;
+  return `$${amount.toLocaleString()}`;
 }
 
 export default async function AdminDashboardPage() {
@@ -42,11 +43,9 @@ export default async function AdminDashboardPage() {
     pendingMembers,
   ] = await Promise.all([
     prisma.member.count(),
-    prisma.transaction.groupBy({
-      by: ["currency"],
+    prisma.transaction.aggregate({
       where: { purpose: "DONATION", status: "SUCCESS" },
-      _sum: { amount: true },
-      orderBy: { currency: "asc" },
+      _sum: { baseAmount: true },
     }),
     prisma.event.count({ where: { date: { gte: startOfYear } } }),
     prisma.user.count(),
@@ -68,16 +67,10 @@ export default async function AdminDashboardPage() {
     }),
   ]);
 
-  // Build per-currency donation totals e.g. "₦309k · $15 · £50"
-  const donationSummary = donationAgg
-    .filter((g) => Number(g._sum.amount ?? 0) > 0)
-    .map((g) => {
-      const amt = Number(g._sum.amount ?? 0);
-      if (g.currency === "NGN") return formatNaira(amt);
-      const sym: Record<string, string> = { USD: "$", GBP: "£", EUR: "€" };
-      return `${sym[g.currency] ?? g.currency}${amt.toLocaleString()}`;
-    })
-    .join(" · ") || "₦0";
+  // Consolidated donation total in USD (frozen at payment time).
+  const donationSummary = formatUsdCompact(
+    Number(donationAgg._sum.baseAmount ?? 0),
+  );
 
   const STATS = [
     { label: "Total Members", value: String(memberCount) },
@@ -98,7 +91,7 @@ export default async function AdminDashboardPage() {
       time: timeAgo(d.createdAt),
       icon: "◆",
       color: "#2d6a4f",
-      text: `${d.currency === "NGN" ? formatNaira(Number(d.amount)) : `${d.currency} ${Number(d.amount).toLocaleString()}`} donation received${d.customerName ? ` — ${d.customerName}` : ""}`,
+      text: `${formatUsd(Number(d.baseAmount ?? 0))} donation received${d.customerName ? ` — ${d.customerName}` : ""}`,
       date: d.createdAt,
     })),
   ]

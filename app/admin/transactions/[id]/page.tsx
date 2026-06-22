@@ -78,11 +78,11 @@ export default async function TransactionDetailPage({
     ["Net Received", tx.netAmount != null ? money(Number(tx.netAmount), tx.currency) : "—"],
     ["Currency", tx.currency],
     [
-      "NGN Equivalent",
+      "USD Equivalent",
       tx.baseAmount != null
-        ? `${money(Number(tx.baseAmount))}${
-            tx.fxRate != null && tx.currency !== "NGN"
-              ? ` (@ ₦${Number(tx.fxRate).toLocaleString("en", { maximumFractionDigits: 2 })}/${tx.currency})`
+        ? `${money(Number(tx.baseAmount), "USD")}${
+            tx.fxRate != null && tx.currency !== "USD"
+              ? ` (@ $${Number(tx.fxRate).toLocaleString("en", { maximumFractionDigits: 6 })}/${tx.currency})`
               : ""
           }`
         : "—",

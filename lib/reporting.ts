@@ -26,7 +26,6 @@ function periodWhere(period: Period): Prisma.TransactionWhereInput {
 
 export type RevenueSummary = {
   totalByPurpose: { purpose: string; total: number; count: number }[];
-  totalByCurrency: { currency: string; total: number; count: number }[];
   failedCount: number;
   failedTotal: number;
   grandTotal: number;
@@ -36,17 +35,11 @@ export type RevenueSummary = {
 export async function getRevenueSummary(period: Period): Promise<RevenueSummary> {
   const where = periodWhere(period);
 
-  const [byPurpose, byCurrency, failed] = await Promise.all([
+  const [byPurpose, failed] = await Promise.all([
     prisma.transaction.groupBy({
       by: ["purpose"],
       where: { ...where, status: "SUCCESS" },
       _sum: { baseAmount: true },
-      _count: { _all: true },
-    }),
-    prisma.transaction.groupBy({
-      by: ["currency"],
-      where: { ...where, status: "SUCCESS" },
-      _sum: { amount: true },
       _count: { _all: true },
     }),
     prisma.transaction.aggregate({
@@ -56,28 +49,20 @@ export async function getRevenueSummary(period: Period): Promise<RevenueSummary>
     }),
   ]);
 
-  // Purpose totals use the frozen NGN-equivalent so currencies are comparable.
+  // Purpose totals use the frozen USD-equivalent so currencies are comparable.
   const totalByPurpose = byPurpose.map((r) => ({
     purpose: r.purpose,
     total: Number(r._sum.baseAmount ?? 0),
     count: r._count._all,
   }));
 
-  // Currency breakdown stays exact: original amount in its own currency.
-  const totalByCurrency = byCurrency.map((r) => ({
-    currency: r.currency ?? "NGN",
-    total: Number(r._sum.amount ?? 0),
-    count: r._count._all,
-  }));
-
-  // Grand total is the consolidated NGN-equivalent across every currency.
+  // Grand total is the consolidated USD-equivalent across every currency.
   const grandTotal = totalByPurpose.reduce((acc, p) => acc + p.total, 0);
 
   const successCount = byPurpose.reduce((acc, r) => acc + r._count._all, 0);
 
   return {
     totalByPurpose,
-    totalByCurrency,
     failedCount: failed._count._all,
     failedTotal: Number(failed._sum.baseAmount ?? 0),
     grandTotal,
@@ -144,18 +129,11 @@ export type TierBreakdown = {
 };
 
 export async function getMembershipTierBreakdown(): Promise<TierBreakdown[]> {
-  const [tiers, revenueRows] = await Promise.all([
-    prisma.membershipTier.findMany({
-      where: { isActive: true },
-      select: { id: true, name: true, color: true },
-      orderBy: { sortOrder: "asc" },
-    }),
-    prisma.transaction.groupBy({
-      by: ["memberId"],
-      where: { status: "SUCCESS", purpose: "MEMBERSHIP" },
-      _sum: { amount: true },
-    }),
-  ]);
+  const tiers = await prisma.membershipTier.findMany({
+    where: { isActive: true },
+    select: { id: true, name: true, color: true },
+    orderBy: { sortOrder: "asc" },
+  });
 
   // Count active members per tier
   const memberCounts = await prisma.member.groupBy({
@@ -167,8 +145,9 @@ export async function getMembershipTierBreakdown(): Promise<TierBreakdown[]> {
   const countByTier = new Map(memberCounts.map((r) => [r.tierId, r._count._all]));
 
   // For revenue: we need to join via member → tier. Use raw query for efficiency.
+  // baseAmount is the frozen USD-equivalent (backfilled for all settled rows).
   const revenueByTier: { tierId: string; total: number }[] = await prisma.$queryRaw`
-    SELECT m."tierId", COALESCE(SUM(COALESCE(t."baseAmount", t.amount)), 0)::float AS total
+    SELECT m."tierId", COALESCE(SUM(t."baseAmount"), 0)::float AS total
     FROM "transaction" t
     JOIN "member" m ON m.id = t."memberId"
     WHERE t.status = 'SUCCESS' AND t.purpose = 'MEMBERSHIP'
@@ -207,7 +186,7 @@ export async function getTopDonationCauses(
       status: "SUCCESS",
       ...(since ? { createdAt: { gte: since } } : {}),
     },
-    select: { metadata: true, baseAmount: true, amount: true },
+    select: { metadata: true, baseAmount: true },
   });
 
   const causeMap = new Map<string, { total: number; count: number }>();
@@ -218,9 +197,9 @@ export async function getTopDonationCauses(
       (meta?.donationCause as string | undefined) ??
       "General Fund";
     const existing = causeMap.get(cause) ?? { total: 0, count: 0 };
-    // Use frozen NGN-equivalent; fall back to raw amount for legacy rows.
+    // Use the frozen USD-equivalent (backfilled for all settled rows).
     causeMap.set(cause, {
-      total: existing.total + Number(row.baseAmount ?? row.amount ?? 0),
+      total: existing.total + Number(row.baseAmount ?? 0),
       count: existing.count + 1,
     });
   }

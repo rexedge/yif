@@ -99,7 +99,7 @@ export function RevenueTrendChart({ data }: { data: TimeSeriesPoint[] }) {
           }}
           labelStyle={{ color: "rgba(255,255,255,0.6)", marginBottom: 4 }}
           itemStyle={{ color: "rgba(255,255,255,0.8)" }}
-          formatter={(value) => [`₦${Number(value).toLocaleString()}`, undefined]}
+          formatter={(value) => [`$${Number(value).toLocaleString()}`, undefined]}
         />
         <Legend
           wrapperStyle={{ fontSize: 11, color: "rgba(255,255,255,0.5)" }}
@@ -159,7 +159,7 @@ export function SourceSplitChart({ summary }: { summary: RevenueSummary }) {
             borderRadius: 8,
             fontSize: 12,
           }}
-          formatter={(value) => [`₦${Number(value).toLocaleString()}`, undefined]}
+          formatter={(value) => [`$${Number(value).toLocaleString()}`, undefined]}
         />
       </PieChart>
     </ResponsiveContainer>
@@ -214,7 +214,7 @@ export function TierDistributionChart({ tiers }: { tiers: TierBreakdown[] }) {
           }}
           formatter={(value, name) =>
             name === "revenue"
-              ? [`₦${Number(value).toLocaleString()}`, "Revenue"]
+              ? [`$${Number(value).toLocaleString()}`, "Revenue"]
               : [value, "Members"]
           }
         />

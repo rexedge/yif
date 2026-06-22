@@ -65,7 +65,7 @@ export async function GET(req: NextRequest) {
 
   const HEADERS = [
     "ID", "Reference", "Purpose", "Status", "Amount", "Currency",
-    "Amount (NGN equiv)", "FX Rate (NGN per unit)",
+    "Amount (USD equiv)", "FX Rate (USD per unit)",
     "Provider", "Channel", "Card Brand", "Card Last 4", "Fees", "Net Amount",
     "Customer Email", "Customer Name", "Customer Phone",
     "Gateway Response", "Notes", "Paid At", "Created At",

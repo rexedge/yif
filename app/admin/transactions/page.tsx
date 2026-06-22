@@ -4,6 +4,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { currencySymbol, formatUsd } from "@/lib/currency";
 import type { Prisma } from "@/generated/prisma/client";
 
 export const metadata: Metadata = { title: "Admin — Transactions | YIF" };
@@ -25,17 +26,10 @@ const PURPOSE_LABELS: Record<string, string> = {
   OTHER: "Other",
 };
 
-const CURRENCY_SYMBOLS: Record<string, string> = {
-  NGN: "₦",
-  USD: "$",
-  GBP: "£",
-  EUR: "€",
-};
-
+// Per-row amounts show the actual charged currency (record detail).
 function fmtAmount(amount: number | null | undefined, currency?: string | null): string {
   if (amount == null) return "—";
-  const sym = CURRENCY_SYMBOLS[currency ?? "NGN"] ?? (currency ?? "");
-  return `${sym}${Number(amount).toLocaleString("en", {
+  return `${currencySymbol(currency ?? "NGN")}${Number(amount).toLocaleString("en", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })}`;
@@ -99,7 +93,7 @@ export default async function AdminTransactionsPage({
       : {}),
   };
 
-  const [rows, totalCount, successByCurrency, statusCounts] =
+  const [rows, totalCount, successRows, statusCounts] =
     await Promise.all([
       prisma.transaction.findMany({
         where,
@@ -109,11 +103,9 @@ export default async function AdminTransactionsPage({
         include: { user: { select: { id: true, name: true, email: true } } },
       }),
       prisma.transaction.count({ where }),
-      prisma.transaction.groupBy({
-        by: ["currency"],
+      prisma.transaction.findMany({
         where: { ...where, status: "SUCCESS" },
-        _sum: { amount: true, fees: true, netAmount: true },
-        orderBy: { currency: "asc" },
+        select: { baseAmount: true, fees: true, netAmount: true, fxRate: true },
       }),
       prisma.transaction.groupBy({
         by: ["status"],
@@ -124,12 +116,16 @@ export default async function AdminTransactionsPage({
 
   const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
 
-  // Format multi-currency totals as "₦309,000 · $15 · £50"
-  function fmtMultiCurrency(field: "amount" | "fees" | "netAmount"): string {
-    const parts = successByCurrency
-      .filter((g) => Number(g._sum[field] ?? 0) > 0)
-      .map((g) => fmtAmount(Number(g._sum[field] ?? 0), g.currency));
-    return parts.length ? parts.join(" · ") : "—";
+  // Consolidated USD totals. Gross uses the frozen baseAmount; fees/net have no
+  // frozen USD column, so convert each row via its stored fxRate (USD per unit).
+  let grossUsd = 0;
+  let feesUsd = 0;
+  let netUsd = 0;
+  for (const r of successRows) {
+    const rate = Number(r.fxRate ?? 0);
+    grossUsd += Number(r.baseAmount ?? 0);
+    if (r.fees != null) feesUsd += Number(r.fees) * rate;
+    if (r.netAmount != null) netUsd += Number(r.netAmount) * rate;
   }
 
   const counts = Object.fromEntries(
@@ -191,9 +187,9 @@ export default async function AdminTransactionsPage({
       {/* Summary cards */}
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 mb-8">
         {[
-          { label: "Gross (Successful)", value: fmtMultiCurrency("amount") },
-          { label: "Gateway Fees", value: fmtMultiCurrency("fees") },
-          { label: "Net Received", value: fmtMultiCurrency("netAmount") },
+          { label: "Gross (Successful, USD)", value: formatUsd(grossUsd) },
+          { label: "Gateway Fees (USD)", value: formatUsd(feesUsd) },
+          { label: "Net Received (USD)", value: formatUsd(netUsd) },
           { label: "Total Records", value: String(totalCount) },
         ].map((s) => (
           <div

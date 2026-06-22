@@ -13,10 +13,19 @@ const STATUS_STYLE = {
   Past: "bg-white/6 text-white/40 border-white/12",
 };
 
-function formatNaira(amount: number): string {
-  if (amount >= 1_000_000) return `₦${(amount / 1_000_000).toFixed(1)}M`;
-  if (amount >= 1_000) return `₦${(amount / 1_000).toFixed(0)}k`;
-  return `₦${amount.toLocaleString()}`;
+function formatUsdCompact(amount: number): string {
+  if (amount >= 1_000_000) return `$${(amount / 1_000_000).toFixed(1)}M`;
+  if (amount >= 1_000) return `$${(amount / 1_000).toFixed(0)}k`;
+  return `$${Math.floor(amount).toLocaleString()}`;
+}
+
+function metaStr(metadata: unknown, key: string): string {
+  if (metadata && typeof metadata === "object" && !Array.isArray(metadata)) {
+    const v = (metadata as Record<string, unknown>)[key];
+    if (typeof v === "string") return v;
+    if (typeof v === "number") return String(v);
+  }
+  return "";
 }
 
 export default async function AdminEventsPage() {
@@ -24,24 +33,38 @@ export default async function AdminEventsPage() {
   if (!session || session.user.role !== "admin") redirect("/dashboard");
 
   const now = new Date();
-  const events = await prisma.event.findMany({
-    orderBy: { date: "desc" },
-    include: {
-      tickets: { select: { amountPaid: true } },
-    },
-  });
+  const [events, ticketTx] = await Promise.all([
+    prisma.event.findMany({
+      orderBy: { date: "desc" },
+      include: {
+        tickets: { select: { amountPaid: true } },
+      },
+    }),
+    prisma.transaction.findMany({
+      where: { purpose: "TICKET", status: "SUCCESS" },
+      select: { baseAmount: true, metadata: true },
+    }),
+  ]);
+
+  // Revenue per event in USD-equivalent, keyed off metadata.eventId, using the
+  // Transaction table (frozen baseAmount) as the single source of truth.
+  const revenueByEvent = new Map<string, number>();
+  for (const t of ticketTx) {
+    const eventId = metaStr(t.metadata, "eventId");
+    if (!eventId) continue;
+    revenueByEvent.set(
+      eventId,
+      (revenueByEvent.get(eventId) ?? 0) + Number(t.baseAmount ?? 0),
+    );
+  }
 
   const upcomingCount = events.filter((e) => e.date > now).length;
   const totalTickets = events.reduce((sum, e) => sum + e.tickets.length, 0);
-  const totalRevenue = events.reduce(
-    (sum, e) =>
-      sum + e.tickets.reduce((s, t) => s + Number(t.amountPaid ?? 0), 0),
-    0,
-  );
+  const totalRevenue = [...revenueByEvent.values()].reduce((s, v) => s + v, 0);
 
   const STATS = [
     { label: "Total Tickets Sold", value: String(totalTickets) },
-    { label: "Total Event Revenue", value: formatNaira(totalRevenue) },
+    { label: "Total Event Revenue (USD)", value: formatUsdCompact(totalRevenue) },
     { label: "Upcoming Events", value: String(upcomingCount) },
     { label: "Events Total", value: String(events.length) },
   ];
@@ -123,10 +146,7 @@ export default async function AdminEventsPage() {
               ) : (
                 events.map((e) => {
                   const ticketCount = e.tickets.length;
-                  const revenue = e.tickets.reduce(
-                    (s, t) => s + Number(t.amountPaid ?? 0),
-                    0,
-                  );
+                  const revenue = revenueByEvent.get(e.id) ?? 0;
                   const statusLabel = e.date > now ? "Upcoming" : "Past";
                   return (
                     <tr
@@ -154,7 +174,7 @@ export default async function AdminEventsPage() {
                         </span>
                       </td>
                       <td className="px-4 py-4 text-white/60 text-sm font-medium hidden md:table-cell">
-                        {formatNaira(revenue)}
+                        {formatUsdCompact(revenue)}
                       </td>
                       <td className="px-4 py-4">
                         <span

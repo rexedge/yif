@@ -5,6 +5,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { currencySymbol, formatUsd } from "@/lib/currency";
 import {
   banMember,
   unbanMember,
@@ -286,7 +287,13 @@ export default async function MemberDetailPage({ params }: Props) {
                   <tr key={tx.id}>
                     <td className="px-5 py-3 text-white/70">{tx.purpose}</td>
                     <td className="px-5 py-3 text-right text-white/70">
-                      ₦{Number(tx.amount).toLocaleString()}
+                      {currencySymbol(tx.currency)}
+                      {Number(tx.amount).toLocaleString()}
+                      {tx.baseAmount != null && tx.currency !== "USD" && (
+                        <span className="block text-xs text-white/35">
+                          ≈ {formatUsd(Number(tx.baseAmount))}
+                        </span>
+                      )}
                     </td>
                     <td className="px-5 py-3 text-white/40 text-xs hidden sm:table-cell">
                       {new Date(tx.createdAt).toLocaleDateString("en-GB")}

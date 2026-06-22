@@ -1,6 +1,6 @@
 // lib/fx.ts — server-side foreign-exchange helper.
 //
-// Converts a payment amount in any supported currency into its NGN equivalent,
+// Converts a payment amount in any supported currency into its USD equivalent,
 // freezing the rate used at the moment of conversion. Live rates come from
 // openexchangerates.org (free plan → base currency is always USD), cached
 // in-memory with a TTL so we don't hammer the API. If the API is unavailable
@@ -65,46 +65,45 @@ async function getRatesPerUsd(): Promise<{ rates: RatesPerUsd; live: boolean }> 
   return { rates: FALLBACK_RATES_PER_USD, live: false };
 }
 
-export interface NgnConversion {
-  /** NGN-equivalent of the input amount, rounded to 2dp. */
+export interface UsdConversion {
+  /** USD-equivalent of the input amount, floored to whole dollars. */
   baseAmount: number;
-  /** NGN per 1 unit of the source currency (1 for NGN). */
+  /** USD per 1 unit of the source currency (1 for USD). */
   fxRate: number;
   /** Whether the rate came from the live API (false → static fallback). */
   live: boolean;
 }
 
 /**
- * Convert `amount` in `currency` to its NGN equivalent.
- * The openexchangerates free plan is USD-based, so we cross-convert:
- *   amountInUsd = amount / rates[currency]
- *   baseAmount  = amountInUsd × rates.NGN
- * which simplifies to fxRate = rates.NGN / rates[currency].
+ * Convert `amount` in `currency` to its USD equivalent.
+ * The openexchangerates free plan is USD-based, so `rates[currency]` is already
+ * "units of `currency` per 1 USD" — converting is a straight division:
+ *   baseAmount = amount / rates[currency]
+ * and the stored fxRate is "USD per 1 unit of currency" = 1 / rates[currency].
+ * The base amount is floored to the nearest whole dollar (approximate by design).
  */
-export async function convertToNgn(
+export async function convertToUsd(
   amount: number,
   currency: string,
-): Promise<NgnConversion> {
-  if (currency === "NGN") {
-    return { baseAmount: round2(amount), fxRate: 1, live: true };
+): Promise<UsdConversion> {
+  if (currency === "USD") {
+    return { baseAmount: Math.floor(amount), fxRate: 1, live: true };
   }
 
   const { rates, live } = await getRatesPerUsd();
-  const ngnPerUsd = rates.NGN;
   const currencyPerUsd = rates[currency];
 
-  if (!ngnPerUsd || !currencyPerUsd) {
-    // Unknown currency or missing rate — fall back to USD_TO_NGN if USD,
+  if (!currencyPerUsd) {
+    // Unknown currency or missing rate — fall back to USD_TO_NGN for NGN,
     // otherwise return amount unconverted with a flagged rate of 1.
-    const fxRate = currency === "USD" ? USD_TO_NGN : 1;
-    return { baseAmount: round2(amount * fxRate), fxRate, live: false };
+    const fxRate = currency === "NGN" ? 1 / USD_TO_NGN : 1;
+    return { baseAmount: Math.floor(amount * fxRate), fxRate, live: false };
   }
 
-  const fxRate = ngnPerUsd / currencyPerUsd;
-  return { baseAmount: round2(amount * fxRate), fxRate: round8(fxRate), live };
+  const fxRate = 1 / currencyPerUsd;
+  return { baseAmount: Math.floor(amount * fxRate), fxRate: round8(fxRate), live };
 }
 
-const round2 = (n: number) => Math.round(n * 100) / 100;
 const round8 = (n: number) => Math.round(n * 1e8) / 1e8;
 
 export type { SupportedCurrency };

@@ -75,13 +75,12 @@ export default async function DashboardPage() {
   const recentDonations = donationTx.slice(0, 3);
   const recentTickets = ticketTx.slice(0, 2);
 
-  // Consolidated lifetime total in NGN-equivalent (baseAmount frozen at payment).
-  const totalDonatedNgn = donationTx.reduce(
-    (acc, d) => acc + Number(d.baseAmount ?? d.amount ?? 0),
+  // Consolidated lifetime total in USD-equivalent (baseAmount frozen at payment).
+  const totalDonatedUsd = donationTx.reduce(
+    (acc, d) => acc + Number(d.baseAmount ?? 0),
     0,
   );
-  const hasForeignDonation = donationTx.some((d) => d.currency !== "NGN");
-  const totalDonated = `${hasForeignDonation ? "≈" : ""}₦${totalDonatedNgn.toLocaleString("en-NG")}`;
+  const totalDonated = `$${Math.floor(totalDonatedUsd).toLocaleString("en-US")}`;
   const donationCount = donationTx.length;
   const ticketCount = ticketTx.length;
   const memberYear = member?.joinedAt

@@ -5,7 +5,7 @@
 import type Stripe from "stripe";
 import { prisma } from "@/lib/prisma";
 import { fromStripeMinor } from "@/lib/stripe";
-import { convertToNgn } from "@/lib/fx";
+import { convertToUsd } from "@/lib/fx";
 import {
   sendTicketConfirmation,
   sendDonationThankYou,
@@ -72,9 +72,9 @@ export async function fulfillStripeCheckoutSession(
   const fees = feeMinor != null ? fromStripeMinor(feeMinor) : null;
   const netAmount = fees != null ? amount - fees : null;
 
-  // Freeze the NGN-equivalent at fulfillment time for consolidated reporting.
+  // Freeze the USD-equivalent at fulfillment time for consolidated reporting.
   // Rates are cached in-memory, so converting cheaply covers all statuses.
-  const fx = amount > 0 ? await convertToNgn(amount, currency).catch(() => null) : null;
+  const fx = amount > 0 ? await convertToUsd(amount, currency).catch(() => null) : null;
 
   const customerEmail =
     session.customer_details?.email ??
@@ -96,7 +96,7 @@ export async function fulfillStripeCheckoutSession(
     netAmount,
     currency,
     baseAmount: fx?.baseAmount ?? null,
-    baseCurrency: "NGN",
+    baseCurrency: "USD",
     fxRate: fx?.fxRate ?? null,
     channel: charge?.payment_method_details?.type ?? "card",
     cardBrand: charge?.payment_method_details?.card?.brand ?? null,

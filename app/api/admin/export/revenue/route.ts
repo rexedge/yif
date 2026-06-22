@@ -35,14 +35,10 @@ export async function GET(req: NextRequest) {
 
   const lines: string[] = [];
 
-  lines.push(csvRow(["Section", "Category", "Total", "Count"]));
+  lines.push(csvRow(["Section", "Category", "Total (USD)", "Count"]));
 
   for (const p of summary.totalByPurpose) {
     lines.push(csvRow(["Revenue by Purpose", p.purpose, p.total, p.count]));
-  }
-
-  for (const c of summary.totalByCurrency) {
-    lines.push(csvRow(["Revenue by Currency", c.currency, c.total, c.count]));
   }
 
   lines.push(
@@ -50,7 +46,7 @@ export async function GET(req: NextRequest) {
   );
 
   lines.push(csvRow([]));
-  lines.push(csvRow(["Top Donation Causes", "Total", "Transactions"]));
+  lines.push(csvRow(["Top Donation Causes", "Total (USD)", "Transactions"]));
   for (const cause of causes) {
     lines.push(csvRow([cause.cause, cause.total, cause.count]));
   }

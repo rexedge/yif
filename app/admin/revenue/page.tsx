@@ -16,6 +16,7 @@ import {
   SourceSplitChart,
   TierDistributionChart,
 } from "./RevenueCharts";
+import { currencySymbol } from "@/lib/currency";
 
 export const metadata: Metadata = { title: "Revenue — Admin | YIF" };
 
@@ -31,18 +32,10 @@ type Props = {
   searchParams: Promise<Record<string, string | undefined>>;
 };
 
-const CURRENCY_SYMBOLS: Record<string, string> = {
-  NGN: "₦",
-  USD: "$",
-  GBP: "£",
-  EUR: "€",
-};
-
-function fmt(n: number, currency = "NGN") {
-  const sym = CURRENCY_SYMBOLS[currency] ?? currency;
-  if (n >= 1_000_000) return `${sym}${(n / 1_000_000).toFixed(2)}M`;
-  if (n >= 1_000) return `${sym}${(n / 1_000).toFixed(1)}k`;
-  return `${sym}${n.toLocaleString()}`;
+function fmt(n: number) {
+  if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(2)}M`;
+  if (n >= 1_000) return `$${(n / 1_000).toFixed(1)}k`;
+  return `$${n.toLocaleString()}`;
 }
 
 export default async function RevenuePage({ searchParams }: Props) {
@@ -83,8 +76,8 @@ export default async function RevenuePage({ searchParams }: Props) {
             Real-time view of all income streams and payment performance.
           </p>
           <p className="mt-1 text-white/30 text-xs">
-            Consolidated totals shown in NGN, converted at payment-time FX rates.
-            Exact per-currency cash is in the breakdown below.
+            All totals shown in USD, converted at payment-time FX rates and
+            rounded down to the nearest dollar.
           </p>
         </div>
         <a
@@ -115,7 +108,7 @@ export default async function RevenuePage({ searchParams }: Props) {
       {/* Summary cards */}
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5 mb-8">
         {[
-          { label: "Total Revenue (≈ NGN)", value: fmt(summary.grandTotal), accent: "var(--yif-gold)" },
+          { label: "Total Revenue (≈ USD)", value: fmt(summary.grandTotal), accent: "var(--yif-gold)" },
           { label: "Memberships", value: fmt(membershipRevenue), accent: "#c2873f" },
           { label: "Tickets", value: fmt(ticketRevenue), accent: "#2c4a8c" },
           { label: "Donations", value: fmt(donationRevenue), accent: "#b5502a" },
@@ -143,26 +136,6 @@ export default async function RevenuePage({ searchParams }: Props) {
           </div>
         ))}
       </div>
-
-      {/* Currency breakdown */}
-      {summary.totalByCurrency.length > 1 && (
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 mb-8">
-          {summary.totalByCurrency.map((c) => (
-            <div
-              key={c.currency}
-              className="rounded-xl bg-white/4 border border-white/6 px-4 py-3"
-            >
-              <p className="text-xs text-white/35 mb-1">
-                {c.currency} · {c.count} txn
-              </p>
-              <p className="font-display font-semibold text-lg text-white">
-                {CURRENCY_SYMBOLS[c.currency] ?? c.currency}
-                {c.total.toLocaleString()}
-              </p>
-            </div>
-          ))}
-        </div>
-      )}
 
       {/* Charts row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
@@ -206,7 +179,7 @@ export default async function RevenuePage({ searchParams }: Props) {
                   <span className="text-white/50">{p.purpose}</span>
                 </div>
                 <span className="text-white/70 font-medium">
-                  ₦{p.total.toLocaleString()}
+                  ${p.total.toLocaleString()}
                 </span>
               </div>
             ))}
@@ -247,7 +220,7 @@ export default async function RevenuePage({ searchParams }: Props) {
                         {t.activeMembers}
                       </td>
                       <td className="py-2.5 text-right text-white/80 font-medium">
-                        ₦{t.revenue.toLocaleString()}
+                        ${t.revenue.toLocaleString()}
                       </td>
                     </tr>
                   ))}
@@ -286,7 +259,7 @@ export default async function RevenuePage({ searchParams }: Props) {
                     </td>
                     <td className="py-2.5 text-right text-white/40">{c.count}</td>
                     <td className="py-2.5 text-right text-white/80 font-medium">
-                      ₦{c.total.toLocaleString()}
+                      ${c.total.toLocaleString()}
                     </td>
                   </tr>
                 ))}
@@ -328,7 +301,7 @@ export default async function RevenuePage({ searchParams }: Props) {
                       </td>
                       <td className="py-2.5 text-white/50">{f.purpose}</td>
                       <td className="py-2.5 text-right text-white/60">
-                        {CURRENCY_SYMBOLS[f.currency] ?? f.currency}
+                        {currencySymbol(f.currency)}
                         {f.amount.toLocaleString()}
                       </td>
                       <td className="py-2.5">
