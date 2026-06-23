@@ -7,6 +7,7 @@ import {
   Section,
   Heading,
   Text,
+  Button,
   Hr,
   Link,
   Tailwind,
@@ -61,105 +62,147 @@ export default function MembershipWelcomeEmail({
           Welcome to YIF, {recipientName}! Your {tierName} membership is now
           active.
         </Preview>
-        <Body className="bg-cream font-sans m-0 p-0">
-          <Container className="max-w-[600px] mx-auto py-10 px-4">
+        <Body className="bg-cream font-sans m-0 p-0 py-40">
+          <Container className="max-w-600 mx-auto bg-white rounded-16 overflow-hidden">
+
             {/* Header */}
-            <Section className="bg-navy rounded-t-2xl px-8 py-8 text-center">
-              <Heading className="text-white font-serif text-3xl font-bold m-0 leading-tight">
+            <Section className="bg-navy px-40 py-36">
+              <Text className="m-0 text-11 font-bold tracking-widest uppercase text-gold">
                 Yoruba Indigenes&apos; Foundation
+              </Text>
+              <Heading className="m-0 mt-10 text-30 font-bold text-white leading-36">
+                Welcome to YIF
               </Heading>
-              <Text className="text-gold-pale text-sm m-0 mt-1 tracking-widest uppercase">
-                Member Welcome
+              <Text className="m-0 mt-8 text-14 text-gold-pale opacity-80">
+                Your {tierName} membership is now active.
               </Text>
             </Section>
 
-            {/* Body */}
-            <Section className="bg-white px-8 py-8">
-              <Text className="text-navy text-lg font-semibold m-0 mb-2">
-                Welcome, {recipientName}!
+            {/* Gold accent bar */}
+            <Section className="bg-gold px-40 py-10">
+              <Text className="m-0 text-11 font-bold uppercase tracking-widest text-navy-dark">
+                Membership Confirmed · UN/ECOSOC Consultative Status
               </Text>
-              <Text className="text-muted text-sm leading-relaxed m-0 mb-6">
-                Your <strong>{tierName}</strong> membership is now active. You
-                are now part of a growing community of Yoruba indigenes
-                committed to heritage, progress, and unity.
-              </Text>
+            </Section>
 
-              {/* Membership card summary */}
-              <Section className="bg-cream rounded-xl px-6 py-5 mb-6">
+            {/* Greeting */}
+            <Section className="px-40 py-32">
+              <Text className="m-0 text-17 font-semibold text-navy">
+                Congratulations, {recipientName}!
+              </Text>
+              <Text className="m-0 mt-12 text-15 text-muted leading-26">
+                You are now a <strong className="text-navy">{tierName}</strong>{" "}
+                member of the Yoruba Indigenes&apos; Foundation — part of a
+                growing community committed to heritage, progress, and unity
+                across Nigeria and the diaspora.
+              </Text>
+            </Section>
+
+            {/* Membership card */}
+            <Section className="mx-40 mb-0 rounded-12 bg-navy overflow-hidden">
+              <Section className="px-24 py-20">
+                <Text className="m-0 text-11 font-bold tracking-widest uppercase text-gold mb-16">
+                  Member Card
+                </Text>
                 <table width="100%" cellPadding={0} cellSpacing={0}>
                   <tbody>
                     <tr>
-                      <td className="text-muted text-xs py-1.5">
-                        Membership Number
-                      </td>
-                      <td className="text-navy text-xs font-bold text-right py-1.5">
-                        {membershipNumber}
-                      </td>
+                      <td className="py-8 text-13 text-gold-pale opacity-70">Membership No.</td>
+                      <td className="py-8 text-13 font-bold text-white text-right font-mono">{membershipNumber}</td>
                     </tr>
                     <tr>
-                      <td className="text-muted text-xs py-1.5">Tier</td>
-                      <td className="text-navy text-xs font-bold text-right py-1.5">
-                        {tierName}
-                      </td>
+                      <td className="py-8 text-13 text-gold-pale opacity-70">Tier</td>
+                      <td className="py-8 text-13 font-bold text-white text-right">{tierName}</td>
                     </tr>
                     <tr>
-                      <td className="text-muted text-xs py-1.5">Amount Paid</td>
-                      <td className="text-navy text-xs font-bold text-right py-1.5">
-                        {amountPaid}
-                      </td>
+                      <td className="py-8 text-13 text-gold-pale opacity-70">Valid Until</td>
+                      <td className="py-8 text-13 font-bold text-white text-right">{expiresAt}</td>
                     </tr>
                     <tr>
-                      <td className="text-muted text-xs py-1.5">Valid Until</td>
-                      <td className="text-navy text-xs font-bold text-right py-1.5">
-                        {expiresAt}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="text-muted text-xs py-1.5">Reference</td>
-                      <td className="text-navy text-xs font-mono text-right py-1.5">
-                        {reference}
-                      </td>
+                      <td className="py-8 text-13 text-gold-pale opacity-70">Amount Paid</td>
+                      <td className="py-8 text-13 font-bold text-gold text-right">{amountPaid}</td>
                     </tr>
                   </tbody>
                 </table>
               </Section>
+              <Section className="bg-navy-dark px-24 py-12">
+                <Text className="m-0 text-11 text-gold-pale opacity-50 font-mono">
+                  REF: {reference}
+                </Text>
+              </Section>
+            </Section>
 
-              <Text className="text-muted text-xs m-0 mb-6">
-                Log in to your member portal to access your profile, explore
-                upcoming events, and connect with fellow members.
+            {/* Benefits */}
+            <Section className="px-40 pt-28 pb-8">
+              <Text className="m-0 mb-16 text-12 font-bold uppercase tracking-widest text-muted">
+                Your member benefits
               </Text>
+              <table width="100%" cellPadding={0} cellSpacing={0}>
+                <tbody>
+                  {[
+                    "Access to the YIF member portal and exclusive resources",
+                    "Priority registration for events, summits, and programmes",
+                    "Networking with Yoruba indigenes across Nigeria and the diaspora",
+                    "Updates on scholarships, advocacy efforts, and cultural initiatives",
+                  ].map((benefit, i) => (
+                    <tr key={i}>
+                      <td className="w-20 py-6 align-top text-gold text-15 font-bold">✦</td>
+                      <td className="py-6 text-14 text-muted leading-20">{benefit}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </Section>
 
-              <Link
+            {/* CTA */}
+            <Section className="px-40 py-32 text-center">
+              <Button
                 href={dashboardUrl}
-                className="inline-block bg-navy text-white text-sm font-semibold rounded-lg px-6 py-3 no-underline"
+                className="bg-navy text-white text-15 font-bold px-40 py-16 rounded-10 no-underline box-border"
               >
                 Go to Member Portal
-              </Link>
+              </Button>
             </Section>
 
-            <Hr className="border-cream-dark mx-0 my-0" />
+            <Hr
+              style={{ borderTopColor: "#ede5d4" }}
+              className="my-0 mx-40"
+            />
 
             {/* Footer */}
-            <Section className="bg-white rounded-b-2xl px-8 pb-8 pt-4 text-center">
-              <Text className="text-muted text-xs m-0">
-                This email was sent to {recipientEmail}. If you have any
-                questions, reply to this email or contact us at{" "}
-                <Link
-                  href="mailto:info@yif.org"
-                  className="text-navy underline"
-                >
-                  info@yif.org
-                </Link>
-                .
+            <Section className="bg-navy-dark px-40 py-28">
+              <Text className="m-0 text-12 font-semibold text-gold">
+                Yoruba Indigenes&apos; Foundation
               </Text>
-              <Text className="text-muted text-xs m-0 mt-2">
-                &copy; {new Date().getFullYear()} Yoruba Indigenes&apos;
-                Foundation. All rights reserved.
+              <Text className="m-0 mt-4 text-11 text-gold-pale opacity-60">
+                Registration No. IT 28744 · UN/ECOSOC Consultative Status
+              </Text>
+              <Hr
+                style={{ borderTopColor: "rgba(255,255,255,0.12)" }}
+                className="my-16"
+              />
+              <Text className="m-0 text-11 text-gold-pale opacity-40">
+                Sent to {recipientEmail}. Questions?{" "}
+                <Link href="mailto:info@yifww.org" className="text-gold underline">
+                  info@yifww.org
+                </Link>
               </Text>
             </Section>
+
           </Container>
         </Body>
       </Tailwind>
     </Html>
   );
 }
+
+MembershipWelcomeEmail.PreviewProps = {
+  recipientName: "Adewale Okafor",
+  tierName: "Fellow",
+  membershipNumber: "YIF-2026-0042",
+  amountPaid: "NGN 50,000",
+  expiresAt: "23 June 2027",
+  reference: "cs_live_a19bvKLf",
+  recipientEmail: "adewale@example.com",
+  dashboardUrl: "https://www.yifww.org/dashboard",
+} satisfies MembershipWelcomeEmailProps;

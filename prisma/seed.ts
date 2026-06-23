@@ -4,6 +4,7 @@ config({ path: ".env.local" });
 import { PrismaClient } from "../generated/prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { hashPassword } from "better-auth/crypto";
+import { YWD_EVENT, YWD_AGENDA, YWD_DIGNITARIES } from "../lib/yoruba-world-day-2026";
 
 const adapter = new PrismaPg({
   connectionString: process.env.DATABASE_URL!,
@@ -190,228 +191,51 @@ async function seedBlogPosts() {
 }
 
 async function seedEvents() {
-  const events = [
-    {
-      slug: "yif-annual-awards-2026",
-      title: "YIF Annual Awards & Recognition Ceremony 2026",
-      tagline:
-        "Honouring the sons and daughters of Oodua who have made the race proud",
-      category: "Awards",
-      date: new Date("2026-07-12T17:00:00"),
-      time: "5:00 PM WAT",
-      location: "Federal Palace Hotel, Lagos",
-      address: "1415 Ahmadu Bello Way, Victoria Island, Lagos",
-      country: "Nigeria",
-      description:
-        "The YIF Annual Awards & Recognition Ceremony celebrates outstanding Yoruba individuals at home and in the diaspora who have distinguished themselves in their fields. Join us for an evening of culture, recognition, and unity as we honour heroes and heroines of the Yoruba race.",
-      agenda: [
-        "5:00 PM — Arrival & Reception",
-        "6:00 PM — Opening prayers & national anthem",
-        "6:20 PM — Welcome address by the National President",
-        "6:45 PM — Keynote: The Yoruba Nation in a Changing World",
-        "7:30 PM — Awards presentation (8 categories)",
-        "9:00 PM — Cultural performances & dinner",
-        "10:30 PM — Closing remarks",
-      ],
-      speakers: [
-        { name: "Chief Aderounmu Adesesan", role: "National President, YIF" },
-        { name: "Dr. Aderibole Olumide", role: "Keynote Speaker" },
-        { name: "Mr. Sanjo Olawuyi", role: "Master of Ceremonies" },
-      ],
-      isPublished: true,
-      tiers: [
-        {
-          name: "General Admission",
-          price: 25000,
-          description: "Standard seating, dinner included",
-          capacity: 300,
-        },
-        {
-          name: "VIP",
-          price: 75000,
-          description: "Priority seating, exclusive reception & gift pack",
-          capacity: 50,
-        },
-        {
-          name: "Table of 10",
-          price: 200000,
-          description: "Reserved table for 10 guests, branding opportunities",
-          capacity: 20,
-        },
-      ],
-    },
-    {
-      slug: "yoruba-world-day-summit-2026",
-      title: "Yoruba World Day Summit 2026",
-      tagline:
-        "Connecting the global Yoruba diaspora — unity, culture, and progress",
-      category: "Conference",
-      date: new Date("2026-09-06T09:00:00"),
-      endDate: new Date("2026-09-07T18:00:00"),
-      time: "9:00 AM BST",
-      location: "The Barbican Centre, London",
-      address: "Silk Street, Barbican, London EC2Y 8DS",
-      country: "United Kingdom",
-      description:
-        "The Yoruba World Day Summit brings together Yoruba leaders, entrepreneurs, scholars, and creatives from over 30 countries for two days of high-level dialogue, cultural celebration, and strategic networking. This is the flagship event of the YIF calendar.",
-      agenda: [
-        "Day 1 — Cultural Celebration & Opening Ceremony",
-        "Day 1 — Panel: Economic Empowerment in the Diaspora",
-        "Day 1 — Networking Dinner",
-        "Day 2 — Youth Forum & Leadership Masterclass",
-        "Day 2 — Closing Plenary: The Path Forward for Yoruba Unity",
-      ],
-      speakers: [
-        { name: "Chief Aderounmu Adesesan", role: "National President, YIF" },
-        {
-          name: "Princess M. Adewunmi King (Labamba)",
-          role: "National Co-ordinator, UK",
-        },
-        {
-          name: "Ms. Olushola Olude",
-          role: "YIF Representative, United States",
-        },
-        {
-          name: "Dr. Gbenga Adeyeye",
-          role: "YIF Representative, South Africa",
-        },
-      ],
-      isPublished: true,
-      tiers: [
-        {
-          name: "Delegate Pass (2 days)",
-          price: 45000,
-          description: "Full access both days, meals included",
-          capacity: 400,
-        },
-        {
-          name: "VIP Delegate",
-          price: 120000,
-          description: "VIP lounge access, both days, gala dinner ticket",
-          capacity: 60,
-        },
-        {
-          name: "Student / Youth (Under 30)",
-          price: 10000,
-          description:
-            "Both days, meals included — valid student ID required at entry",
-          capacity: 100,
-        },
-      ],
-    },
-    {
-      slug: "karo-ojire-investment-workshop-2026",
-      title: "Karo-Ojire Economic Empowerment Workshop",
-      tagline: "Breaking free from poverty through cooperative economics",
-      category: "Workshop",
-      date: new Date("2026-06-14T10:00:00"),
-      time: "10:00 AM WAT",
-      location: "YIF Secretariat, Ibadan",
-      address: "Secretariat Road, Ibadan, Oyo State",
-      country: "Nigeria",
-      description:
-        "A practical, hands-on workshop on cooperative economics and investment strategies for Yoruba entrepreneurs. Learn how the Karo-Ojire initiative creates pathways to economic self-reliance, particularly for widows and young people.",
-      agenda: [
-        "10:00 AM — Registration & welcome",
-        "10:30 AM — Introduction to Cooperative Economics",
-        "11:30 AM — Karo-Ojire: Model & Opportunities",
-        "1:00 PM — Lunch break",
-        "2:00 PM — Group discussions & case studies",
-        "4:00 PM — Q&A and next steps",
-      ],
-      speakers: [
-        { name: "Mr. Edward Kayode Adeleye", role: "Treasurer, YIF" },
-        { name: "Ogundare Adenike", role: "Youth Development Lead, YIF" },
-      ],
-      isPublished: true,
-      tiers: [
-        {
-          name: "Participant",
-          price: 5000,
-          description: "Full day access, workshop materials, lunch",
-          capacity: 150,
-        },
-      ],
-    },
-    {
-      slug: "yif-fundraising-gala-london-2026",
-      title: "YIF UK Fundraising Gala 2026",
-      tagline:
-        "An evening of culture and generosity — supporting Yoruba scholars",
-      category: "Fundraiser",
-      date: new Date("2026-10-17T19:00:00"),
-      time: "7:00 PM BST",
-      location: "Grosvenor House Hotel, London",
-      address: "Park Lane, London W1K 7TN",
-      country: "United Kingdom",
-      description:
-        "Join YIF UK for a glittering fundraising gala supporting the YIF Scholarship Program. Every ticket purchased directly funds a Yoruba student's university education. An evening of Afrobeats, Yoruba cuisine, live performances, and philanthropic spirit.",
-      agenda: [
-        "7:00 PM — Arrival & cocktail reception",
-        "7:45 PM — Welcome by Princess M. Adewunmi King",
-        "8:00 PM — Scholarship impact presentation",
-        "8:30 PM — Dinner & live cultural performances",
-        "10:00 PM — Fundraising auction",
-        "11:00 PM — Dancing & networking",
-      ],
-      speakers: [
-        {
-          name: "Princess M. Adewunmi King (Labamba)",
-          role: "National Co-ordinator, UK",
-        },
-        {
-          name: "Princess Omolabake Margret King",
-          role: "YIF Representative, London",
-        },
-      ],
-      isPublished: true,
-      tiers: [
-        {
-          name: "Individual Ticket",
-          price: 60000,
-          description:
-            "Dinner, entertainment, and a contribution to the Scholarship Fund",
-          capacity: 200,
-        },
-        {
-          name: "Couple Ticket",
-          price: 110000,
-          description: "Two tickets — save ₦10,000",
-          capacity: 60,
-        },
-        {
-          name: "Gold Sponsor Table (10)",
-          price: 500000,
-          description:
-            "Table of 10, naming rights on program, recognition speech slot",
-          capacity: 10,
-        },
-      ],
-    },
-  ];
+  const existing = await prisma.event.findUnique({
+    where: { slug: YWD_EVENT.slug },
+  });
 
-  for (const event of events) {
-    const { tiers, ...eventData } = event;
-    const existing = await prisma.event.findUnique({
-      where: { slug: event.slug },
-    });
-    if (!existing) {
-      await prisma.event.create({
-        data: {
-          ...eventData,
-          tiers: { create: tiers },
+  if (!existing) {
+    await prisma.event.create({
+      data: {
+        slug: YWD_EVENT.slug,
+        title: YWD_EVENT.title,
+        tagline: YWD_EVENT.subtitle,
+        category: "Conference",
+        date: new Date(`${YWD_EVENT.startDate}T09:00:00`),
+        endDate: new Date(`${YWD_EVENT.endDate}T21:00:00`),
+        time: "9:00 AM EDT",
+        location: YWD_EVENT.venue,
+        address: YWD_EVENT.address,
+        country: "United States",
+        description: `Theme: ${YWD_EVENT.theme}. A landmark two-day summit bringing together Yoruba leaders, investors, and dignitaries from across the globe at ${YWD_EVENT.venue}, ${YWD_EVENT.city}.`,
+        agenda: YWD_AGENDA,
+        speakers: YWD_DIGNITARIES.map((d) => ({ name: d.name, role: d.role })),
+        isPublished: true,
+        tiers: {
+          create: [
+            {
+              name: "Delegate Pass",
+              price: YWD_EVENT.ticketPriceUsd,
+              description:
+                "Full two-day access to all sessions and networking events",
+              capacity: 500,
+            },
+          ],
         },
-      });
-      console.log(`  + Event: ${event.title}`);
-    }
+      },
+    });
+    console.log(`  + Event: ${YWD_EVENT.title}`);
+  } else {
+    console.log(`  = Event already exists: ${YWD_EVENT.title}`);
   }
   console.log(`✓ Events seeded`);
 }
 
 async function main() {
-  await seedAdmin();
-  await seedBlogTopics();
-  await seedBlogPosts();
+  // await seedAdmin();
+  // await seedBlogTopics();
+  // await seedBlogPosts();
   await seedEvents();
 }
 

@@ -7,6 +7,7 @@ import {
   Section,
   Heading,
   Text,
+  Button,
   Hr,
   Link,
   Tailwind,
@@ -53,126 +54,158 @@ export default function MembershipInitializationEmail({
       >
         <Head />
         <Preview>
-          Your YIF {tierName} membership application is ready — complete your
-          payment to activate.
+          One step left — complete your {tierName} membership payment to join
+          YIF.
         </Preview>
-        <Body className="bg-cream font-sans m-0 p-0">
-          <Container className="max-w-[600px] mx-auto py-10 px-4">
+        <Body className="bg-cream font-sans m-0 p-0 py-40">
+          <Container className="max-w-600 mx-auto bg-white rounded-16 overflow-hidden">
+
             {/* Header */}
-            <Section className="bg-navy rounded-t-2xl px-8 py-8 text-center">
-              <Heading className="text-white font-serif text-3xl font-bold m-0 leading-tight">
+            <Section className="bg-navy px-40 py-36">
+              <Text className="m-0 text-11 font-bold tracking-widest uppercase text-gold">
                 Yoruba Indigenes&apos; Foundation
+              </Text>
+              <Heading className="m-0 mt-10 text-30 font-bold text-white leading-36">
+                Complete Your Membership
               </Heading>
-              <Text className="text-gold-pale text-sm m-0 mt-1 tracking-widest uppercase">
-                Membership Application
+              <Text className="m-0 mt-8 text-14 text-gold-pale opacity-80">
+                Your application has been received.
               </Text>
             </Section>
 
-            {/* Body */}
-            <Section className="bg-white px-8 py-8">
-              <Text className="text-navy text-lg font-semibold m-0 mb-2">
+            {/* Gold accent bar */}
+            <Section className="bg-gold px-40 py-10">
+              <Text className="m-0 text-11 font-bold uppercase tracking-widest text-navy-dark">
+                Action Required · Secure Payment
+              </Text>
+            </Section>
+
+            {/* Greeting */}
+            <Section className="px-40 py-32">
+              <Text className="m-0 text-17 font-semibold text-navy">
                 Hi {recipientName},
               </Text>
-              <Text className="text-muted text-sm leading-relaxed m-0 mb-6">
-                Your <strong>{tierName}</strong> membership application has been
-                received. To complete your membership and gain full access to
-                the YIF member portal, please finalize your payment of{" "}
-                <strong>{amountNaira}</strong>.
+              <Text className="m-0 mt-12 text-15 text-muted leading-26">
+                Your <strong className="text-navy">{tierName}</strong>{" "}
+                membership application is ready. Finalise your payment of{" "}
+                <strong className="text-navy">{amountNaira}</strong> to gain
+                full access to the YIF member portal and community.
               </Text>
-
-              {/* Application summary */}
-              <Section className="bg-cream rounded-xl px-6 py-5 mb-6">
-                <table width="100%" cellPadding={0} cellSpacing={0}>
-                  <tbody>
-                    <tr>
-                      <td className="text-muted text-xs py-1.5">
-                        Membership Tier
-                      </td>
-                      <td className="text-navy text-xs font-bold text-right py-1.5">
-                        {tierName}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="text-muted text-xs py-1.5">Amount Due</td>
-                      <td className="text-navy text-xs font-bold text-right py-1.5">
-                        {amountNaira}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="text-muted text-xs py-1.5">
-                        Payment Reference
-                      </td>
-                      <td className="text-navy text-xs font-mono text-right py-1.5">
-                        {reference}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="text-muted text-xs py-1.5">Status</td>
-                      <td className="text-xs font-bold text-right py-1.5 text-gold">
-                        Pending Payment
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </Section>
-
-              <Text className="text-muted text-sm leading-relaxed m-0 mb-6">
-                Use the button below to proceed to the secure payment page. If
-                you were redirected there already, you can ignore this email or
-                use the link to resume your payment at any time.
-              </Text>
-
-              <Link
-                href={paymentUrl}
-                className="inline-block bg-gold text-white text-sm font-semibold rounded-lg px-6 py-3 no-underline"
-              >
-                Complete Payment
-              </Link>
             </Section>
 
-            <Hr className="border-cream-dark mx-0 my-0" />
+            {/* Application summary card */}
+            <Section className="mx-40 mb-0 rounded-12 bg-cream overflow-hidden">
+              <table width="100%" cellPadding={0} cellSpacing={0}>
+                <tbody>
+                  <tr>
+                    <td className="px-24 py-12 border-b border-solid border-cream-dark text-13 text-muted">
+                      Membership Tier
+                    </td>
+                    <td className="px-24 py-12 border-b border-solid border-cream-dark text-13 font-bold text-navy text-right">
+                      {tierName}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="px-24 py-12 border-b border-solid border-cream-dark text-13 text-muted">
+                      Amount Due
+                    </td>
+                    <td className="px-24 py-12 border-b border-solid border-cream-dark text-13 font-bold text-navy text-right">
+                      {amountNaira}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="px-24 py-12 border-b border-solid border-cream-dark text-13 text-muted">
+                      Reference
+                    </td>
+                    <td className="px-24 py-12 border-b border-solid border-cream-dark text-12 font-mono text-navy text-right">
+                      {reference}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="px-24 py-12 text-13 text-muted">
+                      Status
+                    </td>
+                    <td className="px-24 py-12 text-13 font-bold text-gold text-right">
+                      Pending Payment
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </Section>
+
+            {/* CTA */}
+            <Section className="px-40 py-36 text-center">
+              <Button
+                href={paymentUrl}
+                className="bg-gold text-navy-dark text-15 font-bold px-40 py-16 rounded-10 no-underline box-border"
+              >
+                Complete Payment Now
+              </Button>
+              <Text className="m-0 mt-14 text-12 text-muted">
+                Secure payment · Your details are encrypted
+              </Text>
+            </Section>
+
+            <Hr
+              style={{ borderTopColor: "#ede5d4" }}
+              className="my-0 mx-40"
+            />
 
             {/* What happens next */}
-            <Section className="bg-white px-8 py-6">
-              <Text className="text-navy text-sm font-semibold m-0 mb-3">
-                What happens next?
+            <Section className="px-40 py-28">
+              <Text className="m-0 mb-16 text-12 font-bold uppercase tracking-widest text-muted">
+                What happens next
               </Text>
-              <Text className="text-muted text-xs leading-relaxed m-0 mb-1">
-                1. Complete your payment on the secure Paystack page.
-              </Text>
-              <Text className="text-muted text-xs leading-relaxed m-0 mb-1">
-                2. Your membership will be activated automatically within
-                seconds.
-              </Text>
-              <Text className="text-muted text-xs leading-relaxed m-0">
-                3. You will receive a confirmation email with your membership
-                details and access to the member portal.
-              </Text>
+              <table width="100%" cellPadding={0} cellSpacing={0}>
+                <tbody>
+                  <tr>
+                    <td className="w-28 py-8 align-top text-13 font-bold text-gold">1.</td>
+                    <td className="py-8 text-13 text-muted leading-20">Complete your payment on the secure checkout page.</td>
+                  </tr>
+                  <tr>
+                    <td className="w-28 py-8 align-top text-13 font-bold text-gold">2.</td>
+                    <td className="py-8 text-13 text-muted leading-20">Your membership activates automatically within seconds.</td>
+                  </tr>
+                  <tr>
+                    <td className="w-28 py-8 align-top text-13 font-bold text-gold">3.</td>
+                    <td className="py-8 text-13 text-muted leading-20">You&apos;ll receive a welcome email with your membership card and portal access.</td>
+                  </tr>
+                </tbody>
+              </table>
             </Section>
-
-            <Hr className="border-cream-dark mx-0 my-0" />
 
             {/* Footer */}
-            <Section className="bg-white rounded-b-2xl px-8 pb-8 pt-4 text-center">
-              <Text className="text-muted text-xs m-0">
-                This email was sent to {recipientEmail}. If you did not initiate
-                this application, please contact us at{" "}
-                <Link
-                  href="mailto:info@yif.org"
-                  className="text-navy underline"
-                >
-                  info@yif.org
-                </Link>
-                .
+            <Section className="bg-navy-dark px-40 py-28">
+              <Text className="m-0 text-12 font-semibold text-gold">
+                Yoruba Indigenes&apos; Foundation
               </Text>
-              <Text className="text-muted text-xs m-0 mt-2">
-                &copy; {new Date().getFullYear()} Yoruba Indigenes&apos;
-                Foundation. All rights reserved.
+              <Text className="m-0 mt-4 text-11 text-gold-pale opacity-60">
+                Registration No. IT 28744 · UN/ECOSOC Consultative Status
+              </Text>
+              <Hr
+                style={{ borderTopColor: "rgba(255,255,255,0.12)" }}
+                className="my-16"
+              />
+              <Text className="m-0 text-11 text-gold-pale opacity-40">
+                Sent to {recipientEmail}. Did not apply?{" "}
+                <Link href="mailto:info@yifww.org" className="text-gold underline">
+                  Contact us
+                </Link>
               </Text>
             </Section>
+
           </Container>
         </Body>
       </Tailwind>
     </Html>
   );
 }
+
+MembershipInitializationEmail.PreviewProps = {
+  recipientName: "Chiamaka Eze",
+  tierName: "Fellow",
+  amountNaira: "NGN 50,000",
+  reference: "YIF-MEM-2026-004821",
+  paymentUrl: "https://www.yifww.org/membership/pay?ref=YIF-MEM-2026-004821",
+  recipientEmail: "chiamaka@example.com",
+} satisfies MembershipInitializationEmailProps;
