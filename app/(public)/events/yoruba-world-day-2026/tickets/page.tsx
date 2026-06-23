@@ -9,6 +9,9 @@ export const metadata: Metadata = {
 };
 
 export default function TicketsPage() {
+  const paystackKey = process.env.PAYSTACK_SECRET_KEY ?? "";
+  const paystackIsLive = paystackKey.startsWith("sk_live_");
+
   return (
     <main className="bg-[var(--yif-cream-dark)] py-16">
       <div className="mx-auto max-w-3xl px-6">
@@ -32,7 +35,7 @@ export default function TicketsPage() {
         </div>
 
         <div className="mt-10 rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5 md:p-10">
-          <TicketForm />
+          <TicketForm paystackIsLive={paystackIsLive} />
         </div>
       </div>
     </main>

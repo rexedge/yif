@@ -7,13 +7,20 @@ import { YWD_EVENT } from "@/lib/yoruba-world-day-2026";
 
 const initialState: TicketCheckoutState = {};
 
-export default function TicketForm() {
+export default function TicketForm({
+  paystackIsLive,
+}: {
+  paystackIsLive: boolean;
+}) {
   const [state, action, pending] = useActionState(
     buyDelegatePass,
     initialState,
   );
   const [qty, setQty] = useState(1);
-  const [currency, setCurrency] = useState<"NGN" | "USD">("NGN");
+  // When Paystack is in test mode, lock to USD/Stripe
+  const [currency, setCurrency] = useState<"NGN" | "USD">(
+    paystackIsLive ? "NGN" : "USD",
+  );
 
   const totalNgn = YWD_EVENT.ticketPriceNgn * qty;
   const totalUsd = YWD_EVENT.ticketPriceUsd * qty;
@@ -29,10 +36,12 @@ export default function TicketForm() {
         </legend>
         <div className="mt-3 grid grid-cols-2 gap-3">
           <label
-            className={`relative flex cursor-pointer flex-col rounded-xl border-2 p-4 transition ${
-              currency === "NGN"
-                ? "border-[var(--yif-gold)] bg-[var(--yif-gold)]/10"
-                : "border-black/10 bg-white"
+            className={`relative flex flex-col rounded-xl border-2 p-4 transition ${
+              !paystackIsLive
+                ? "cursor-not-allowed border-black/10 bg-black/5 opacity-50"
+                : currency === "NGN"
+                  ? "cursor-pointer border-[var(--yif-gold)] bg-[var(--yif-gold)]/10"
+                  : "cursor-pointer border-black/10 bg-white"
             }`}
           >
             <input
@@ -41,13 +50,16 @@ export default function TicketForm() {
               value="NGN"
               checked={currency === "NGN"}
               onChange={() => setCurrency("NGN")}
+              disabled={!paystackIsLive}
               className="sr-only"
             />
             <span className="text-sm font-bold text-[var(--yif-navy-dark)]">
               Nigerian Naira
             </span>
             <span className="text-xs text-[var(--yif-charcoal)]/70">
-              Paystack · Cards · Bank · USSD · Transfer
+              {paystackIsLive
+                ? "Paystack · Cards · Bank · USSD · Transfer"
+                : "Paystack · Unavailable in test mode"}
             </span>
           </label>
 

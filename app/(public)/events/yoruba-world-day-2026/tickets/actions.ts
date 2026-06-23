@@ -18,7 +18,12 @@ export async function buyDelegatePass(
   _prev: TicketCheckoutState,
   formData: FormData,
 ): Promise<TicketCheckoutState> {
-  const currency = (formData.get("currency") as string | null) ?? "NGN";
+  const paystackKey = process.env.PAYSTACK_SECRET_KEY ?? "";
+  const paystackIsLive = paystackKey.startsWith("sk_live_");
+
+  // If Paystack is in test mode, always route through Stripe regardless of what the form sent
+  const rawCurrency = (formData.get("currency") as string | null) ?? "NGN";
+  const currency = !paystackIsLive && rawCurrency === "NGN" ? "USD" : rawCurrency;
 
   const email = (formData.get("email") as string | null)?.trim() ?? "";
   const name = (formData.get("name") as string | null)?.trim() ?? "";
