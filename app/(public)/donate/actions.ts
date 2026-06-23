@@ -101,6 +101,7 @@ export async function initiateDonation(
           frequency,
           customerName: name,
           fullName: name,
+          customerEmail: email,
         },
       });
 

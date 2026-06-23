@@ -15,6 +15,11 @@ const siteUrl =
   process.env.NEXT_PUBLIC_BETTER_AUTH_URL ??
   "http://localhost:3000";
 
+const extraOrigins = (process.env.BETTER_AUTH_TRUSTED_ORIGINS ?? "")
+  .split(",")
+  .map((s) => s.trim())
+  .filter(Boolean);
+
 const trustedOrigins = Array.from(
   new Set(
     [
@@ -24,6 +29,7 @@ const trustedOrigins = Array.from(
       process.env.NEXT_PUBLIC_BETTER_AUTH_URL,
       process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null,
       "http://localhost:3000",
+      ...extraOrigins,
     ].filter((v): v is string => Boolean(v)),
   ),
 );

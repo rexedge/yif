@@ -89,6 +89,7 @@ export async function buyDelegatePass(
           tierName: tier.name,
           quantity: String(qty),
           customerName: name,
+          customerEmail: email,
           customerPhone: phone,
           country,
           fullName: name,

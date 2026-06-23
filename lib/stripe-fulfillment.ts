@@ -66,11 +66,15 @@ export async function fulfillStripeCheckoutSession(
   const currency = (session.currency ?? pi?.currency ?? "usd").toUpperCase();
   const amount = fromStripeMinor(amountMinor);
 
-  const feeMinor = charge?.balance_transaction
-    ? null // we'd need to expand balance_transaction to read fees; skip for now
-    : null;
+  const balanceTxn =
+    charge?.balance_transaction &&
+    typeof charge.balance_transaction === "object"
+      ? (charge.balance_transaction as Stripe.BalanceTransaction)
+      : null;
+  const feeMinor = balanceTxn?.fee ?? null;
+  const netMinor = balanceTxn?.net ?? null;
   const fees = feeMinor != null ? fromStripeMinor(feeMinor) : null;
-  const netAmount = fees != null ? amount - fees : null;
+  const netAmount = netMinor != null ? fromStripeMinor(netMinor) : null;
 
   // Freeze the USD-equivalent at fulfillment time for consolidated reporting.
   // Rates are cached in-memory, so converting cheaply covers all statuses.

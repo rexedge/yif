@@ -55,7 +55,13 @@ export async function POST(req: Request): Promise<Response> {
         // capture card details and accurate amounts.
         const fullSession = await stripe.checkout.sessions.retrieve(
           session.id,
-          { expand: ["payment_intent", "payment_intent.latest_charge"] },
+          {
+            expand: [
+              "payment_intent",
+              "payment_intent.latest_charge",
+              "payment_intent.latest_charge.balance_transaction",
+            ],
+          },
         );
         await fulfillStripeCheckoutSession(fullSession);
         break;
